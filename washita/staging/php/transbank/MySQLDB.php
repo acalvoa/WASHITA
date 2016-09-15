@@ -12,11 +12,23 @@ require_once("DBCommon.php");
 /**
 *	This class is the main class.
 */
-public class MYSQLDB implements DBCommon {
-	/** @var string $DB_HOST */
-	$DB_HOST;
+public class MySQLDB implements DBCommon {
+	/** @var string $_HOST Mysql Server Host*/
+	private $_HOST;
+	/** @var string $_USERNAME Mysql Username */
+	private $_USERNAME;
+	/** @var string $_PASSWORD Mysql Username Password*/
+	private $_PASSWORD;
+	/** @var string $_DATABASE Mysql Database name*/
+	private $_DATABASE;
+	/** @var string $_PORT Mysql Server port*/
+	private $_PORT = 3306; 
+
+
 	/** @method boolean _CONNECT(string $host, string $user, string $password) This function provide a common way to conect and make a conector to database */
-	private function _CONNECT($host,$user,$password);
+	private function _CONNECT($host,$user,$password){
+
+	}
 	/** @method boolean _SELECT_DATABASE(string $db) This function provide a common way to select a database */
 	private function _SELECT_DATABASE($db);
 	/** @method void _FETCHWAY(string $query) This function set the type of FETCH, the options can be ASSOC, NUM or BOTH*/

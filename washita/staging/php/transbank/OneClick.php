@@ -6,12 +6,12 @@
 *	
 *	This class implementation has been created for use the OneCLick SOAP Call API provided by transbank.
 */
-require_once("MYSQLDB");
+require_once("MySQLDB.php");
 
 /**
 *	This class is the main class of the OneClick Process.
 */
-public class OneClick extends DBClass{
+public class OneClick extends MySQLDB{
 	/** @var */
 }
 ?>

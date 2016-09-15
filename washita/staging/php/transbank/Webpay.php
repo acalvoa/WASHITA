@@ -6,12 +6,12 @@
 *	
 *	This class implementation has been created for use the Webpay Plus Kit provided by transbank.
 */
-require_once("MYSQLDB");
+require_once("MySQLDB.php");
 
 /**
 *	This class is the main class of the Webpay Plus Process.
 */
-publi class Webpay extends DBCLass{
+publi class Webpay extends MySQLDB{
 	/** @var */
 }
 ?>
