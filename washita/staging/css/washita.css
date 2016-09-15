@@ -1,0 +1,36 @@
+.main-buttons{
+    text-align: center;
+}
+
+.process-button{
+    padding-top: 10px;
+}
+
+.section-heading {
+  margin: 60px 0 80px;
+}
+.section-heading-subscription{
+    margin:10px 0 30px;
+}
+
+@media (min-width: 590px) {
+    .process-button{
+        padding-top: 0;
+    }
+}
+
+
+.img-feature{
+    bottom: 0;
+    position: absolute;
+}
+
+@media screen and (max-width: 991px){
+    .img-feature{
+        position: relative; 
+    }
+}
+
+.feature-column .feature:last-child{
+    margin-bottom: 40px;
+}

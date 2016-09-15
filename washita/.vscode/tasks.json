@@ -1,0 +1,27 @@
+
+{
+	"version": "0.1.0",
+
+	// The command is tsc. Assumes that tsc has been installed using npm install -g typescript
+	"command": "gulp",
+
+	// The command is a shell script
+	"isShellCommand": true,
+	"tasks": [
+		{
+			"taskName": "scripts",
+			"isBuildCommand": true,
+			"showOutput": "always"
+		},
+		{
+			"taskName": "css",
+			"isBuildCommand": true,
+			"showOutput": "always"
+		},
+		{
+			"taskName": "watch",
+			"isBuildCommand": true,
+			"showOutput": "always"
+		}
+	]
+}

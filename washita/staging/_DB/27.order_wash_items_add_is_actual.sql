@@ -1,0 +1,3 @@
+
+
+ALTER TABLE `order_wash_items` ADD IS_ACTUAL BOOL NOT NULL DEFAULT 0

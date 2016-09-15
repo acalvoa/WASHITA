@@ -1,0 +1,2 @@
+
+ALTER TABLE `orders` ADD COMMENT varchar(3000)  NULL;

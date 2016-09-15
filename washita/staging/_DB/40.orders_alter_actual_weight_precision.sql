@@ -1,0 +1,2 @@
+
+ALTER TABLE `orders` MODIFY ACTUAL_WEIGHT decimal(6,2) NULL

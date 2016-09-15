@@ -1,0 +1,2 @@
+
+ALTER TABLE `orders` MODIFY WEIGHT decimal(6,2) NOT  NULL;

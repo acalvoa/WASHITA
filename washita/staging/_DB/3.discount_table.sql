@@ -1,0 +1,15 @@
+
+DROP TABLE IF EXISTS `discount`;
+
+create table discount(
+   ID int primary key NOT NULL AUTO_INCREMENT,
+   COUPON nchar(6) NOT NULL,
+   VALUE DECIMAL(5,2) NOT NULL, 
+   VALID_TILL DATETIME NOT NULL
+);
+
+ALTER TABLE `discount` ADD INDEX `COUPON_INDX` (`COUPON`);
+
+
+INSERT INTO `discount` (`ID`, `COUPON`, `VALUE`, `VALID_TILL`) VALUES (NULL, 'TEST20', '20', '2020-02-17 00:00:00');
+ 

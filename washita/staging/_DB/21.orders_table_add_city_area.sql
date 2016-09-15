@@ -1,0 +1,3 @@
+
+ALTER TABLE `orders` 
+    ADD `CITY_AREA_ID` INT NULL
