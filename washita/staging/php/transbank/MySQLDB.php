@@ -85,9 +85,10 @@ class MySQLDB implements DBCommon {
 			$this->STATUS = 1;
 		}
 	}
-	/** @method boolean CONNECT(string $host, string $user, string $password) This function provide a common way to conect and make a conector to database */
-	public function DCONNECT($host, $user, $password){
-
+	/** @method boolean CONNECT(string $host, string $user, string $password, string $database) This function provide a common way to conect and make a conector to database */
+	public static function DCONNECT($host, $user, $password, $db){
+		$conector = new MySQLDB($host,$user,$password,$db);
+		return $conector;
 	}
 	/** @method boolean SELECT_DATABASE(string $db) This function provide a common way to select a database */
 	function SELECT_DATABASE($db){
@@ -97,7 +98,9 @@ class MySQLDB implements DBCommon {
 	/** @method void QUERY(string $query, array $field) This function provide a common way to do a query for use */
 	public function QUERY($query, $field = []){
 		//INIT THE TRANSACTIONS AND NEXT EXECUTE THE QUERY.
+		error_reporting(E_ALL ^ E_WARNING);
 		$this->MYSQL->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+		error_reporting(E_ALL); 
 		$stmt = $this->MYSQL->prepare($query);
 		if(!$stmt){
 			throw new Exception("The statement is incorrect. Check the query", 7);
@@ -131,9 +134,6 @@ class MySQLDB implements DBCommon {
 					break;
 			}
 		}
-		// array_unshift($list,$params);
-		// $tmp = array();
-        // foreach($list as $key => $value) $tmp[$key] = &$list[$key];
 		call_user_func_array(array($stmt, "bind_param"), $list);
 		$stmt->execute();
 		$this->L_STMT = $stmt;
@@ -153,7 +153,9 @@ class MySQLDB implements DBCommon {
 		//INIT THE TRANSACTIONS AND NEXT EXECUTE THE QUERY.
 		$STMTS = array();
 		$RESULTS = array();
+		error_reporting(E_ALL ^ E_WARNING);
 		$this->MYSQL->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
+		error_reporting(E_ALL); 
 		foreach ($querys as $keys => $query) {
 			$stmt = $this->MYSQL->prepare($query);
 			// COUNT THE NUMBER OF FIELDS REQUIRED
@@ -188,7 +190,6 @@ class MySQLDB implements DBCommon {
 						break;
 				}
 			}
-			print_r($list);
 			call_user_func_array(array($stmt, "bind_param"), $list);
 			$stmt->execute();
 			$STMTS[] = $stmt;
@@ -290,34 +291,92 @@ class MySQLDB implements DBCommon {
 	/** @method boolean UPDATE(array $update, array $where, string $table) This function update a row into table */
 	public function UPDATE($update,$where, $table){
 		$query = "UPDATE ".$table." SET";
-		foreach ($insert as $key => $value) {
-			$argument .= " `".$key."`=?,";
+		foreach ($update as $key => $value) {
+			$query .= " `".$key."`=?,";
 		}
-		$argument = substr($argument,0,-1);
-		$fields = substr($fields,0,-1);
-		$fields .= ")";
-		$query .= " ".$argument." VALUES ".$fields;
-		$this->QUERY($query, $insert);
-		$retorno = $this->L_STMT->insert_id;
+		$query = substr($query,0,-1);
+		$query .= " WHERE ";
+		foreach ($where as $key => $value) {
+			$query .= " `".$key."`=? AND";
+			$update[] = $value;
+		}
+		$query = substr($query,0,-4);
+		$this->QUERY($query, $update);
+		$retorno = $this->L_STMT->affected_rows;
 		if(gettype($this->L_RESULT) != "boolean") $this->L_RESULT->free();
 		$this->L_STMT->close();
 		return $retorno;
 	}
 	/** @method boolean DELETE(array $where, string $table) This function returns delete a row into table */
 	public function M_UPDATE($update,$where, $table){
-
+		$queries = array();
+		foreach ($update as $key => $value) {
+			$query = "UPDATE ".$table[$key]." SET";
+			foreach ($update[$key] as $key2 => $value2) {
+				$query .= " `".$key2."`=?,";
+			}
+			$query = substr($query,0,-1);
+			$query .= " WHERE ";
+			foreach ($where[$key] as $key2 => $value2) {
+				$query .= " `".$key2."`=? AND";
+				$update[$key][] = $value2;
+			}
+			$query = substr($query,0,-4);
+			$queries[] = $query;
+		}
+		$this->M_QUERY($queries, $update);
+		$retorno_id = array();
+		foreach ($this->L_STMT as $key => $value) {
+			$retorno_id[] = $value->insert_id;
+			if(gettype($this->L_RESULT[$key]) != "boolean") $this->L_RESULT[$key]->free();
+			$value->close();
+		}
+		return $retorno_id;
 	}
 	/** @method boolean DELETE(array $where, string $table) This function returns delete a row into table */
 	public function DELETE($where, $table){
-
+		$query = "DELETE FROM ".$table;
+		$query .= " WHERE ";
+		foreach ($where as $key => $value) {
+			$query .= " `".$key."`=? AND";
+		}
+		$query = substr($query,0,-4);
+		$this->QUERY($query, $where);
+		$retorno = $this->L_STMT->affected_rows;
+		if(gettype($this->L_RESULT) != "boolean") $this->L_RESULT->free();
+		$this->L_STMT->close();
+		return $retorno;
 	}
 	/** @method integer EXISTS(string $query) This function provide a boolean of results*/
 	public function M_DELETE($where, $table){
-
+		$queries = array();
+		foreach ($where as $key => $value) {
+			$query = "DELETE FROM ".$table[$key];
+			$query .= " WHERE ";
+			foreach ($where[$key] as $key2 => $value2) {
+				$query .= " `".$key2."`=? AND";
+			}
+			$query = substr($query,0,-4);
+			$queries[] = $query;
+		}
+		$this->M_QUERY($queries, $where);
+		$retorno_id = array();
+		foreach ($this->L_STMT as $key => $value) {
+			$retorno_id[] = $value->affected_rows;
+			if(gettype($this->L_RESULT[$key]) != "boolean") $this->L_RESULT[$key]->free();
+			$value->close();
+		}
+		return $retorno_id;
 	}
 	/** @method integer EXISTS(string $query) This function provide a boolean of results*/
 	public function EXISTS($query){
-
+		$this->QUERY($query);
+		if($L_STMT->num_rows > 0){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	/** @method integer NUMROWS() This function returns the number of rows of  the last query*/
 	public function NUMROWS(){

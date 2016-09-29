@@ -13,8 +13,8 @@
 interface DBCommon{
 	/** @method boolean CONNECT() This function provide a common way to conect and make a conector to database */
 	function CONNECT();
-	/** @method boolean CONNECT(string $host, string $user, string $password) This function provide a common way to conect and make a conector to database */
-	public function DCONNECT($host, $user, $password);
+	/** @method boolean CONNECT(string $host, string $user, string $password, string $database) This function provide a common way to conect and make a conector to database */
+	public static function DCONNECT($host, $user, $password, $db);
 	/** @method boolean SELECTDATABASE(string $db) This function provide a common way to select a database */
 	function SELECT_DATABASE($db);
 	/** @method void QUERY(string $query) This function provide a common way to do a query for use */
