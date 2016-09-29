@@ -10,19 +10,19 @@
 /**
 *	This class is the main class.
 */
-public interface DBCommon{
+interface DBCommon{
 	/** @method boolean CONNECT() This function provide a common way to conect and make a conector to database */
-	private function CONNECT();
+	function CONNECT();
 	/** @method boolean CONNECT(string $host, string $user, string $password) This function provide a common way to conect and make a conector to database */
-	public function CONNECT($host, $user, $password);
+	public function DCONNECT($host, $user, $password);
 	/** @method boolean SELECTDATABASE(string $db) This function provide a common way to select a database */
-	private function SELECTDATABASE($db);
+	function SELECT_DATABASE($db);
 	/** @method void QUERY(string $query) This function provide a common way to do a query for use */
 	public function QUERY($query);
 	/** @method array GET(string $query) This function get all content of a query and put into array */
 	public function GET($query, $where);
 	/** @method boolean FIRST(string $query) This function returns the first result of the query */
-	public function FIRST($query);
+	public function FIRST($query, $where);
 	/** @method boolean INSERT(array $insert, string $table) This function insert a row into table */
 	public function INSERT($insert, $table);
 	/** @method boolean UPDATE(array $update, array $where, string $table) This function update a row into table */
@@ -36,8 +36,8 @@ public interface DBCommon{
 	/** @method void DISCONNECT() This function disconnect the app from database */
 	public function DISCONNECT();
 	/** @method void SHOWERROR() this function show the last error ocurrs */
-	public function SHOWERROR();
+	public function SHOW_ERROR();
 	/** @method void ERROR() this function throw an error */
-	private function ERROR();
+	function ERROR($message);
 }
 ?>
