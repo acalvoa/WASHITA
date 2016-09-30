@@ -2,6 +2,7 @@
 require_once(dirname(__FILE__).'/php/PickupTime.class.php');
 require_once(dirname(__FILE__)."/php/City.class.php");
 require_once(dirname(__FILE__)."/php/hybridauth/WashitaUser.php");
+require_once(dirname(__FILE__)."/_config.php");
 
 include_once(dirname(__FILE__)."/templates/header.general.php");
 
@@ -20,7 +21,7 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                 <h1>Lavar Ahora</h1>
                 <div class="divider"></div>
                 <div class="page padding">
-                    <form id="checkout_form" method="post" action="checkout_post.php">
+                    <form id="checkout_form" method="post" action="<?php echo $GLOBALS['TBK_INIT_TRANS_LINK'];?>">
                         
                         <div class="row item checkout-block border-between">
                             <div class="col col-sm-12">

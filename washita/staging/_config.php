@@ -76,8 +76,27 @@ $AdminOrdersPasswordSantiagoAndInfluencers = "San99111!123";
 
 $AdminOrdersPassword = "3355.washita";
 
-/*variables transbank*/
-$TBK_MAC_PATH = "";
+/**************************
+*	TRANSBANK CONFIG VARIABLES
+*	
+*
+***************************/
+/* ABSOLUTE SERVER PATH*/
+$TBK_MAC_PATH = "/home/acalvoa/";
+/* URL ABSOLUTE*/
+$TBK_SUCCESS = "/sucess.php";
+/* URL ABSOLUTE*/
+$TBK_FAIL = "/fail.php";
+/* URL ABSOLUTE*/
+$TBK_URL_KIT = "/transbank/tbk_bp_pago.cgi";
+/* TYPE OF TRANSACTION*/
+$TBK_TIPO_TRANSACCION = "TR";
+/* BEGIN TRANSACTION LINK*/
+$TBK_INIT_TRANS_LINK = "/php/transbank/ep_webpay.php?action=BEGIN_TRANS";
+/* VERIFY TRANSACTION LINK*/
+$TBK_VERIFY_TRANS_LINK = "/php/transbank/ep_webpay.php?action=VERIFY_TRANS";
+/***************************/
+
 
 
 if(file_exists(dirname(__FILE__)."/_config.localhost.php")){

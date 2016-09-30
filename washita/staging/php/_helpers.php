@@ -8,7 +8,7 @@ function allExceptionHandler($exception) {
     
     RedirectToErrorPage("", "Fatal eror occured");
 }
-set_exception_handler('allExceptionHandler');
+// set_exception_handler('allExceptionHandler');
 
 
 function IsSamePagePost(){
@@ -83,7 +83,7 @@ function OpenPDOConnection(){
 
 function RedirectToErrorPage($orderNumber,$text){
     // Redirect to success page
-    header("Location: ".$GLOBALS['site_root']."/error.php?order_number=".urlencode($orderNumber)."&text=".urlencode($text)); 
+    // header("Location: ".$GLOBALS['site_root']."/error.php?order_number=".urlencode($orderNumber)."&text=".urlencode($text)); 
     exit();
 }
 
