@@ -28,10 +28,13 @@ class Webpay extends MySQLDB{
 	private $TBK_FAIL;
 	/** @var WashitaUser $USER Indicate the fail page script */
 	private $USER;
+	/** @var string $TBK_MAC_PATH Indicate the MAC path */
+	private $TBK_MAC_PATH;
 	/** @method __construct() represent the main constructor of class. this method get the database values from global configuration. */
 	function __construct(){
 		parent::__construct($GLOBALS["DBServer"],$GLOBALS["DBUser"],$GLOBALS["DBPass"],$GLOBALS["DBName"]);
 		$this->user = WashitaUser::CurrentUser();
+		$this->TBK_MAC_PATH = $GLOBALS["TBK_MAC_PATH"];
 	}
 	/** @method void START_TRANS() this function start the transbank transaction */
 	function START_TRANS(){
@@ -43,6 +46,10 @@ class Webpay extends MySQLDB{
 	}
 	/** @method void START_TRANS() this function check the transaction with the database registers */
 	function CHECK_TOKEN(){
+		
+	}
+	/** @method void START_TRANS() this function check the MAC provided by transbank */
+	function GENERATE_MAC(){
 		
 	}
 	/** @method void START_TRANS() this function check the MAC provided by transbank */

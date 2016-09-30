@@ -76,7 +76,8 @@ $AdminOrdersPasswordSantiagoAndInfluencers = "San99111!123";
 
 $AdminOrdersPassword = "3355.washita";
 
-
+/*variables transbank*/
+$TBK_MAC_PATH = "";
 
 
 if(file_exists(dirname(__FILE__)."/_config.localhost.php")){
