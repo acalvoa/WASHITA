@@ -49,7 +49,8 @@ class Webpay extends MySQLDB{
 		$this->TBK_URL_KIT = $GLOBALS["TBK_URL_KIT"];
 		$this->TBK_TIPO_TRANSACCION = $GLOBALS["TBK_TIPO_TRANSACCION"];
 		$this->TBK_CHECK_MAC_PATH = $GLOBALS["TBK_CHECK_MAC_PATH"];
-		$this->TBK_PROD_MODE  = $GLOBALS["TBK_PROD_MODE"];		
+		$this->TBK_PROD_MODE  = $GLOBALS["TBK_PROD_MODE"];
+		$this->SETPRODMODE($TBK_PROD_MODE,$this->TBK_MAC_PATH);	
 		$this->VERIFY_CONFIG();
 	}
 	/** @method void VERIFY_CONFIG() this function verify when the config was set. */
