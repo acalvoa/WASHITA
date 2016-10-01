@@ -54,7 +54,6 @@ class Webpay extends MySQLDB{
 	}
 	/** @method void VERIFY_CONFIG() this function verify when the config was set. */
 	private function VERIFY_CONFIG(){
-		if(!isset($this->USER)) throw new Exception("The USER is not loged is not set", 1);
 		if(!isset($this->TBK_MAC_PATH)) throw new Exception("The TBK_MAC_PATH is not set", 1);
 		if(!isset($this->TBK_SUCCESS)) throw new Exception("The TBK_SUCCESS is not set", 2);
 		if(!isset($this->TBK_FAIL)) throw new Exception("The TBK_FAIL is not set", 3);
@@ -66,6 +65,7 @@ class Webpay extends MySQLDB{
 	public function START_TRANS(){
 		// FIRST WE WILL GENERATE A SESION CODE
 		$this->USER = WashitaUser::CurrentUser();
+		if(!isset($this->USER)) throw new Exception("The USER is not loged is not set", 1);
 		$this->GENERATE_SESION();
 		$this->LOG("#######################\nIniciamos la transaccion: ".$this->TBK_SESSION);
 		// GENERATE THE PREORDER
