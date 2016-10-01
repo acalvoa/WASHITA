@@ -8,6 +8,7 @@ $TBK_URL_EXITO = "http://IP_SERVIDOR/TIENDA_TEST/html/exito.php";
 $TBK_URL_FRACASO = "http://IP_SERVIDOR/TIENDA_TEST/html/fracaso.php";
 $url_cgi = "http://washita.teamnodes.com/transbank/tbk_bp_pago.cgi";
 //Archivos de datos para uso de pagina de cierre
+$myPath = "/home/washita/washita/staging/transbank/comun/dato$TBK_ID_SESION.log";
 /****************** FIN CONFIGURACION *****************/
 //formato Moneda
 $partesMonto= explode(",",$TBK_MONTO);
