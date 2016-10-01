@@ -37,6 +37,8 @@ class Webpay extends MySQLDB{
 	private $TBK_MAC_FILE = NULL;
 	/** @var string $TBK_CHECK_MAC_PATH Indicate the Check MAC cgi file */
 	private $TBK_CHECK_MAC_PATH = NULL;
+	/** @var boolean $TBK_PROD_MODE Indicate if the system is in PRODUCTION MODE */
+	private $TBK_PROD_MODE = FALSE;
 
 	/** @method __construct() represent the main constructor of class. this method get the database values from global configuration. */
 	function __construct(){
@@ -48,6 +50,7 @@ class Webpay extends MySQLDB{
 		$this->TBK_URL_KIT = $GLOBALS["TBK_URL_KIT"];
 		$this->TBK_TIPO_TRANSACCION = $GLOBALS["TBK_TIPO_TRANSACCION"];
 		$this->TBK_CHECK_MAC_PATH = $GLOBALS["TBK_CHECK_MAC_PATH"];
+		$this->TBK_PROD_MODE  = $GLOBALS["TBK_PROD_MODE"];		
 		$this->VERIFY_CONFIG();
 	}
 	/** @method void VERIFY_CONFIG() this function verify when the config was set. */
@@ -64,10 +67,12 @@ class Webpay extends MySQLDB{
 	public function START_TRANS(){
 		// FIRST WE WILL GENERATE A SESION CODE
 		$this->GENERATE_SESION();
+		$this->LOG("\nIniciamos la transaccion: ".$this->TBK_SESSION." ORDERN DE COMPRA: ".$this->TBK_ODC);
 		// GENERATE THE PREORDER
 		$PREORDER = new OrderGenerator($this->USER->Id);
 		$PREORDER->PROCESS_FIELDS();
 		$ID_PREORDER = $PREORDER->CREATE_PRE_ORDER();
+		$this->LOG("\nPreorden creada, Redirigiendo");
 		if($this->REG_TRANS($ID_PREORDER,$PREORDER->GET_PRICE()."00")){
 			printf('<form action="%s" name="frm" method="post">', $this->TBK_URL_KIT);
 			printf('<input type="hidden" name="TBK_TIPO_TRANSACCION" value="%s"/>', $this->TBK_TIPO_TRANSACCION);
@@ -118,8 +123,10 @@ class Webpay extends MySQLDB{
 		$CHECK['TBK_ODC'] = $this->TBK_ODC;
 		$CHECK['TBK_AMOUNT'] = $this->TBK_MONTO;
 		$CHECK['TBK_SESSION'] = $this->TBK_SESSION;
+		$this->LOG("\nVerificamos el token: ".json_encode($CHECK));
 		//VERIFICAMOS
 		$this->GET('TBK_TRANSACTIONS', $CHECK);
+		$this->LOG("\nResultado del token: ".$this->NUMROWS());
 		if(!($this->NUMROWS() > 0)){
 			die('RECHAZADO');
 		}
@@ -127,11 +134,13 @@ class Webpay extends MySQLDB{
 	/** @method void START_TRANS() this function check the MAC provided by transbank */
 	private function GENERATE_MAC(){
 		$this->TBK_MAC_FILE = $this->TBK_MAC_PATH."/MAC01Normal".$this->TBK_SESSION.".txt";
+		$this->LOG("\nGeneramos el MAC file: ".$this->TBK_MAC_FILE);
 		$fp=fopen($this->TBK_MAC_FILE,"wt");
 		while(list($key, $val)=each($_POST)){
 			fwrite($fp, "$key=$val&");
 		}
 		fclose($fp);
+		$this->LOG("\nArchivo MAC generado");
 	}
 	/** @method void START_TRANS() this function check the MAC provided by transbank */
 	private function GENERATE_SESION(){
@@ -142,16 +151,28 @@ class Webpay extends MySQLDB{
 	}
 	/** @method void START_TRANS() this function check the MAC provided by transbank */
 	private function CHECK_MAC(){
+		$this->LOG("\nCheckeamos el MAC file: ".$this->TBK_MAC_FILE);
 		$cmdline = $this->TBK_CHECK_MAC_PATH." ".$this->TBK_MAC_FILE;
 		exec($cmdline, $result, $retint);
-		if($result [0] != "CORRECTO"){
+		$this->LOG("\nRespuesta del MAC check: ".$result[0]);
+		if($result[0] != "CORRECTO"){
 			die('RECHAZADO');
 		}
 	}
 	/** @method void START_TRANS() this function finalice the transaction with transbank and close the process */
 	public function FINALICE($respuesta){
+		$this->LOG("\nVerificamos la respuesta de transbank ".$respuesta);
 		if(!($respuesta == "0")){
 			die('RECHAZADO');
+		}
+	}
+	/** @method void START_TRANS() this function finalice the transaction with transbank and close the process */
+	public function LOG($message){
+		if(!$this->TBK_PROD_MODE){
+			$logfile = $this->TBK_MAC_PATH."/log.txt";
+			$fp=fopen($logfile,"a+");
+			fwrite($fp, $message);
+			fclose($fp);
 		}
 	}
 }

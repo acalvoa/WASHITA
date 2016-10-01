@@ -97,6 +97,8 @@ $TBK_TIPO_TRANSACCION = "TR_NORMAL";
 $TBK_INIT_TRANS_LINK = "/php/transbank/ep_webpay.php?action=BEGIN_TRANS";
 /* VERIFY TRANSACTION LINK*/
 $TBK_VERIFY_TRANS_LINK = "/php/transbank/ep_webpay.php?action=VERIFY_TRANS";
+/* DEFINE IF THE SYSTEM IS IN PRODUCTION MODE*/
+$TBK_PROD_MODE = FALSE;
 /***************************/
 
 
