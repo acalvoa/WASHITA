@@ -15,7 +15,8 @@ if(!empty($action) AND !is_null($action)){
 		$webpay->START_TRANS();
 	}
 	else if($action == "VERIFY_TRANS"){
-		
+		$webpay = new Webpay();
+		$webpay->VERIFY();
 	}
 	else{
 		
