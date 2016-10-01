@@ -106,10 +106,10 @@ class MySQLDB implements DBCommon {
 		error_reporting(E_ALL ^ E_WARNING);
 		$this->MYSQL->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 		error_reporting(E_ALL);
-		$this->LOG($query);
-		$this->LOG(json_encode($field));
+		$this->LOGDB($query);
+		$this->LOGDB(json_encode($field));
 		$stmt = $this->MYSQL->prepare($query);
-		$this->LOG($this->MYSQL->error);
+		if($this->MYSQL->error) $this->LOGDB("Error: ".$this->MYSQL->error);
 		if(!$stmt){
 			throw new Exception("The statement is incorrect. Check the query", 7);
 		}
@@ -161,9 +161,12 @@ class MySQLDB implements DBCommon {
 		//INIT THE TRANSACTIONS AND NEXT EXECUTE THE QUERY.
 		$STMTS = array();
 		$RESULTS = array();
+		$this->LOGDB($query);
+		$this->LOGDB(json_encode($field));
 		error_reporting(E_ALL ^ E_WARNING);
 		$this->MYSQL->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 		error_reporting(E_ALL); 
+		if($this->MYSQL->error) $this->LOGDB("Error: ".$this->MYSQL->error);
 		foreach ($querys as $keys => $query) {
 			$stmt = $this->MYSQL->prepare($query);
 			// COUNT THE NUMBER OF FIELDS REQUIRED
@@ -418,7 +421,7 @@ class MySQLDB implements DBCommon {
 		$this->DISCONNECT();
 	}
 	/** @method void _destruct Destructor de la clase */
-	private function LOG($message){
+	private function LOGDB($message){
 		if(!$this->PROD_MODE){
 			echo $this->LOGPATH;
 			$logfile = $this->LOGPATH."/log.txt";
@@ -430,7 +433,6 @@ class MySQLDB implements DBCommon {
 	protected function SETPRODMODE($MODE,$LOGPATH){
 		$this->PROD_MODE = $MODE;
 		$this->LOGPATH = $LOGPATH;
-		echo $this->LOGPATH;
 	}
 }
 ?>
