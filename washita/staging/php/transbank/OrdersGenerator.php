@@ -92,6 +92,7 @@ class OrderGenerator extends MySQLDB{
         
         // VALIDAMOS lOS CAMPOS
         $this->TBK_ORDER = $TBK_ORDER;
+        print_r($this->TBK_ORDER);
         $this->VALIDATE_FIELDS();
 
 	}
