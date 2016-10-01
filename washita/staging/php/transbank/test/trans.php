@@ -6,7 +6,7 @@ $TBK_ID_SESION = date("Ymdhis");
 $TBK_TIPO_TRANSACCION = "TR_NORMAL";
 $TBK_URL_EXITO = "http://IP_SERVIDOR/TIENDA_TEST/html/exito.php";
 $TBK_URL_FRACASO = "http://IP_SERVIDOR/TIENDA_TEST/html/fracaso.php";
-$url_cgi = "http://washita.teamnodes.com/transbank/tbk_bp_pago.cgi";
+$url_cgi = "http://testing.4tiempos.cl/tbk/tbk_bp_pago.cgi";
 //Archivos de datos para uso de pagina de cierre
 $myPath = "/home/washita/washita/staging/transbank/comun/dato$TBK_ID_SESION.log";
 /****************** FIN CONFIGURACION *****************/
