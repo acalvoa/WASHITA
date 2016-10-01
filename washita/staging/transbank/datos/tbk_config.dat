@@ -1,16 +1,16 @@
 IDCOMERCIO = 597020000501
-MEDCOM = 1
+MEDCOM = 2
 TBK_KEY_ID = 101
 PARAMVERIFCOM = 1
-URLCGICOM =
-SERVERCOM =
+URLCGICOM = http://washita.teamnodes.com/transbank/tbk_bp_resultado.cgi
+SERVERCOM = http://washita.teamnodes.com
 PORTCOM = 80
 WHITELISTCOM = ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 0123456789./:=&?_
-HOST =
+HOST = http://washita.teamnodes.com
 WPORT = 80
 URLCGITRA = /filtroUnificado/bp_revision.cgi
 URLCGIMEDTRA = /filtroUnificado/bp_validacion.cgi
 SERVERTRA = https://webpay3gint.transbank.cl
 PORTTRA = 443
 PREFIJO_CONF_TR = HTML_
-HTML_TR_NORMAL =
+HTML_TR_NORMAL = http://washita.teamnodes.com/php/transbank/ep_webpay.php?action=VERIFY_TRANS
