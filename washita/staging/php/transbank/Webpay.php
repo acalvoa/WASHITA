@@ -100,7 +100,7 @@ class Webpay extends MySQLDB{
 	}
 	/** @method void START_TRANS() this function verify the result of transbank in the two-ways transbank verify process */
 	public function VERIFY(){
-		if(!$_POST) throw new Exception("No are a transbank transaction", 1);
+		// if(!$_POST) throw new Exception("No are a transbank transaction", 1);
 		$this->LOG("\nComienza la verificacion de sesion: ".$_POST["TBK_ID_SESION"]);
 		$TBK_RESPUESTA = $_POST["TBK_RESPUESTA"];
 		$this->TBK_ODC = $_POST["TBK_ORDEN_COMPRA"];
