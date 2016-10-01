@@ -83,7 +83,7 @@ class Webpay extends MySQLDB{
 			printf('<input type="hidden" name="TBK_URL_EXITO" value="%s"/>', $this->TBK_SUCCESS);
 			printf('<input type="hidden" name="TBK_URL_FRACASO" value="%s"/>', $this->TBK_FAIL);
 			echo "</form>";
-			echo '<script type="text/javascript"> document.frm.submit(); </script>';
+			// echo '<script type="text/javascript"> document.frm.submit(); </script>';
 		}
 		else
 		{
