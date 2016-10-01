@@ -39,8 +39,8 @@ class Webpay extends MySQLDB{
 	private $TBK_CHECK_MAC_PATH = NULL;
 	/** @var boolean $TBK_PROD_MODE Indicate if the system is in PRODUCTION MODE */
 	private $TBK_PROD_MODE = FALSE;
-	/** @var string $LOGPATH Indicate the log path when the system is not in PRODUCTION MODE */
-	private $LOGPATH;
+	/** @var string $TBK_LOGPATH Indicate the log path when the system is not in PRODUCTION MODE */
+	private $TBK_LOGPATH;
 
 	/** @method __construct() represent the main constructor of class. this method get the database values from global configuration. */
 	function __construct(){
@@ -86,7 +86,7 @@ class Webpay extends MySQLDB{
 			printf('<input type="hidden" name="TBK_URL_EXITO" value="%s"/>', $this->TBK_SUCCESS);
 			printf('<input type="hidden" name="TBK_URL_FRACASO" value="%s"/>', $this->TBK_FAIL);
 			echo "</form>";
-			// echo '<script type="text/javascript"> document.frm.submit(); </script>';
+			echo '<script type="text/javascript"> document.frm.submit(); </script>';
 		}
 		else
 		{
@@ -174,7 +174,7 @@ class Webpay extends MySQLDB{
 	/** @method void START_TRANS() this function finalice the transaction with transbank and close the process */
 	public function LOG($message){
 		if(!$this->TBK_PROD_MODE){
-			$logfile = $this->LOGPATH."/log.txt";
+			$logfile = $this->TBK_LOGPATH."/log.txt";
 			$fp=fopen($logfile,"a+");
 			fwrite($fp, $message);
 			fclose($fp);
