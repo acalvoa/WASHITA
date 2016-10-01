@@ -82,13 +82,15 @@ $AdminOrdersPassword = "3355.washita";
 *
 ***************************/
 /* ABSOLUTE SERVER PATH*/
-$TBK_MAC_PATH = "/home/acalvoa/";
+$TBK_MAC_PATH = "/home/washita/washita/staging/transbank/comun";
 /* URL ABSOLUTE*/
 $TBK_SUCCESS = "/sucess.php";
 /* URL ABSOLUTE*/
 $TBK_FAIL = "/fail.php";
 /* URL ABSOLUTE*/
 $TBK_URL_KIT = "/transbank/tbk_bp_pago.cgi";
+/* CHECK MAC PATH */
+$TBK_CHECK_MAC_PATH = "/home/washita/washita/staging/transbank/tbk_check_mac.cgi";
 /* TYPE OF TRANSACTION*/
 $TBK_TIPO_TRANSACCION = "TR_NORMAL";
 /* BEGIN TRANSACTION LINK*/

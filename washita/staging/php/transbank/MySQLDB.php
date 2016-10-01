@@ -38,6 +38,8 @@ class MySQLDB implements DBCommon {
 	private $L_STMT;
 	/** @var $L_RESULT Store the last statement **/
 	private $L_RESULT;
+	/** @var $L_N_R Last number of result **/
+	private $L_N_R = 0;
 	
 	/** @method void __construct Constructor of the class */ 
 	function __construct($host,$user,$password, $db)
@@ -208,6 +210,7 @@ class MySQLDB implements DBCommon {
 	}
 	/** @method array GET(string $table, array $where) This function get all content of a query and put into array */
 	public function GET($table, $where = []){
+		$this->L_N_R = 0;
 		$query = "SELECT * FROM ".$table;
 		if(count($where) > 0){
 			$query .= " WHERE ";
@@ -221,12 +224,14 @@ class MySQLDB implements DBCommon {
 		while($fila = $this->L_RESULT->fetch_assoc()){
 			array_push($retorno, $fila);
 		}
+		$this->L_N_R = $this->L_STMT->num_rows;
 		$this->L_RESULT->free();
 		$this->L_STMT->close();
 		return $retorno;
 	}
 	/** @method boolean FIRST(string $query, $table) This function returns the first result of the query */
 	public function FIRST($table, $where = []){
+		$this->L_N_R = 0;
 		$query = "SELECT * FROM ".$table;
 		if(count($where) > 0){
 			$query .= " WHERE ";
@@ -237,6 +242,7 @@ class MySQLDB implements DBCommon {
 		}
 		$this->QUERY($query, $where);
 		$retorno = $this->L_RESULT->fetch_assoc();
+		$this->L_N_R = $this->L_STMT->num_rows;
 		$this->L_RESULT->free();
 		$this->L_STMT->close();
 		return $retorno;
@@ -380,7 +386,13 @@ class MySQLDB implements DBCommon {
 	}
 	/** @method integer NUMROWS() This function returns the number of rows of  the last query*/
 	public function NUMROWS(){
-		return $L_STMT->num_rows;
+		if($this->L_N_R != NULL){
+			return $this->L_N_R;
+		}
+		else
+		{
+			return -1;
+		}
 	}
 	/** @method void DISCONNECT() This function disconnect the app from database */
 	public function DISCONNECT(){

@@ -35,6 +35,8 @@ class Webpay extends MySQLDB{
 	private $TBK_URL_KIT = NULL;
 	/** @var string $TBK_MAC_FILE Indicate the MAC file */
 	private $TBK_MAC_FILE = NULL;
+	/** @var string $TBK_CHECK_MAC_PATH Indicate the Check MAC cgi file */
+	private $TBK_CHECK_MAC_PATH = NULL;
 
 	/** @method __construct() represent the main constructor of class. this method get the database values from global configuration. */
 	function __construct(){
@@ -45,7 +47,8 @@ class Webpay extends MySQLDB{
 		$this->TBK_FAIL = $GLOBALS["TBK_FAIL"];
 		$this->TBK_URL_KIT = $GLOBALS["TBK_URL_KIT"];
 		$this->TBK_TIPO_TRANSACCION = $GLOBALS["TBK_TIPO_TRANSACCION"];
-		// $this->VERIFY_CONFIG();
+		$this->TBK_CHECK_MAC_PATH = $GLOBALS["TBK_CHECK_MAC_PATH"];
+		$this->VERIFY_CONFIG();
 	}
 	/** @method void VERIFY_CONFIG() this function verify when the config was set. */
 	private function VERIFY_CONFIG(){
@@ -54,6 +57,8 @@ class Webpay extends MySQLDB{
 		if(!isset($this->TBK_SUCCESS)) throw new Exception("The TBK_SUCCESS is not set", 2);
 		if(!isset($this->TBK_FAIL)) throw new Exception("The TBK_FAIL is not set", 3);
 		if(!isset($this->TBK_URL_KIT)) throw new Exception("The TBK_URL_KIT is not set", 4);
+		if(!isset($this->TBK_TIPO_TRANSACCION)) throw new Exception("The TBK_TIPO_TRANSACCION is not set", 4);
+		if(!isset($this->TBK_CHECK_MAC_PATH)) throw new Exception("The TBK_CHECK_MAC_PATH is not set", 4);
 	}
 	/** @method void START_TRANS() this function start the transbank transaction */
 	public function START_TRANS(){
@@ -90,15 +95,39 @@ class Webpay extends MySQLDB{
 	}
 	/** @method void START_TRANS() this function verify the result of transbank in the two-ways transbank verify process */
 	public function VERIFY(){
-		
+		if(!$_POST) throw new Exception("No are a transbank transaction", 1);
+		$TBK_RESPUESTA = $_POST["TBK_RESPUESTA"];
+		$this->TBK_ODC = $_POST["TBK_ORDEN_COMPRA"];
+		$this->TBK_MONTO =$_POST["TBK_MONTO"];
+		$this->TBK_SESSION = $_POST["TBK_ID_SESION"];
+		//VERIFICAMOS LA RESPUESTA DE TRANSBANK
+		$this->FINALICE($TBK_RESPUESTA);
+		//PRIMERO VERIFICACION DE LO CAMPOS CON EL REGISTRO
+		$this->CHECK_TOKEN();
+		// CREAMOS LA MAC
+		$this->GENERATE_MAC();
+		// VERIFICAMOS LA MAC
+		$this->CHECK_MAC();
+		// FINALIZAMOS SI NO HAY ERRORES
+		die('ACEPTADO');
+
 	}
-	/** @method void START_TRANS() this function check the transaction with the database registers */
+	/** @method void CHECK_TOKEN() this function check the transaction with the database registers */
 	private function CHECK_TOKEN(){
-		
+		$CHECK = array();
+		$CHECK['TBK_ODC'] = $this->TBK_ODC;
+		$CHECK['TBK_AMOUNT'] = $this->TBK_MONTO;
+		$CHECK['TBK_SESSION'] = $this->TBK_SESSION;
+		//VERIFICAMOS
+		$this->GET('TBK_TRANSACTIONS', $CHECK);
+		if(!($this->NUMROWS() > 0)){
+			die('RECHAZADO');
+		}
 	}
 	/** @method void START_TRANS() this function check the MAC provided by transbank */
 	private function GENERATE_MAC(){
-		$fp=fopen($filename_txt,"wt");
+		$this->TBK_MAC_FILE = $this->TBK_MAC_PATH."/MAC01Normal".$this->TBK_SESSION.".txt";
+		$fp=fopen($this->TBK_MAC_FILE,"wt");
 		while(list($key, $val)=each($_POST)){
 			fwrite($fp, "$key=$val&");
 		}
@@ -113,11 +142,17 @@ class Webpay extends MySQLDB{
 	}
 	/** @method void START_TRANS() this function check the MAC provided by transbank */
 	private function CHECK_MAC(){
-		
+		$cmdline = $this->TBK_CHECK_MAC_PATH." ".$this->TBK_MAC_FILE;
+		exec($cmdline, $result, $retint);
+		if($result [0] != "CORRECTO"){
+			die('RECHAZADO');
+		}
 	}
 	/** @method void START_TRANS() this function finalice the transaction with transbank and close the process */
-	public function FINALICE(){
-		
+	public function FINALICE($respuesta){
+		if(!($respuesta == "0")){
+			die('RECHAZADO');
+		}
 	}
 }
 ?>
