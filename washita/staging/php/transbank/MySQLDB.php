@@ -420,6 +420,7 @@ class MySQLDB implements DBCommon {
 	/** @method void _destruct Destructor de la clase */
 	private function LOG($message){
 		if(!$this->PROD_MODE){
+			echo $this->LOGPATH;
 			$logfile = $this->LOGPATH."/log.txt";
 			$fp=fopen($logfile,"a+");
 			fwrite($fp, $message);
