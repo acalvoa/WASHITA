@@ -101,7 +101,8 @@ class MySQLDB implements DBCommon {
 		error_reporting(E_ALL ^ E_WARNING);
 		$this->MYSQL->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 		error_reporting(E_ALL); 
-		echo $query;
+		echo $query."<br>";
+		print_r($field);
 		$stmt = $this->MYSQL->prepare($query);
 		if(!$stmt){
 			throw new Exception("The statement is incorrect. Check the query", 7);
