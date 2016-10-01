@@ -63,7 +63,6 @@ class Webpay extends MySQLDB{
 		$PREORDER = new OrderGenerator($this->USER->Id);
 		$PREORDER->PROCESS_FIELDS();
 		$ID_PREORDER = $PREORDER->CREATE_PRE_ORDER();
-		echo $this->REG_TRANS($ID_PREORDER,$PREORDER->GET_PRICE()."00");
 		if($this->REG_TRANS($ID_PREORDER,$PREORDER->GET_PRICE()."00")){
 			printf('<form action="%s" name="frm" method="post">', $this->TBK_URL_KIT);
 			printf('<input type="hidden" name="TBK_TIPO_TRANSACCION" value="%s"/>', $this->TBK_TIPO_TRANSACCION);
