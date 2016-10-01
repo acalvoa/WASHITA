@@ -103,7 +103,6 @@ class MySQLDB implements DBCommon {
 	/** @method void QUERY(string $query, array $field) This function provide a common way to do a query for use */
 	public function QUERY($query, $field = []){
 		//INIT THE TRANSACTIONS AND NEXT EXECUTE THE QUERY.
-
 		error_reporting(E_ALL ^ E_WARNING);
 		$this->MYSQL->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 		error_reporting(E_ALL);
@@ -423,9 +422,9 @@ class MySQLDB implements DBCommon {
 	}
 	/** @method void _destruct Destructor de la clase */
 	private function LOGDB($message){
-		echo $this->LOGPATH;
 		if(!$this->PROD_MODE){
 			$logfile = $this->LOGPATH."/log.txt";
+			echo $logfile;
 			$fp=fopen($logfile,"a+");
 			fwrite($fp, $message);
 			fclose($fp);
