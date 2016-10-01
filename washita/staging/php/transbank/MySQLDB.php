@@ -40,6 +40,9 @@ class MySQLDB implements DBCommon {
 	private $L_RESULT;
 	/** @var $L_N_R Last number of result **/
 	private $L_N_R = 0;
+	/** @var $PROD_MODE Mode of operation **/
+	private $PROD_MODE = FALSE;
+	private $LOGPATH;
 	
 	/** @method void __construct Constructor of the class */ 
 	function __construct($host,$user,$password, $db)
@@ -102,8 +105,11 @@ class MySQLDB implements DBCommon {
 		//INIT THE TRANSACTIONS AND NEXT EXECUTE THE QUERY.
 		error_reporting(E_ALL ^ E_WARNING);
 		$this->MYSQL->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
-		error_reporting(E_ALL); 
+		error_reporting(E_ALL);
+		$this->LOG($query);
+		$this->LOG(json_encode($field));
 		$stmt = $this->MYSQL->prepare($query);
+		$this->LOG($this->MYSQL->error);
 		if(!$stmt){
 			throw new Exception("The statement is incorrect. Check the query", 7);
 		}
@@ -410,6 +416,19 @@ class MySQLDB implements DBCommon {
 	/** @method void _destruct Destructor de la clase */
 	function _destruct(){
 		$this->DISCONNECT();
+	}
+	/** @method void _destruct Destructor de la clase */
+	private function LOG($message){
+		if(!$this->PROD_MODE){
+			$logfile = $this->LOGPATH."/log.txt";
+			$fp=fopen($logfile,"a+");
+			fwrite($fp, $message);
+			fclose($fp);
+		}
+	}
+	protected function SETPRODMODE($MODE,$LOGPATH){
+		$this->PROD_MODE = $MODE;
+		$this->LOGPATH = $LOGPATH;
 	}
 }
 ?>
