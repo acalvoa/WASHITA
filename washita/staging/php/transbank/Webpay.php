@@ -43,7 +43,6 @@ class Webpay extends MySQLDB{
 	/** @method __construct() represent the main constructor of class. this method get the database values from global configuration. */
 	function __construct(){
 		parent::__construct($GLOBALS["DBServer"],$GLOBALS["DBUser"],$GLOBALS["DBPass"],$GLOBALS["DBName"]);
-		$this->USER = WashitaUser::CurrentUser();
 		$this->TBK_MAC_PATH = $GLOBALS["TBK_MAC_PATH"];
 		$this->TBK_SUCCESS = $GLOBALS["TBK_SUCCESS"];
 		$this->TBK_FAIL = $GLOBALS["TBK_FAIL"];
@@ -66,6 +65,7 @@ class Webpay extends MySQLDB{
 	/** @method void START_TRANS() this function start the transbank transaction */
 	public function START_TRANS(){
 		// FIRST WE WILL GENERATE A SESION CODE
+		$this->USER = WashitaUser::CurrentUser();
 		$this->GENERATE_SESION();
 		$this->LOG("#######################\nIniciamos la transaccion: ".$this->TBK_SESSION);
 		// GENERATE THE PREORDER
