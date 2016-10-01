@@ -103,6 +103,7 @@ class MySQLDB implements DBCommon {
 	/** @method void QUERY(string $query, array $field) This function provide a common way to do a query for use */
 	public function QUERY($query, $field = []){
 		//INIT THE TRANSACTIONS AND NEXT EXECUTE THE QUERY.
+		echo $this->LOGPATH;
 		error_reporting(E_ALL ^ E_WARNING);
 		$this->MYSQL->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 		error_reporting(E_ALL);
