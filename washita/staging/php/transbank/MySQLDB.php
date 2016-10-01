@@ -429,6 +429,7 @@ class MySQLDB implements DBCommon {
 	protected function SETPRODMODE($MODE,$LOGPATH){
 		$this->PROD_MODE = $MODE;
 		$this->LOGPATH = $LOGPATH;
+		echo $this->LOGPATH;
 	}
 }
 ?>
