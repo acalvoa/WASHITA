@@ -42,6 +42,7 @@ class MySQLDB implements DBCommon {
 	private $L_N_R = 0;
 	/** @var $PROD_MODE Mode of operation **/
 	protected $PROD_MODE = FALSE;
+	/** @var $LOGPATH Log path when the system is not in production mode **/
 	protected $LOGPATH;
 	
 	/** @method void __construct Constructor of the class */ 
@@ -53,6 +54,8 @@ class MySQLDB implements DBCommon {
 			$this->USERNAME = $user;
 			$this->PASSWORD = $password;
 			$this->DATABASE = $db;
+			$this->PROD_MODE = $GLOBALS["WSH_PROD_MODE"];
+			$this->LOGPATH = $GLOBALS["LOG_PATH"];
 			// TRY TO CONECT AND SELECT THE DB BASE PUT INTO CONFIGURATION.
 			$this->CONNECT();
 		}
@@ -70,6 +73,8 @@ class MySQLDB implements DBCommon {
 			$this->PASSWORD = $password;
 			$this->DATABASE = $db;
 			$this->PORT = $port;
+			$this->PROD_MODE = $GLOBALS["WSH_PROD_MODE"];
+			$this->LOGPATH = $GLOBALS["LOG_PATH"];
 			// TRY TO CONECT AND SELECT THE DB BASE PUT INTO CONFIGURATION.
 			$this->CONNECT();
 		}
@@ -423,17 +428,11 @@ class MySQLDB implements DBCommon {
 	/** @method void _destruct Destructor de la clase */
 	private function LOGDB($message){
 		if(!$this->PROD_MODE){
-			echo "gb<br>";
 			$logfile = $this->LOGPATH."/log.txt";
-			echo $logfile;
 			$fp=fopen($logfile,"a+");
 			fwrite($fp, $message);
 			fclose($fp);
 		}
-	}
-	protected function SETPRODMODE($MODE,$LOGPATH){
-		$this->PROD_MODE = $MODE;
-		$this->LOGPATH = $LOGPATH;
 	}
 }
 ?>

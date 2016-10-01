@@ -39,6 +39,8 @@ class Webpay extends MySQLDB{
 	private $TBK_CHECK_MAC_PATH = NULL;
 	/** @var boolean $TBK_PROD_MODE Indicate if the system is in PRODUCTION MODE */
 	private $TBK_PROD_MODE = FALSE;
+	/** @var string $LOGPATH Indicate the log path when the system is not in PRODUCTION MODE */
+	private $LOGPATH;
 
 	/** @method __construct() represent the main constructor of class. this method get the database values from global configuration. */
 	function __construct(){
@@ -49,7 +51,8 @@ class Webpay extends MySQLDB{
 		$this->TBK_URL_KIT = $GLOBALS["TBK_URL_KIT"];
 		$this->TBK_TIPO_TRANSACCION = $GLOBALS["TBK_TIPO_TRANSACCION"];
 		$this->TBK_CHECK_MAC_PATH = $GLOBALS["TBK_CHECK_MAC_PATH"];
-		$this->TBK_PROD_MODE  = $GLOBALS["TBK_PROD_MODE"];
+		$this->TBK_PROD_MODE  = $GLOBALS["WSH_PROD_MODE"];
+		$this->LOGPATH = $GLOBALS["LOG_PATH"];
 		$this->SETPRODMODE($this->TBK_PROD_MODE,$this->TBK_MAC_PATH);	
 		$this->VERIFY_CONFIG();
 	}
@@ -171,7 +174,7 @@ class Webpay extends MySQLDB{
 	/** @method void START_TRANS() this function finalice the transaction with transbank and close the process */
 	public function LOG($message){
 		if(!$this->TBK_PROD_MODE){
-			$logfile = $this->TBK_MAC_PATH."/log.txt";
+			$logfile = $this->LOGPATH."/log.txt";
 			$fp=fopen($logfile,"a+");
 			fwrite($fp, $message);
 			fclose($fp);
