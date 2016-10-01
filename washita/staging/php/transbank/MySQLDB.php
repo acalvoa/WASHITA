@@ -41,8 +41,8 @@ class MySQLDB implements DBCommon {
 	/** @var $L_N_R Last number of result **/
 	private $L_N_R = 0;
 	/** @var $PROD_MODE Mode of operation **/
-	private $PROD_MODE = FALSE;
-	private $LOGPATH;
+	protected $PROD_MODE = FALSE;
+	protected $LOGPATH;
 	
 	/** @method void __construct Constructor of the class */ 
 	function __construct($host,$user,$password, $db)
@@ -423,7 +423,6 @@ class MySQLDB implements DBCommon {
 	/** @method void _destruct Destructor de la clase */
 	private function LOGDB($message){
 		if(!$this->PROD_MODE){
-			echo $this->LOGPATH;
 			$logfile = $this->LOGPATH."/log.txt";
 			$fp=fopen($logfile,"a+");
 			fwrite($fp, $message);
