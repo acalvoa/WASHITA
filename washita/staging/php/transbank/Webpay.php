@@ -67,12 +67,12 @@ class Webpay extends MySQLDB{
 	public function START_TRANS(){
 		// FIRST WE WILL GENERATE A SESION CODE
 		$this->GENERATE_SESION();
-		$this->LOG("\nIniciamos la transaccion: ".$this->TBK_SESSION." ORDERN DE COMPRA: ".$this->TBK_ODC);
+		$this->LOG("#######################\nIniciamos la transaccion: ".$this->TBK_SESSION);
 		// GENERATE THE PREORDER
 		$PREORDER = new OrderGenerator($this->USER->Id);
 		$PREORDER->PROCESS_FIELDS();
 		$ID_PREORDER = $PREORDER->CREATE_PRE_ORDER();
-		$this->LOG("\nPreorden creada, Redirigiendo");
+		$this->LOG("\nPreorden creada: ".$ID_PREORDER.", Redirigiendo");
 		if($this->REG_TRANS($ID_PREORDER,$PREORDER->GET_PRICE()."00")){
 			printf('<form action="%s" name="frm" method="post">', $this->TBK_URL_KIT);
 			printf('<input type="hidden" name="TBK_TIPO_TRANSACCION" value="%s"/>', $this->TBK_TIPO_TRANSACCION);
