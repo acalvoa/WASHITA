@@ -90,7 +90,7 @@ $TBK_FAIL = "/fail.php";
 /* URL ABSOLUTE*/
 $TBK_URL_KIT = "/transbank/tbk_bp_pago.cgi";
 /* TYPE OF TRANSACTION*/
-$TBK_TIPO_TRANSACCION = "TR";
+$TBK_TIPO_TRANSACCION = "TR_NORMAL";
 /* BEGIN TRANSACTION LINK*/
 $TBK_INIT_TRANS_LINK = "/php/transbank/ep_webpay.php?action=BEGIN_TRANS";
 /* VERIFY TRANSACTION LINK*/
