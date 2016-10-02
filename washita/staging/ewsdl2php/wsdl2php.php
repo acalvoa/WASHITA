@@ -4,7 +4,7 @@
 <title>WSDSL2PHP</title>
 </head>
 <body>
-<?
+<?php
 if (isset($_POST['url']))
 {
  $url = $_POST['url'];
@@ -30,7 +30,7 @@ else
 <form method="post" action="http://thephppro.com/tools/beautify.php">
 <textarea rows="10" cols="80" name="code">
 
-<?
+<?php
 include 'EasyWsdl2PHP.php';
 echo EasyWsdl2PHP::generate(trim($url),$sname);
 ?>
