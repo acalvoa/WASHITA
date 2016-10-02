@@ -84,9 +84,9 @@ $AdminOrdersPassword = "3355.washita";
 /* ABSOLUTE SERVER PATH*/
 $TBK_MAC_PATH = "/home/washita/washita/staging/transbank/comun";
 /* URL ABSOLUTE*/
-$TBK_SUCCESS = "/sucess.php";
+$TBK_SUCCESS = "http://washita.teamnodes.com/success_payment.php";
 /* URL ABSOLUTE*/
-$TBK_FAIL = "/fail.php";
+$TBK_FAIL = "http://washita.teamnodes.com/fail_payment.php";
 /* URL ABSOLUTE*/
 $TBK_URL_KIT = "/transbank/tbk_bp_pago.cgi";
 /* CHECK MAC PATH */
