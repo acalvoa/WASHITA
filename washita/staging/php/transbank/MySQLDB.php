@@ -144,7 +144,7 @@ class MySQLDB implements DBCommon {
 					break;
 				case "NULL":
 					$list[0] .= "s";
-					$list[] = NULL;
+					$list[] = &NULL;
 					break;
 				default:
 					throw new Exception("The query can't be formed. Please verify the params provided", 5);
