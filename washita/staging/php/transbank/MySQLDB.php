@@ -274,6 +274,7 @@ class MySQLDB implements DBCommon {
 			if(!is_null($value)){
 				$argument .= "`".$key."`,";
 				$fields .= "?,";
+				unset($insert[$key]);
 			}
 		}
 		$argument = substr($argument,0,-1);
@@ -294,10 +295,11 @@ class MySQLDB implements DBCommon {
 			$query = "INSERT INTO ".$table[$key];
 			$argument = "(";
 			$fields = "(";
-			foreach ($insert[$key] as $key => $value) {
+			foreach ($insert[$key] as $keys => $value) {
 				if(!is_null($value)){
-					$argument .= "`".$key."`,";
+					$argument .= "`".$keys."`,";
 					$fields .= "?,";
+					unset($insert[$key][$keys]);
 				}
 			}
 			$argument = substr($argument,0,-1);
