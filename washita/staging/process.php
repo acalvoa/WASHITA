@@ -302,7 +302,7 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                             <div class="input-group-horizontal">
                                 <div class="payelement">
                                     <div class="inputfield"><input type="radio" name="payment_method" value="webpay" checked></div>  
-                                    <div class="logofield"><img class="webpay-logo" src="img/logo-webpay.png" height="90"></div>
+                                    <div class="logofield"><img class="webpay-logo" src="img/logo-webpay.png" height="100"></div>
                                 </div>
                                 <div class="payelement">
                                     <div class="inputfield"><input type="radio" name="payment_method" value="oneclick"></div> 
