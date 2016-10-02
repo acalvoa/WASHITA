@@ -675,6 +675,11 @@ p.help-block{
     padding-left: 20px;
     padding-right: 20px;
 }
-.payelement input{
+.payelement .inputfield{
+    float: left;
     margin-right: 5px;
+    padding-top: 30px;
+}
+.payelement .logo{
+    float: left;
 }
