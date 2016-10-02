@@ -190,7 +190,7 @@ class Webpay extends MySQLDB{
 		}
 		$ORDER_FINAL['ORDER_NUMBER'] = $TBK_ORDER['WASHITA_ORDER'];
 		$ORDER_FINAL['PAYMENT_STATUS'] = 1;
-		$ORDER_WHERE['ID']  = $TBK_ORDER['WASHITA_ORDER'];
+		$ORDER_WHERE['ID']  = $order;
 		$order_result = $this->UPDATE($ORDER_FINAL,$ORDER_WHERE,"orders");
 		if(!($order_result)){
 			die('RECHAZADO');
