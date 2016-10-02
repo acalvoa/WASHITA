@@ -142,6 +142,10 @@ class MySQLDB implements DBCommon {
 					$list[0] .= "d";
 					$list[] = &$field[$key];
 					break;
+				case "NULL":
+					$list[0] .= "s";
+					$list[] = NULL;
+					break;
 				default:
 					throw new Exception("The query can't be formed. Please verify the params provided", 5);
 					break;
@@ -200,6 +204,10 @@ class MySQLDB implements DBCommon {
 					case "float":
 						$list[0] .= "d";
 						$list[] = &$field[$keys][$key];
+						break;
+					case "NULL":
+						$list[0] .= "s";
+						$list[] = NULL;
 						break;
 					default:
 						throw new Exception("The query can't be formed. Please verify the params provided", 5);
