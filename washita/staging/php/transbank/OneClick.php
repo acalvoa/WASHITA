@@ -7,6 +7,7 @@
 *	This class implementation has been created for use the OneCLick SOAP Call API provided by transbank.
 */
 require_once("MySQLDB.php");
+require_once("OneClickWs.php");
 
 /**
 *	This class is the main class of the OneClick Process.
