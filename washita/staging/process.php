@@ -294,9 +294,18 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                 
                             
                         </div>
+
+                        <div class="row item checkout-block">
+                            <div class="input-group-vertical">
+                                <p>Elige tu medio de pago</p>
+                            </div>
+                            <div class="input-group-horizontal">
+                                <input type="radio" name="gender" value="male">  <img class="webpay-logo" src="img/logo-webpay.png">
+                                <input type="radio" name="gender" value="female"> <img class="webpay-logo" src="img/oneclick.png">
+                            </div>
+                        </div>
                         <div class="row item checkout_footer">
                             <button type="submit" class="pay_btn hvr-glow">Pagar</button>
-                            <img class="webpay-logo" src="img/logo-webpay.png">
                         </div>
                     </form>
                 </div>
