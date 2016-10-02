@@ -149,5 +149,12 @@ class OrderGenerator extends MySQLDB{
 		if($this->TBK_ORDER == NULL) throw new Exception("Preorder was not generated");
 		return $this->TBK_ORDER['PRICE_WITH_DISCOUNT'];
 	}
+	/* @method object ORDER_INFO() This method get the info of order emited by transbank */
+	public function ORDER_INFO($ODC){
+		$ORDER['TBK_ODC'] = $ODC;
+		$retorno['TBK_TRANSACTION'] = $this->FIRST('TBK_TRANSACTIONS',$ORDER);
+		$retorno['TBK_PREORDER'] = $this->FIRST('TBK_PREORDER',$ORDER);
+		return retorno;
+	}
 }
 ?>

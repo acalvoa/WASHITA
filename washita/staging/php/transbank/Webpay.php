@@ -8,6 +8,7 @@
 */
 require_once(dirname(__FILE__)."/../../_config.php");
 require_once(dirname(__FILE__)."/../hybridauth/WashitaUser.php");
+include_once(dirname(__FILE__)."/php/MailService.class.php");
 require_once(dirname(__FILE__)."/OrdersGenerator.php");
 require_once("MySQLDB.php");
 
@@ -181,11 +182,22 @@ class Webpay extends MySQLDB{
 		unset($order_param['ID_USER']);
 		$this->LOG("Creamos la nueva orden de trabajo. Creamos el registro");
 		$order = $this->INSERT($order_param,"orders");
-		$TBK_ORDER['WASHITA_ORDER'] = $GLOBALS["OrdersNumberStart"]; + $order;
+		$TBK_ORDER['WASHITA_ORDER'] = $GLOBALS["OrdersNumberStart"] + $order;
+		$TBK_ORDER['PAYMENT_STATUS'] = 1;
 		$order_resp = $this->UPDATE($TBK_ORDER,$preorder,"TBK_TRANSACTIONS");
 		if(!($order_resp)){
 			die('RECHAZADO');
 		}
+		$ORDER_FINAL['ORDER_NUMBER'] = $TBK_ORDER['WASHITA_ORDER'];
+		$ORDER_FINAL['PAYMENT_STATUS'] = 1;
+		$ORDER_WHERE['ID']  = $TBK_ORDER['WASHITA_ORDER'];
+		$order_result = $this->UPDATE($ORDER_FINAL,$ORDER_WHERE,"orders");
+		if(!($order_result)){
+			die('RECHAZADO');
+		}
+		 // SEND EMAIL
+        $mailService = new MailService();
+        $mailService->SendNotification($TBK_ORDER['WASHITA_ORDER']);
 	}
 	/** @method void LOG(string $message) this function finalice the transaction with transbank and close the process */
 	public function LOG($message){

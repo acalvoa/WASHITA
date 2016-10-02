@@ -84,9 +84,9 @@ $AdminOrdersPassword = "3355.washita";
 /* ABSOLUTE SERVER PATH*/
 $TBK_MAC_PATH = "/home/washita/washita/staging/transbank/comun";
 /* URL ABSOLUTE*/
-$TBK_SUCCESS = "http://washita.teamnodes.com/success_payment.php";
+$TBK_SUCCESS = "http://washita.teamnodes.com/tbk_success_payment.php";
 /* URL ABSOLUTE*/
-$TBK_FAIL = "http://washita.teamnodes.com/fail_payment.php";
+$TBK_FAIL = "http://washita.teamnodes.com/tbk_fail_payment.php";
 /* URL ABSOLUTE*/
 $TBK_URL_KIT = "/transbank/tbk_bp_pago.cgi";
 /* CHECK MAC PATH */
@@ -101,6 +101,14 @@ $TBK_VERIFY_TRANS_LINK = "/php/transbank/ep_webpay.php?action=VERIFY_TRANS";
 $WSH_PROD_MODE = FALSE;
 /* DEFINE THE LOG DEVELOPMENT DATABASE LOG*/
 $LOG_PATH = "/home/washita/washita/staging/transbank/comun";
+/* DEFINE EL PATH DEL ARCHIVO DEL CERTIFICADO DIGITAL*/
+$TBK_CERT_FILE_WS;
+/* DEFINE EL PATH DE LA LLAVE PRIVADA PARA WEBSERVICES TRANSBANK*/
+$TBK_PRIVATE_KEY_WS;
+/* DEFINE EL PATH DE LA LLAVE PRIVADA PARA WEBSERVICES TRANSBANK*/
+$TBK_SERVER_CERT_FILE;
+/* DEFINE EL LINK DEL RESULTADO DE INSCRIPCION DEL PROCESO ONECLICK*/
+$ONECLICK_URL_INSCRIPTION;
 /***************************/
 
 
