@@ -154,7 +154,7 @@ class OrderGenerator extends MySQLDB{
 		$ORDER['TBK_ODC'] = $ODC;
 		$retorno['TBK_TRANSACTION'] = $this->FIRST('TBK_TRANSACTIONS',$ORDER);
 		$retorno['TBK_PREORDER'] = $this->FIRST('TBK_PREORDER',$ORDER);
-		return retorno;
+		return $retorno;
 	}
 }
 ?>
