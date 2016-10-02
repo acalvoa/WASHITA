@@ -229,7 +229,7 @@ class MySQLDB implements DBCommon {
 		if(count($where) > 0){
 			$query .= " WHERE ";
 			foreach ($where as $key => $value) {
-				$query .= "´".$key."´=? AND ";
+				$query .= "`".$key."`=? AND ";
 			}
 			$query = substr($query,0,-5);
 		}
@@ -250,7 +250,7 @@ class MySQLDB implements DBCommon {
 		if(count($where) > 0){
 			$query .= " WHERE ";
 			foreach ($where as $key => $value) {
-				$query .= "´".$key."´=? AND ";
+				$query .= "`".$key."`=? AND ";
 			}
 			$query = substr($query,0,-5);
 		}
