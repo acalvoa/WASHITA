@@ -306,7 +306,7 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                                 </div>
                                 <div class="payelement">
                                     <div class="inputfield"><input type="radio" name="payment_method" value="oneclick"></div> 
-                                    <div class="logofield" style="padding-top:10px;"><img class="webpay-logo" src="img/oneclick.png" height="80"></div>
+                                    <div class="logofield" style="padding-top:5px;"><img class="webpay-logo" src="img/oneclick.png" height="80"></div>
                                 </div>
                             </div>
                         </div>
