@@ -23,6 +23,7 @@ public class OneClick extends MySQLDB{
 	private $WASHITA_EMAIL;
 	private $ONECLICK_URL_INSCRIPTION;
 	function __construct(){
+		parent::__construct($GLOBALS["DBServer"],$GLOBALS["DBUser"],$GLOBALS["DBPass"],$GLOBALS["DBName"]);
 		$this->SERVER_CERT = $GLOBAL['TBK_CERT_FILE_WS'];
 		$this->PRIVATE_KEY = $GLOBAL['TBK_PRIVATE_KEY_WS'];
 		$this->CERT_FILE = $GLOBAL['TBK_SERVER_CERT_FILE'];
@@ -47,11 +48,12 @@ public class OneClick extends MySQLDB{
 		$oneClickInscriptionOutput = $oneClickInscriptionResponse->return; 
 		$tokenOneClick = $oneClickInscriptionOutput->token; //Token de resultado
 		//URL para realizar el post
-		$inscriptionURL = $oneClickInscriptionOutput->urlWebpay; 
+		return $oneClickInscriptionOutput->urlWebpay; 
 		
 	}
 	/** @method void FINISH_INSCRIPTION() this function finish the TC inscription process. */
 	function FINISH_INSCRIPTION($tokenOneClick){
+		if(!isset($tokenOneClick)) throw new Exception("The token not are provided", 1);
 		$oneClickService = new OneClickWS();
 		$oneClickFinishInscriptionInput = new oneClickFinishInscriptionInput();
 		// INGRESAMOS EL TOKEN DEVUELTO POR EL PROCESO INIT_INSCRIPTION
@@ -65,25 +67,32 @@ public class OneClick extends MySQLDB{
 		$oneClickFinishInscriptionOutput = $oneClickFinishInscriptionResponse->return;
 		// Datos de resultado de la inscripción OneClick
 		$responseCode = $oneClickFinishInscriptionOutput->responseCode;
-		$authCode = $oneClickFinishInscriptionOutput->authCode;
-		$creditCardType = $oneClickFinishInscriptionOutput->creditCardType;
-		$last4CardDigits = $oneClickFinishInscriptionOutput->last4CardDigits;
-		$tbkUser = $oneClickFinishInscriptionOutput->tbkUser;
 		// INGRESAMOS LOS CAMPOS A LA BASE DE DATOS
-		$TC['ID_USER']
+		$TC['ID_USER'] = $this->WASHITA_USERNAME;
+		$TC['AUTH_CODE'] = $oneClickFinishInscriptionOutput->authCode;
+		$TC['CREDIT_CARD_TYPE'] = $oneClickFinishInscriptionOutput->creditCardType;
+		$TC['LAST4NUMBER'] = $oneClickFinishInscriptionOutput->last4CardDigits;
+		$TC['TBK_USER'] = $oneClickFinishInscriptionOutput->tbkUser;
+		$result = $this->INSERT($TC,'TBK_OC_REGISTER_TC');
+		if(!$result){
+			throw new Exception("The TBK_USER REGISTER ERROR - ERROR IN INSERT OPERATION", 1);
+		}
+		return $TC;
 	}
 	/** @method void AUTHORIZE() this function authorice a transaction with transbank oneclick. */
-	function AUTHORIZE(){
+	function AUTHORIZE($AMOUNT,$ODC,$TBK_USER){
+		// EXTRAEMOS LOS DATOS DEL USUARIO
+		$this->GETUSERPARAM();
+		// LLAMAMOS LOS WEBSERVICES
 		$oneClickService = new OneClickWS();
 		$oneClickInscriptionInput = new oneClickInscriptionInput();
 		$oneClickPayInput = new oneClickPayInput();
 		// CREAMOS LA PREORDEN
 		// VERIFICAMOS CON TRANSBANK
-		$oneClickPayInput->amount = <monto de pago>;
-		$oneClickPayInput->buyOrder = <orden de compra>;
-		$oneClickPayInput->tbkUser = <identificador de usuario entregado
-		en el servicio finishInscription>;
-		$oneClickPayInput->username = <identificador de usuario del comercio>;
+		$oneClickPayInput->amount = $AMOUNT;
+		$oneClickPayInput->buyOrder = $ODC;
+		$oneClickPayInput->tbkUser = $TBK_USER;
+		$oneClickPayInput->username = $this->WASHITA_USERNAME;
 		$oneClickauthorizeResponse = $oneClickService->authorize(array(
 			"arg0" => $oneClickPayInput
 		));
@@ -91,12 +100,14 @@ public class OneClick extends MySQLDB{
 		$soapValidation = new SoapValidation($xmlResponse, $this->TBK_CERT_FILE);
 		$oneClickPayOutput = $oneClickauthorizeResponse->return;
 		//Resultado de la autorización
+		
 		$authorizationCode = $oneClickPayOutput->authorizationCode;
 		$creditCardType = $oneClickPayOutput->creditCardType;
 		$last4CardDigits = $oneClickPayOutput->last4CardDigits;
 		$responseCode = $oneClickPayOutput->responseCode;
 		$transactionId = $oneClickPayOutput->transactionId;
 		// CREAMOS LA ORDEN EN LA BASE DE DATOS
+
 	}
 	/** @method void REVERSE() this function reverse a transaction when it was processed. */
 	function REVERSE(){
@@ -139,8 +150,8 @@ public class OneClick extends MySQLDB{
 	function GETUSERPARAM(){
 		if($_POST){
 			$USER = WashitaUser::CurrentUser();
-			$this->WASHITA_USERNAME = $_POST['username'];
-			$this->WASHITA_EMAIL = $_POST['email'];
+			$this->WASHITA_USERNAME = $USER->Id;
+			$this->WASHITA_EMAIL = $USER->Email;
 			return;
 		}
 		throw new Exception("The user fields not are post", 44);
