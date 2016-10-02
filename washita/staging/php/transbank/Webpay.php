@@ -174,12 +174,12 @@ class Webpay extends MySQLDB{
 	}
 	/** @method void FINALICE() this function finalice the transaction with transbank and close the process */
 	public function FINALICE(){
-		$this->LOG("Creamos la nueva orden de trabajo. Rescatamos el registro".);
+		$this->LOG("Creamos la nueva orden de trabajo. Rescatamos el registro");
 		$preorder['TBK_ODC'] = $this->TBK_ODC;
 		$order_param = $this->FIRST('TBK_PREORDER', $preorder);
 		unset($order_param['TBK_ODC']);
 		unset($order_param['ID_USER']);
-		$this->LOG("Creamos la nueva orden de trabajo. Creamos el registro".);
+		$this->LOG("Creamos la nueva orden de trabajo. Creamos el registro");
 		$order = $this->INSERT($order_param,"orders");
 		$TBK_ORDER['WASHITA_ORDER'] = $GLOBALS["OrdersNumberStart"]; + $order;
 		$order_resp = $this->UPDATE($TBK_ORDER,$preorder,"TBK_TRANSACTIONS");
