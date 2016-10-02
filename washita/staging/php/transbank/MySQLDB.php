@@ -238,7 +238,7 @@ class MySQLDB implements DBCommon {
 		while($fila = $this->L_RESULT->fetch_assoc()){
 			array_push($retorno, $fila);
 		}
-		$this->L_N_R = $this->L_STMT->num_rows;
+		$this->L_N_R = $this->L_RESULT->num_rows;
 		$this->L_RESULT->free();
 		$this->L_STMT->close();
 		return $retorno;
@@ -256,7 +256,7 @@ class MySQLDB implements DBCommon {
 		}
 		$this->QUERY($query, $where);
 		$retorno = $this->L_RESULT->fetch_assoc();
-		$this->L_N_R = $this->L_STMT->num_rows;
+		$this->L_N_R = $this->L_RESULT->num_rows;
 		$this->L_RESULT->free();
 		$this->L_STMT->close();
 		return $retorno;
