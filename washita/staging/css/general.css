@@ -672,5 +672,6 @@ p.help-block{
 }
 .payelement{
     float: left;
-    
+    padding-left: 20px;
+    padding-right: 20px;
 }
