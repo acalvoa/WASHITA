@@ -271,7 +271,7 @@ class MySQLDB implements DBCommon {
 		$argument = "(";
 		$fields = "(";
 		foreach ($insert as $key => $value) {
-			if(is_null($value)){
+			if(!is_null($value)){
 				$argument .= "`".$key."`,";
 				$fields .= "?,";
 			}
@@ -295,7 +295,7 @@ class MySQLDB implements DBCommon {
 			$argument = "(";
 			$fields = "(";
 			foreach ($insert[$key] as $key => $value) {
-				if(is_null($value)){
+				if(!is_null($value)){
 					$argument .= "`".$key."`,";
 					$fields .= "?,";
 				}
