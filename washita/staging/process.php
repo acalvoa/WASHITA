@@ -300,8 +300,8 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                                 <p>Elige tu medio de pago</p>
                             </div>
                             <div class="input-group-horizontal">
-                                <input type="radio" name="gender" value="male">  <img class="webpay-logo" src="img/logo-webpay.png">
-                                <input type="radio" name="gender" value="female"> <img class="webpay-logo" src="img/oneclick.png" height="80">
+                                <div class="payelement"><input type="radio" name="gender" value="webpay">  <img class="webpay-logo" src="img/logo-webpay.png"></div>
+                                <div class="payelement"><input type="radio" name="gender" value="oneclick"> <img class="webpay-logo" src="img/oneclick.png" height="80"></div>
                             </div>
                         </div>
                         <div class="row item checkout_footer">
