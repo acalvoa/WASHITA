@@ -270,11 +270,12 @@ class MySQLDB implements DBCommon {
 		$query = "INSERT INTO ".$table;
 		$argument = "(";
 		$fields = "(";
+		$intable = array();
 		foreach ($insert as $key => $value) {
 			if(!is_null($value)){
 				$argument .= "`".$key."`,";
 				$fields .= "?,";
-				unset($insert[$key]);
+				$intable[$key] = $value;
 			}
 		}
 		$argument = substr($argument,0,-1);
@@ -282,7 +283,7 @@ class MySQLDB implements DBCommon {
 		$fields = substr($fields,0,-1);
 		$fields .= ")";
 		$query .= " ".$argument." VALUES ".$fields;
-		$this->QUERY($query, $insert);
+		$this->QUERY($query, $intable);
 		$retorno = $this->L_STMT->insert_id;
 		if(gettype($this->L_RESULT) != "boolean") $this->L_RESULT->free();
 		$this->L_STMT->close();
@@ -291,7 +292,9 @@ class MySQLDB implements DBCommon {
 	/** @method boolean INSERT(array $insert, string $table) This function insert a row into table */
 	public function M_INSERT($insert, $table){
 		$queries = array();
+		$intable = array();
 		foreach ($insert as $key => $value) {
+			$intable[$key] = array();
 			$query = "INSERT INTO ".$table[$key];
 			$argument = "(";
 			$fields = "(";
@@ -299,7 +302,7 @@ class MySQLDB implements DBCommon {
 				if(!is_null($value)){
 					$argument .= "`".$keys."`,";
 					$fields .= "?,";
-					unset($insert[$key][$keys]);
+					$intable[$key][$keys] = $value;
 				}
 			}
 			$argument = substr($argument,0,-1);
@@ -309,7 +312,7 @@ class MySQLDB implements DBCommon {
 			$query .= " ".$argument." VALUES ".$fields;
 			$queries[] = $query;
 		}
-		$this->M_QUERY($queries, $insert);
+		$this->M_QUERY($queries, $intable);
 		$retorno_id = array();
 		foreach ($this->L_STMT as $key => $value) {
 			$retorno_id[] = $value->insert_id;
