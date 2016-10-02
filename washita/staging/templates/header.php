@@ -2,9 +2,9 @@
      
 <?php 
      //start a new session (required for Hybridauth)
-    error_reporting(E_ALL ^ E_NOTICE);
+    error_reporting(E_ALL ^ E_NOTICE  & ~E_DEPRECATED & ~E_STRICT);
 	session_start();
-    error_reporting(E_ALL);
+    error_reporting(E_ALL  & ~E_DEPRECATED & ~E_STRICT);
 ?> 
 <!doctype html>
 <!--[if lt IE 7]><html lang="en" class="no-js ie6"><![endif]-->
