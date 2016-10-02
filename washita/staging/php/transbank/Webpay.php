@@ -101,22 +101,24 @@ class Webpay extends MySQLDB{
 		$TRANSACTION['PAYMENT_STATUS'] = 0;
 		return $this->INSERT($TRANSACTION,"TBK_TRANSACTIONS");
 	}
-	/** @method void START_TRANS() this function verify the result of transbank in the two-ways transbank verify process */
+	/** @method void VERIFY() this function verify the result of transbank in the two-ways transbank verify process */
 	public function VERIFY(){
-		// if(!$_POST) throw new Exception("No are a transbank transaction", 1);
+		if(!$_POST) throw new Exception("No are a transbank transaction", 1);
 		$this->LOG("Comienza la verificacion de sesion: ".$_POST["TBK_ID_SESION"]);
 		$TBK_RESPUESTA = $_POST["TBK_RESPUESTA"];
 		$this->TBK_ODC = $_POST["TBK_ORDEN_COMPRA"];
 		$this->TBK_MONTO =$_POST["TBK_MONTO"];
 		$this->TBK_SESSION = $_POST["TBK_ID_SESION"];
 		//VERIFICAMOS LA RESPUESTA DE TRANSBANK
-		$this->FINALICE($TBK_RESPUESTA);
+		$this->CHECK_TBK($TBK_RESPUESTA);
 		//PRIMERO VERIFICACION DE LO CAMPOS CON EL REGISTRO
 		$this->CHECK_TOKEN();
 		// CREAMOS LA MAC
 		$this->GENERATE_MAC();
 		// VERIFICAMOS LA MAC
 		$this->CHECK_MAC();
+		// VERIFICAMOS LA MAC
+		$this->FINALICE();
 		// FINALIZAMOS SI NO HAY ERRORES
 		die('ACEPTADO');
 
@@ -135,7 +137,7 @@ class Webpay extends MySQLDB{
 			die('RECHAZADO');
 		}
 	}
-	/** @method void START_TRANS() this function check the MAC provided by transbank */
+	/** @method void GENERATE_MAC() this function check the MAC provided by transbank */
 	private function GENERATE_MAC(){
 		$this->TBK_MAC_FILE = $this->TBK_MAC_PATH."/MAC01Normal".$this->TBK_SESSION.".txt";
 		$this->LOG("Generamos el MAC file: ".$this->TBK_MAC_FILE);
@@ -146,14 +148,14 @@ class Webpay extends MySQLDB{
 		fclose($fp);
 		$this->LOG("Archivo MAC generado");
 	}
-	/** @method void START_TRANS() this function check the MAC provided by transbank */
+	/** @method void GENERATE_SESION() this function check the MAC provided by transbank */
 	private function GENERATE_SESION(){
 		$user_id = $this->USER->Id;
 		$time_hash = sha1(time());
 		$hash = $user_id."@".$time_hash;
 		$this->TBK_SESSION = md5($hash);
 	}
-	/** @method void START_TRANS() this function check the MAC provided by transbank */
+	/** @method void CHECK_MAC() this function check the MAC provided by transbank */
 	private function CHECK_MAC(){
 		$this->LOG("Checkeamos el MAC file: ".$this->TBK_MAC_FILE);
 		$cmdline = $this->TBK_CHECK_MAC_PATH." ".$this->TBK_MAC_FILE;
@@ -163,14 +165,29 @@ class Webpay extends MySQLDB{
 			die('RECHAZADO');
 		}
 	}
-	/** @method void START_TRANS() this function finalice the transaction with transbank and close the process */
-	public function FINALICE($respuesta){
+	/** @method void CHECK_TBK() this function finalice the transaction with transbank and close the process */
+	public function CHECK_TBK($respuesta){
 		$this->LOG("Verificamos la respuesta de transbank ".$respuesta);
 		if(!($respuesta == "0")){
 			die('RECHAZADO');
 		}
 	}
-	/** @method void START_TRANS() this function finalice the transaction with transbank and close the process */
+	/** @method void FINALICE() this function finalice the transaction with transbank and close the process */
+	public function FINALICE(){
+		$this->LOG("Creamos la nueva orden de trabajo. Rescatamos el registro".);
+		$preorder['TBK_ODC'] = $this->TBK_ODC;
+		$order_param = $this->FIRST('TBK_PREORDER', $preorder);
+		unset($order_param['TBK_ODC']);
+		unset($order_param['ID_USER']);
+		$this->LOG("Creamos la nueva orden de trabajo. Creamos el registro".);
+		$order = $this->INSERT($order_param,"orders");
+		$TBK_ORDER['WASHITA_ORDER'] = $GLOBALS["OrdersNumberStart"]; + $order;
+		$order_resp = $this->UPDATE($TBK_ORDER,$preorder,"TBK_TRANSACTIONS");
+		if(!($order_resp)){
+			die('RECHAZADO');
+		}
+	}
+	/** @method void LOG(string $message) this function finalice the transaction with transbank and close the process */
 	public function LOG($message){
 		if(!$this->TBK_PROD_MODE){
 			$logfile = $this->TBK_LOGPATH."/log.txt";
