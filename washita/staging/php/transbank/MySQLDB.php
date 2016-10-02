@@ -111,10 +111,10 @@ class MySQLDB implements DBCommon {
 		error_reporting(E_ALL ^ E_WARNING);
 		$this->MYSQL->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 		error_reporting(E_ALL);
-		$this->LOGDB("\n".$query);
-		$this->LOGDB("\n".json_encode($field));
+		$this->LOGDB($query);
+		$this->LOGDB(json_encode($field));
 		$stmt = $this->MYSQL->prepare($query);
-		if($this->MYSQL->error) $this->LOGDB("\nError: ".$this->MYSQL->error);
+		if($this->MYSQL->error) $this->LOGDB("Error: ".$this->MYSQL->error);
 		if(!$stmt){
 			throw new Exception("The statement is incorrect. Check the query", 7);
 		}
@@ -166,12 +166,12 @@ class MySQLDB implements DBCommon {
 		//INIT THE TRANSACTIONS AND NEXT EXECUTE THE QUERY.
 		$STMTS = array();
 		$RESULTS = array();
-		$this->LOGDB("\n".$query);
-		$this->LOGDB("\n".json_encode($field));
+		$this->LOGDB($query);
+		$this->LOGDB(json_encode($field));
 		error_reporting(E_ALL ^ E_WARNING);
 		$this->MYSQL->begin_transaction(MYSQLI_TRANS_START_READ_WRITE);
 		error_reporting(E_ALL); 
-		if($this->MYSQL->error) $this->LOGDB("\nError: ".$this->MYSQL->error);
+		if($this->MYSQL->error) $this->LOGDB("Error: ".$this->MYSQL->error);
 		foreach ($querys as $keys => $query) {
 			$stmt = $this->MYSQL->prepare($query);
 			// COUNT THE NUMBER OF FIELDS REQUIRED
@@ -430,7 +430,7 @@ class MySQLDB implements DBCommon {
 		if(!$this->PROD_MODE){
 			$logfile = $this->DB_LOGPATH."/log.txt";
 			$fp=fopen($logfile,"a+");
-			fwrite($fp, $message);
+			fwrite($fp,"\n".$message);
 			fclose($fp);
 		}
 	}

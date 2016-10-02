@@ -75,7 +75,7 @@ class Webpay extends MySQLDB{
 		$PREORDER = new OrderGenerator($this->USER->Id);
 		$PREORDER->PROCESS_FIELDS();
 		$ID_PREORDER = $PREORDER->CREATE_PRE_ORDER();
-		$this->LOG("\nPreorden creada: ".$ID_PREORDER.", Redirigiendo");
+		$this->LOG("Preorden creada: ".$ID_PREORDER.", Redirigiendo");
 		if($this->REG_TRANS($ID_PREORDER,$PREORDER->GET_PRICE()."00")){
 			printf('<form action="%s" name="frm" method="post">', $this->TBK_URL_KIT);
 			printf('<input type="hidden" name="TBK_TIPO_TRANSACCION" value="%s"/>', $this->TBK_TIPO_TRANSACCION);
@@ -104,7 +104,7 @@ class Webpay extends MySQLDB{
 	/** @method void START_TRANS() this function verify the result of transbank in the two-ways transbank verify process */
 	public function VERIFY(){
 		// if(!$_POST) throw new Exception("No are a transbank transaction", 1);
-		$this->LOG("\nComienza la verificacion de sesion: ".$_POST["TBK_ID_SESION"]);
+		$this->LOG("Comienza la verificacion de sesion: ".$_POST["TBK_ID_SESION"]);
 		$TBK_RESPUESTA = $_POST["TBK_RESPUESTA"];
 		$this->TBK_ODC = $_POST["TBK_ORDEN_COMPRA"];
 		$this->TBK_MONTO =$_POST["TBK_MONTO"];
@@ -127,10 +127,10 @@ class Webpay extends MySQLDB{
 		$CHECK['TBK_ODC'] = $this->TBK_ODC;
 		$CHECK['TBK_AMOUNT'] = $this->TBK_MONTO;
 		$CHECK['TBK_SESSION'] = $this->TBK_SESSION;
-		$this->LOG("\nVerificamos el token: ".json_encode($CHECK));
+		$this->LOG("Verificamos el token: ".json_encode($CHECK));
 		//VERIFICAMOS
 		$this->GET('TBK_TRANSACTIONS', $CHECK);
-		$this->LOG("\nResultado del token: ".$this->NUMROWS());
+		$this->LOG("Resultado del token: ".$this->NUMROWS());
 		if(!($this->NUMROWS() > 0)){
 			die('RECHAZADO');
 		}
@@ -138,13 +138,13 @@ class Webpay extends MySQLDB{
 	/** @method void START_TRANS() this function check the MAC provided by transbank */
 	private function GENERATE_MAC(){
 		$this->TBK_MAC_FILE = $this->TBK_MAC_PATH."/MAC01Normal".$this->TBK_SESSION.".txt";
-		$this->LOG("\nGeneramos el MAC file: ".$this->TBK_MAC_FILE);
+		$this->LOG("Generamos el MAC file: ".$this->TBK_MAC_FILE);
 		$fp=fopen($this->TBK_MAC_FILE,"wt");
 		while(list($key, $val)=each($_POST)){
 			fwrite($fp, "$key=$val&");
 		}
 		fclose($fp);
-		$this->LOG("\nArchivo MAC generado");
+		$this->LOG("Archivo MAC generado");
 	}
 	/** @method void START_TRANS() this function check the MAC provided by transbank */
 	private function GENERATE_SESION(){
@@ -155,17 +155,17 @@ class Webpay extends MySQLDB{
 	}
 	/** @method void START_TRANS() this function check the MAC provided by transbank */
 	private function CHECK_MAC(){
-		$this->LOG("\nCheckeamos el MAC file: ".$this->TBK_MAC_FILE);
+		$this->LOG("Checkeamos el MAC file: ".$this->TBK_MAC_FILE);
 		$cmdline = $this->TBK_CHECK_MAC_PATH." ".$this->TBK_MAC_FILE;
 		exec($cmdline, $result, $retint);
-		$this->LOG("\nRespuesta del MAC check: ".$result[0]);
+		$this->LOG("Respuesta del MAC check: ".$result[0]);
 		if($result[0] != "CORRECTO"){
 			die('RECHAZADO');
 		}
 	}
 	/** @method void START_TRANS() this function finalice the transaction with transbank and close the process */
 	public function FINALICE($respuesta){
-		$this->LOG("\nVerificamos la respuesta de transbank ".$respuesta);
+		$this->LOG("Verificamos la respuesta de transbank ".$respuesta);
 		if(!($respuesta == "0")){
 			die('RECHAZADO');
 		}
@@ -175,7 +175,7 @@ class Webpay extends MySQLDB{
 		if(!$this->TBK_PROD_MODE){
 			$logfile = $this->TBK_LOGPATH."/log.txt";
 			$fp=fopen($logfile,"a+");
-			fwrite($fp, $message);
+			fwrite($fp, "\n".$message);
 			fclose($fp);
 		}
 	}
