@@ -8,8 +8,8 @@
 */
 require_once(dirname(__FILE__)."/../../_config.php");
 require_once(dirname(__FILE__)."/../hybridauth/WashitaUser.php");
-include_once(dirname(__FILE__)."/php/MailService.class.php");
-require_once(dirname(__FILE__)."/../OrdersGenerator.php");
+include_once(dirname(__FILE__)."/../MailService.class.php");
+require_once(dirname(__FILE__)."/OrdersGenerator.php");
 require_once("MySQLDB.php");
 
 /**
