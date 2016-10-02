@@ -301,7 +301,7 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                             </div>
                             <div class="input-group-horizontal">
                                 <input type="radio" name="gender" value="male">  <img class="webpay-logo" src="img/logo-webpay.png">
-                                <input type="radio" name="gender" value="female"> <img class="webpay-logo" src="img/oneclick.png">
+                                <input type="radio" name="gender" value="female"> <img class="webpay-logo" src="img/oneclick.png" height="80">
                             </div>
                         </div>
                         <div class="row item checkout_footer">
