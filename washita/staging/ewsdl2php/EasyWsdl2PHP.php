@@ -5,6 +5,7 @@
         static public function generate($url,$sname)
         {
             $soapClient       = new SoapClient($url);
+            die($soapClient);
             $classesArr = array();
 
             $functions = $soapClient->__getFunctions();
