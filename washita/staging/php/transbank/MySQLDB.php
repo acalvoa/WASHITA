@@ -143,8 +143,6 @@ class MySQLDB implements DBCommon {
 					$list[] = &$field[$key];
 					break;
 				case "NULL":
-					$list[0] .= "s";
-					$list[] = &NULL;
 					break;
 				default:
 					throw new Exception("The query can't be formed. Please verify the params provided", 5);
@@ -206,8 +204,6 @@ class MySQLDB implements DBCommon {
 						$list[] = &$field[$keys][$key];
 						break;
 					case "NULL":
-						$list[0] .= "s";
-						$list[] = NULL;
 						break;
 					default:
 						throw new Exception("The query can't be formed. Please verify the params provided", 5);
@@ -275,8 +271,10 @@ class MySQLDB implements DBCommon {
 		$argument = "(";
 		$fields = "(";
 		foreach ($insert as $key => $value) {
-			$argument .= "`".$key."`,";
-			$fields .= "?,";
+			if(is_null($value)){
+				$argument .= "`".$key."`,";
+				$fields .= "?,";
+			}
 		}
 		$argument = substr($argument,0,-1);
 		$argument .= ")";
@@ -297,8 +295,10 @@ class MySQLDB implements DBCommon {
 			$argument = "(";
 			$fields = "(";
 			foreach ($insert[$key] as $key => $value) {
-				$argument .= "`".$key."`,";
-				$fields .= "?,";
+				if(is_null($value)){
+					$argument .= "`".$key."`,";
+					$fields .= "?,";
+				}
 			}
 			$argument = substr($argument,0,-1);
 			$argument .= ")";
