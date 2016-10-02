@@ -20,8 +20,8 @@ else
 <p> ej. http://soap.amazon.com/schemas2/AmazonWebServices.wsdl</p>
 
 <form action="wsdl2php.php" method="post">
-<p>Url: <input type="text" name="url" size="60" value="<?=$url?>" /></p>
-<p>Class Name: <input type="text" name="sname" size="60" value="<?=$sname?>" /></p>
+<p>Url: <input type="text" name="url" size="60" value="" /></p>
+<p>Class Name: <input type="text" name="sname" size="60" value="" /></p>
 
 <input type="submit" name="generatebtn" value="Generate Code" />
 </form>
