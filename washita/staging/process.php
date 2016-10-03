@@ -301,11 +301,11 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                             </div>
                             <div class="input-group-horizontal">
                                 <div class="payelement">
-                                    <div class="inputfield"><input type="radio" name="payment_method" value="webpay" checked></div>  
+                                    <div class="inputfield"><input class="payment_method" type="radio" name="payment_method" value="webpay" checked></div>  
                                     <div class="logofield"><img class="webpay-logo" src="img/logo-webpay.png" height="100"></div>
                                 </div>
                                 <div class="payelement">
-                                    <div class="inputfield"><input type="radio" name="payment_method" value="oneclick"></div> 
+                                    <div class="inputfield"><input class="payment_method" type="radio" name="payment_method" value="oneclick"></div> 
                                     <div class="logofield" style="padding-top:5px;"><img class="webpay-logo" src="img/oneclick.png" height="80"></div>
                                 </div>
                             </div>
@@ -360,7 +360,7 @@ $(document).ready(function() {
                 }
             });
 
-            $("#checkout_form input[name=payment_method]"").on("click", function() {
+            $("#checkout_form input[name=payment_method]").on("click", function() {
                 alert();
             });
             
