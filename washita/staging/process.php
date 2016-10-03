@@ -361,7 +361,12 @@ $(document).ready(function() {
             });
 
             $("#checkout_form input[name=payment_method]").on("click", function() {
-                alert($("input[name=payment_method]:checked", "#checkout_form").val()); 
+                if($("input[name=payment_method]:checked", "#checkout_form").val()){
+                    $(".pay_btn").hide();
+                } 
+                else{
+                    $(".pay_btn").show();
+                }
             });
             
             
