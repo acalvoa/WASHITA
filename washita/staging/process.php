@@ -320,7 +320,8 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
     </section>
 <script>
 $(document).ready(function() {
-    $('input[name=payment_method]:checked', '#checkout_form').on('click', function(){
+    $('#myForm input[name=payment_method]').on('change', function() {
+    // $('input[name=payment_method]:checked', '#checkout_form').on('click', function(){
         alert();
     });
 });
