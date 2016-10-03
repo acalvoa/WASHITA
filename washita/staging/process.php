@@ -360,7 +360,7 @@ $(document).ready(function() {
                 }
             });
 
-            $("#checkout_form input[name=payment_method]"").on("change", function() {
+            $("#checkout_form input[name=payment_method]"").on("click", function() {
                 alert();
             });
             
