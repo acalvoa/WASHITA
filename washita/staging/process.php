@@ -318,7 +318,13 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
             </div>
         </div>
     </section>
-
+<script>
+$(document).ready(function() {
+    $('input[name=payment_method]:checked', '#checkout_form').on('change', function(){
+        alert();
+    });
+});
+</script>
 
  <?php 
  if(!isset($SCRIPTS_FOOTER)){
