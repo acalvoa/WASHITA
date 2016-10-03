@@ -361,7 +361,7 @@ $(document).ready(function() {
             });
 
             $("#checkout_form input[name=payment_method]").on("click", function() {
-                if($("input[name=payment_method]:checked", "#checkout_form").val()){
+                if($("input[name=payment_method]:checked", "#checkout_form").val() == "oneclick"){
                     $(".pay_btn").hide();
                 } 
                 else{
