@@ -361,7 +361,7 @@ $(document).ready(function() {
             });
 
             $("#checkout_form input[name=payment_method]").on("click", function() {
-                alert();
+                alert($("input[name=payment_method]:checked", "#checkout_form").val()); 
             });
             
             
