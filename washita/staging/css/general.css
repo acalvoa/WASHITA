@@ -683,3 +683,9 @@ p.help-block{
 .payelement .logofield{
     float: left;
 }
+.oneclick_tab{
+    display: none;
+}
+.pay_tab{
+    display: block;
+}

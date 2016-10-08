@@ -310,6 +310,28 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                                 </div>
                             </div>
                         </div>
+                        <div class="row item checkout_footer pay_tab">
+                            <button type="submit" class="pay_btn hvr-glow">Pagar</button>
+                        </div>
+                        <div class="row item checkout-block oneclick_tab">
+                            <div class="input-group-vertical">
+                                <p>Elige La tarjeta de pago</p>
+                            </div>
+                            <div class="input-group-horizontal">
+                                <select name="city_area_id" class="form-control" required>
+                                    <?php 
+                                        $cities = City::GetAllCititesWithAreas();
+                                        foreach ($cities as $city) {
+                                            foreach ($city->Areas as $cityArea) {
+                                                $isSelected = ($user != null && $user->CityAreaId == $cityArea->Id);
+                                                echo '<option value="'.$cityArea->Id.'" '.($isSelected? "selected":"").'>'.$city->Name.' / '.$cityArea->Name.'</option>';
+                                            }
+                                        }
+
+                                    ?>                               
+                                </select>
+                            </div>
+                        </div>
                         <div class="row item checkout_footer">
                             <button type="submit" class="pay_btn hvr-glow">Pagar</button>
                         </div>
@@ -362,10 +384,12 @@ $(document).ready(function() {
 
             $("#checkout_form input[name=payment_method]").on("click", function() {
                 if($("input[name=payment_method]:checked", "#checkout_form").val() == "oneclick"){
-                    $(".pay_btn").hide();
+                    $(".pay_tab").hide();
+                    $(".oneclick_tab").show();
                 } 
                 else{
-                    $(".pay_btn").show();
+                    $(".pay_tab").show();
+                    $(".oneclick_tab").hide();
                 }
             });
             
