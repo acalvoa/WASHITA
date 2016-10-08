@@ -110,10 +110,10 @@ public class OneClick extends MySQLDB{
 
 	}
 	/** @method void REVERSE() this function reverse a transaction when it was processed. */
-	function REVERSE(){
+	function REVERSE($ODC,$TBK_USER){
 		$oneClickService = new OneClickWS();
 		$oneClickReverseInput = new oneClickReverseInput();
-		$buyOrder = <orden de compra de la transacción>;
+		$buyOrder = $ODC;
 		$oneClickReverseInput->buyorder= $buyOrder;
 		$codeReverseOneClickResponse = $oneClickService->codeReverseOneClick(array(
 			"arg0" => $oneClickReverseInput
@@ -129,10 +129,10 @@ public class OneClick extends MySQLDB{
 		// MODIFICAMOS LA BASE DE DATOS
 	}
 	/** @method void REMOVE_INSCRIPTION() this function remove an TC inscription. */
-	function REMOVE_INSCRIPTION(){
+	function REMOVE_INSCRIPTION($ODC,$TBK_USER){
 		$oneClickService = new OneClickWS();
 		$oneClickRemoveUserInput = new oneClickRemoveUserInput();
-		$tbkUser = <identificador de usuario entregado en el servicio finishInscription>;
+		$tbkUser = ,$TBK_USER;
 		$commerceUser = <identificador de usuario del comercio>;
 		$oneClickRemoveUserInput->tbkUser = $tbkUser;
 		$oneClickRemoveUserInput->username = $commerceUser;

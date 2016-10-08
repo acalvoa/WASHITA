@@ -7,6 +7,7 @@
 *	This sctipr is used like a endpoint of transbank process
 */
 require_once(dirname(__FILE__)."/Webpay.php");
+require_once(dirname(__FILE__)."/OneClick.php");
 
 $action = $_GET['action'];
 if(!empty($action) AND !is_null($action)){
@@ -18,8 +19,10 @@ if(!empty($action) AND !is_null($action)){
 		$webpay = new Webpay();
 		$webpay->VERIFY();
 	}
-	else{
-		
+	else if($action == "ONECLICK_INSCRIPTION"){
+		$oneclick = new OneClick();
+		$url = $oneclick->INIT_INSCRIPTION();
+		header('Location: '.$url);
 	}
 }
 ?>
