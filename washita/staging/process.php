@@ -330,9 +330,10 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
 
                                     ?>                               
                                 </select>
+                                <button type="submit" class="add_tc_btn">Agregar tarjeta</button>
                             </div>
                         </div>
-                        <div class="row item checkout_footer">
+                        <div class="row item checkout_footer oneclick_tab">
                             <button type="submit" class="pay_btn hvr-glow">Pagar</button>
                         </div>
                     </form>
