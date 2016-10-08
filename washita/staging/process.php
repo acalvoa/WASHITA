@@ -318,19 +318,23 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                                 <p>Elige La tarjeta de pago</p>
                             </div>
                             <div class="input-group-horizontal">
-                                <select name="city_area_id" class="form-control" required>
-                                    <?php 
-                                        $cities = City::GetAllCititesWithAreas();
-                                        foreach ($cities as $city) {
-                                            foreach ($city->Areas as $cityArea) {
-                                                $isSelected = ($user != null && $user->CityAreaId == $cityArea->Id);
-                                                echo '<option value="'.$cityArea->Id.'" '.($isSelected? "selected":"").'>'.$city->Name.' / '.$cityArea->Name.'</option>';
+                                <div class="tc_input_row">
+                                    <select name="city_area_id" class="form-control" required>
+                                        <?php 
+                                            $cities = City::GetAllCititesWithAreas();
+                                            foreach ($cities as $city) {
+                                                foreach ($city->Areas as $cityArea) {
+                                                    $isSelected = ($user != null && $user->CityAreaId == $cityArea->Id);
+                                                    echo '<option value="'.$cityArea->Id.'" '.($isSelected? "selected":"").'>'.$city->Name.' / '.$cityArea->Name.'</option>';
+                                                }
                                             }
-                                        }
 
-                                    ?>                               
-                                </select>
-                                <button type="submit" class="add_tc_btn">Agregar tarjeta</button>
+                                        ?>                               
+                                    </select>
+                                </div>
+                                <div class="tc_add_row">
+                                    <button type="submit" class="add_tc_btn">Agregar tarjeta</button>
+                                </div>
                             </div>
                         </div>
                         <div class="row item checkout_footer oneclick_tab">
