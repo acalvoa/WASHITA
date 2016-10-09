@@ -333,7 +333,7 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                                     </select>
                                 </div>
                                 <div class="tc_add_row">
-                                    <button type="submit" class="add_tc_btn" id="add_tc_action">+ Agregar tarjeta</button>
+                                    <button type="button" class="add_tc_btn" id="add_tc_action">+ Agregar tarjeta</button>
                                 </div>
                             </div>
                         </div>
