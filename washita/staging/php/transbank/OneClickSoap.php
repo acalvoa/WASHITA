@@ -17,7 +17,7 @@ define('CERT_FILE', $GLOBAL['TBK_CERT_FILE_WS']);
 /**
 *	This class is the main class of the OneClick Process.
 */
-public class OneClickSoap extends SoapClient{
+class OneClickSoap extends SoapClient{
 	/** @var */
 	function __doRequest($request, $location, $saction, $version) {
 		$doc = new DOMDocument('1.0');
