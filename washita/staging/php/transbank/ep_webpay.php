@@ -20,7 +20,7 @@ if(!empty($action) AND !is_null($action)){
 		$webpay->VERIFY();
 	}
 	else if($action == "ONECLICK_INSCRIPTION"){
-		if($_GET['ws'] == "true"){
+		if(isset($_GET['ws']) && $_GET['ws'] == "true"){
 			$oneclick = new OneClick();
 			$oneclick->INIT_INSCRIPTION(true);
 		}
