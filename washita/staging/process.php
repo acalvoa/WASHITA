@@ -325,7 +325,7 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
                                         <?php 
                                             $providers = OneClick::GETPROVIDERS();
                                             foreach ($providers as $provider) {
-                                                echo '<option value="'.$provider['TBK_USER'].'" >'.$provider['CREDIT_CARD_TYPE'].' XXXX XXXX XXXX '.$provider['LAST4NUMBER'].'</option>';
+                                                echo '<option value="'.$provider['TBK_USER'].'" >('.$provider['CREDIT_CARD_TYPE'].')  XXXX XXXX XXXX '.$provider['LAST4NUMBER'].'</option>';
                                             }
                                         ?>                               
                                     </select>
