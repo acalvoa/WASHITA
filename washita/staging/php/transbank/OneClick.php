@@ -59,6 +59,7 @@ class OneClick extends MySQLDB{
 	/** @method void FINISH_INSCRIPTION() this function finish the TC inscription process. */
 	function FINISH_INSCRIPTION($tokenOneClick,$ws = true){
 		if(!isset($tokenOneClick)) throw new Exception("The token not are provided", 1);
+		$this->GETUSERPARAM();
 		$oneClickService = new OneClickWS();
 		$oneClickFinishInscriptionInput = new oneClickFinishInscriptionInput();
 		// INGRESAMOS EL TOKEN DEVUELTO POR EL PROCESO INIT_INSCRIPTION
@@ -78,6 +79,7 @@ class OneClick extends MySQLDB{
 		$TC['CREDIT_CARD_TYPE'] = $oneClickFinishInscriptionOutput->creditCardType;
 		$TC['LAST4NUMBER'] = $oneClickFinishInscriptionOutput->last4CardDigits;
 		$TC['TBK_USER'] = $oneClickFinishInscriptionOutput->tbkUser;
+		print_r($TC);
 		$result = $this->INSERT($TC,'TBK_OC_REGISTER_TC');
 		if(!$result){
 			throw new Exception("The TBK_USER REGISTER ERROR - ERROR IN INSERT OPERATION", 1);
