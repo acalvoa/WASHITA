@@ -689,15 +689,15 @@ p.help-block{
 .pay_tab{
     display: block;
 }
-.tc_input_row{
+.oneclick_tab .tc_input_row{
     float: left;
     width: calc(100% - 200px);
 }
-.tc_add_row{
+.oneclick_tab .tc_add_row{
     float: left;
     width: 200px;
 }
-.add_tc_btn{
+.oneclick_tab .add_tc_btn{
     padding: 10px 50px;
     color: white;
     background-color: #66cdcc;
