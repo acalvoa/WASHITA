@@ -57,7 +57,7 @@ class OneClick extends MySQLDB{
 		
 	}
 	/** @method void FINISH_INSCRIPTION() this function finish the TC inscription process. */
-	function FINISH_INSCRIPTION($tokenOneClick){
+	function FINISH_INSCRIPTION($tokenOneClick,$ws = true){
 		if(!isset($tokenOneClick)) throw new Exception("The token not are provided", 1);
 		$oneClickService = new OneClickWS();
 		$oneClickFinishInscriptionInput = new oneClickFinishInscriptionInput();
@@ -82,7 +82,7 @@ class OneClick extends MySQLDB{
 		if(!$result){
 			throw new Exception("The TBK_USER REGISTER ERROR - ERROR IN INSERT OPERATION", 1);
 		}
-		return $TC;
+		if($ws) die(json_encode($TC));
 	}
 	/** @method void AUTHORIZE() this function authorice a transaction with transbank oneclick. */
 	function AUTHORIZE($AMOUNT,$ODC,$TBK_USER){

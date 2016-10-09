@@ -31,7 +31,15 @@ if(!empty($action) AND !is_null($action)){
 		}
 	}
 	else if($action == "FINISH_ONECLICK_INSCRIPTION"){
-		print_r($_POST);
+		if(isset($_GET['ws']) && $_GET['ws'] == "true"){
+			$oneclick = new OneClick();
+			$oneclick->FINISH_INSCRIPTION($_POST['TBK_TOKEN'], true);
+		}
+		else
+		{
+			$oneclick = new OneClick();
+			$oneclick->FINISH_INSCRIPTION($_POST['TBK_TOKEN']);
+		}
 	}
 }
 ?>
