@@ -167,5 +167,14 @@ class OneClick extends MySQLDB{
 		if(!isset($this->TBK_PRIVATE_KEY) OR empty($this->TBK_PRIVATE_KEY)) throw new Exception("The TBK_PRIVATE_KEY_WS is not set", 2);
 		if(!isset($this->TBK_CERT_FILE) OR empty($this->TBK_CERT_FILE)) throw new Exception("The TBK_SERVER_CERT_FILE is not set", 3);
 	}
+	public function PROVIDERS(){
+		$this->GETUSERPARAM();
+		$where['ID_USER'] = $USER->Id;
+		return $this->GET('TBK_OC_REGISTER_TC', $where);
+	}
+	public static function GETPROVIDERS(){
+		$oneclick = new OneClick();
+		return $oneclick->PROVIDERS();
+	}
 }
 ?>

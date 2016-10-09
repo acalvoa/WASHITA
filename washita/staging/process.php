@@ -5,6 +5,7 @@ require_once(dirname(__FILE__)."/php/hybridauth/WashitaUser.php");
 require_once(dirname(__FILE__)."/_config.php");
 
 include_once(dirname(__FILE__)."/templates/header.general.php");
+include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
 
 
 // UNCOMMENT ONLY FOR TEST
@@ -320,15 +321,12 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                             <div class="input-group-horizontal">
                                 <div class="tc_input_row">
                                     <select name="city_area_id" class="form-control" required>
+                                        <option value="-1">Seleccione la tarjeta de pago</option>
                                         <?php 
-                                            $cities = City::GetAllCititesWithAreas();
-                                            foreach ($cities as $city) {
-                                                foreach ($city->Areas as $cityArea) {
-                                                    $isSelected = ($user != null && $user->CityAreaId == $cityArea->Id);
-                                                    echo '<option value="'.$cityArea->Id.'" '.($isSelected? "selected":"").'>'.$city->Name.' / '.$cityArea->Name.'</option>';
-                                                }
+                                            $providers = OneClick::GETPROVIDERS();
+                                            foreach ($providers as $provider) {
+                                                echo '<option value="'.$provider['TBK_USER'].'" >'.$provider['CREDIT_CARD_TYPE'].' XXXX XXXX XXXX '.$provider['LAST4NUMBER'].'</option>';
                                             }
-
                                         ?>                               
                                     </select>
                                 </div>
