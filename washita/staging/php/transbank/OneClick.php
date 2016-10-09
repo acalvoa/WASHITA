@@ -169,7 +169,7 @@ class OneClick extends MySQLDB{
 	}
 	public function PROVIDERS(){
 		$this->GETUSERPARAM();
-		$where['ID_USER'] = $USER->Id;
+		$where['ID_USER'] = $this->WASHITA_USERNAME;
 		return $this->GET('TBK_OC_REGISTER_TC', $where);
 	}
 	public static function GETPROVIDERS(){
