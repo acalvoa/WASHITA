@@ -12,8 +12,8 @@ require_once(dirname(__FILE__)."/../../_config.php");
 /**
 * DEFINES THE CONSTANTS
 */
-define('PRIVATE_KEY', $GLOBAL['TBK_PRIVATE_KEY_WS']);
-define('CERT_FILE', $GLOBAL['TBK_CERT_FILE_WS']);
+define('PRIVATE_KEY', $GLOBALS['TBK_PRIVATE_KEY_WS']);
+define('CERT_FILE', $GLOBALS['TBK_CERT_FILE_WS']);
 /**
 *	This class is the main class of the OneClick Process.
 */
