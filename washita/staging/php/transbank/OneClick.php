@@ -132,7 +132,7 @@ class OneClick extends MySQLDB{
 	function REMOVE_INSCRIPTION($ODC,$TBK_USER){
 		$oneClickService = new OneClickWS();
 		$oneClickRemoveUserInput = new oneClickRemoveUserInput();
-		$tbkUser = ,$TBK_USER;
+		$tbkUser = $TBK_USER;
 		$commerceUser = <identificador de usuario del comercio>;
 		$oneClickRemoveUserInput->tbkUser = $tbkUser;
 		$oneClickRemoveUserInput->username = $commerceUser;
