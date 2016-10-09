@@ -346,9 +346,6 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
         </div>
     </section>
 <script>
-$(document).ready(function() {
-
-});
 </script>
 
  <?php 
@@ -404,6 +401,7 @@ $(document).ready(function() {
                     data: {},
                     success: function(res){
                         result = JSON.parse(res);
+                        alert(res.url);
                         window.open(res.url);
                     }
                 })
