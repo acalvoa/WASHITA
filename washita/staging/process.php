@@ -395,15 +395,16 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                 }
             });
             $("#add_tc_action").on("click", function(){
-                $.ajax({
-                    url: "php/transbank/ep_webpay.php?action=ONECLICK_INSCRIPTION",
-                    method: "POST",
-                    data: {},
-                    success: function(res){
-                        result = JSON.parse(res);
-                        window.open(result.url);
-                    }
-                })
+                location.href="php/transbank/ep_webpay.php?action=ONECLICK_INSCRIPTION";
+                // $.ajax({
+                //     url: "",
+                //     method: "POST",
+                //     data: {},
+                //     success: function(res){
+                //         result = JSON.parse(res);
+                //         window.open(result.url);
+                //     }
+                // })
             });
             
 

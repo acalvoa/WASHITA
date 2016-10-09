@@ -30,7 +30,7 @@ class OneClick extends MySQLDB{
 		$this->ONECLICK_URL_INSCRIPTION = $GLOBALS['ONECLICK_URL_INSCRIPTION'];
 		$this->CHECKCONFIG();
 	}
-	function INIT_INSCRIPTION(){
+	function INIT_INSCRIPTION($ws = false){
 		$this->GETUSERPARAM();
 		$oneClickService = new OneClickWS();
 		$oneClickInscriptionInput = new oneClickInscriptionInput();
@@ -46,9 +46,14 @@ class OneClick extends MySQLDB{
 		$soapValidation->getValidationResult(); 
 		//Esto obtiene el resultado de la operación
 		$oneClickInscriptionOutput = $oneClickInscriptionResponse->return; 
-		$tokenOneClick = $oneClickInscriptionOutput->token; //Token de resultado
+		$retorno['token'] = $oneClickInscriptionOutput->token; //Token de resultado
+		$retorno['url'] = $oneClickInscriptionOutput->urlWebpay;
+		if($ws) die(json_encode($retorno));
 		//URL para realizar el post
-		return $oneClickInscriptionOutput->urlWebpay; 
+		printf('<form action="%s" name="frm" method="post">', $retorno['url']);
+		printf('<input type="hidden" name="TBK_TOKEN" value="%s"/>', $retorno['token']);
+		echo "</form>";
+		echo '<script type="text/javascript"> document.frm.submit(); </script>';
 		
 	}
 	/** @method void FINISH_INSCRIPTION() this function finish the TC inscription process. */

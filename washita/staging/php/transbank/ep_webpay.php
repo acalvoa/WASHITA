@@ -21,10 +21,7 @@ if(!empty($action) AND !is_null($action)){
 	}
 	else if($action == "ONECLICK_INSCRIPTION"){
 		$oneclick = new OneClick();
-		$url = $oneclick->INIT_INSCRIPTION();
-		$retorno["status"] = 1;
-		$retorno["url"] = $url;
-		echo json_encode($retorno);
+		$oneclick->INIT_INSCRIPTION();
 	}
 }
 ?>
