@@ -15,7 +15,7 @@ require_once("OneClickWs.php");
 /**
 *	This class is the main class of the OneClick Process.
 */
-public class OneClick extends MySQLDB{
+class OneClick extends MySQLDB{
 	private $TBK_SERVER_CERT;
 	private $TBK_PRIVATE_KEY;
 	private $TBK_CERT_FILE;
