@@ -108,7 +108,7 @@ $TBK_PRIVATE_KEY_WS = "/home/washita/washita/staging/transbank/keys/597020000547
 /* DEFINE EL PATH DE LA LLAVE PRIVADA PARA WEBSERVICES TRANSBANK*/
 $TBK_SERVER_CERT_FILE = "/home/washita/washita/staging/transbank/keys/tbk.pem";
 /* DEFINE EL LINK DEL RESULTADO DE INSCRIPCION DEL PROCESO ONECLICK*/
-$ONECLICK_URL_INSCRIPTION;
+$ONECLICK_URL_INSCRIPTION = "/php/transbank/ep_webpay.php?action=FINISH_ONECLICK_INSCRIPTION";
 /***************************/
 
 
