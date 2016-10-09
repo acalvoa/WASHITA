@@ -401,8 +401,7 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                     data: {},
                     success: function(res){
                         result = JSON.parse(res);
-                        alert(res.url);
-                        window.open(res.url);
+                        window.open(result.url);
                     }
                 })
             });
