@@ -19,7 +19,7 @@ class oneClickRemoveUserInput{
 	var $tbkUser;//string
 	var $username;//string
 }
-class baseBean{
+	class baseBean{
 }
 class removeUserResponse{
 	var $return;//boolean
@@ -68,6 +68,8 @@ class oneClickReverseOutput{
 	var $reverseCode;//long
 	var $reversed;//boolean
 }
+class reverseOutput{
+}
 class authorize{
 	var $arg0;//oneClickPayInput
 }
@@ -98,33 +100,33 @@ class OneClickWs
  	var $soapClient;
  
 	private static $classmap = array('removeUser'=>'removeUser'
-	,'oneClickRemoveUserInput'=>'oneClickRemoveUserInput'
-	,'baseBean'=>'baseBean'
-	,'removeUserResponse'=>'removeUserResponse'
-	,'initInscription'=>'initInscription'
-	,'oneClickInscriptionInput'=>'oneClickInscriptionInput'
-	,'initInscriptionResponse'=>'initInscriptionResponse'
-	,'oneClickInscriptionOutput'=>'oneClickInscriptionOutput'
-	,'finishInscription'=>'finishInscription'
-	,'oneClickFinishInscriptionInput'=>'oneClickFinishInscriptionInput'
-	,'finishInscriptionResponse'=>'finishInscriptionResponse'
-	,'oneClickFinishInscriptionOutput'=>'oneClickFinishInscriptionOutput'
-	,'codeReverseOneClick'=>'codeReverseOneClick'
-	,'oneClickReverseInput'=>'oneClickReverseInput'
-	,'codeReverseOneClickResponse'=>'codeReverseOneClickResponse'
-	,'oneClickReverseOutput'=>'oneClickReverseOutput'
-	,'authorize'=>'authorize'
-	,'oneClickPayInput'=>'oneClickPayInput'
-	,'authorizeResponse'=>'authorizeResponse'
-	,'oneClickPayOutput'=>'oneClickPayOutput'
-	,'reverse'=>'reverse'
-	,'reverseResponse'=>'reverseResponse'
-
+		,'oneClickRemoveUserInput'=>'oneClickRemoveUserInput'
+		,'baseBean'=>'baseBean'
+		,'removeUserResponse'=>'removeUserResponse'
+		,'initInscription'=>'initInscription'
+		,'oneClickInscriptionInput'=>'oneClickInscriptionInput'
+		,'initInscriptionResponse'=>'initInscriptionResponse'
+		,'oneClickInscriptionOutput'=>'oneClickInscriptionOutput'
+		,'finishInscription'=>'finishInscription'
+		,'oneClickFinishInscriptionInput'=>'oneClickFinishInscriptionInput'
+		,'finishInscriptionResponse'=>'finishInscriptionResponse'
+		,'oneClickFinishInscriptionOutput'=>'oneClickFinishInscriptionOutput'
+		,'codeReverseOneClick'=>'codeReverseOneClick'
+		,'oneClickReverseInput'=>'oneClickReverseInput'
+		,'codeReverseOneClickResponse'=>'codeReverseOneClickResponse'
+		,'oneClickReverseOutput'=>'oneClickReverseOutput'
+		,'reverseOutput'=>'reverseOutput'
+		,'authorize'=>'authorize'
+		,'oneClickPayInput'=>'oneClickPayInput'
+		,'authorizeResponse'=>'authorizeResponse'
+		,'oneClickPayOutput'=>'oneClickPayOutput'
+		,'reverse'=>'reverse'
+		,'reverseResponse'=>'reverseResponse'
 	);
 
 	function __construct($url='https://webpay3gint.transbank.cl/webpayserver/wswebpay/OneClickPaymentService?wsdl')
 	{
-		$this->soapClient = new OneClickSoap($url,array("classmap"=>self::$classmap,"trace" => true,"exceptions" => true));
+	  	$this->soapClient = new SoapClient($url,array("classmap"=>self::$classmap,"trace" => true,"exceptions" => true));
 	}
  
 	function removeUser($removeUser)
@@ -132,15 +134,15 @@ class OneClickWs
 		$removeUserResponse = $this->soapClient->removeUser($removeUser);
 		return $removeUserResponse;
 	}
-	function initInscription($initInscription)
-	{
-		$initInscriptionResponse = $this->soapClient->initInscription($initInscription);
-		return $initInscriptionResponse;
-	}
 	function finishInscription($finishInscription)
 	{
 		$finishInscriptionResponse = $this->soapClient->finishInscription($finishInscription);
 		return $finishInscriptionResponse;
+	}
+	function initInscription($initInscription)
+	{
+		$initInscriptionResponse = $this->soapClient->initInscription($initInscription);
+		return $initInscriptionResponse;
 	}
 	function authorize($authorize)
 	{
