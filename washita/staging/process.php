@@ -333,7 +333,7 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                                     </select>
                                 </div>
                                 <div class="tc_add_row">
-                                    <button type="submit" class="add_tc_btn">Agregar tarjeta</button>
+                                    <button type="submit" class="add_tc_btn" id="add_tc_action">+ Agregar tarjeta</button>
                                 </div>
                             </div>
                         </div>
@@ -397,7 +397,16 @@ $(document).ready(function() {
                     $(".oneclick_tab").hide();
                 }
             });
-            
+            $("#add_tc_action").on("click", function(){
+                $.ajax({
+                    url: "php/transbank/ep_webpay.php?action=ONECLICK_INSCRIPTION",
+                    method: "POST",
+                    data: {},
+                    success: function(res){
+                        alert(res);
+                    }
+                })
+            });
             
 
             var washingControl = new WashingWashItemsControl("#modal_possible_items", true);

@@ -148,13 +148,10 @@ public class OneClick extends MySQLDB{
 	}
 	/** @method void GETUSERPARAM() this function finish the TC inscription process. */
 	function GETUSERPARAM(){
-		if($_POST){
-			$USER = WashitaUser::CurrentUser();
-			$this->WASHITA_USERNAME = $USER->Id;
-			$this->WASHITA_EMAIL = $USER->Email;
-			return;
-		}
-		throw new Exception("The user fields not are post", 44);
+		$USER = WashitaUser::CurrentUser();
+		$this->WASHITA_USERNAME = $USER->Id;
+		$this->WASHITA_EMAIL = $USER->Email;
+		return;
 	}
 	/** @method void FINISH_INSCRIPTION() this function finish the TC inscription process. */
 	function CHECKCONFIG(){
