@@ -403,7 +403,8 @@ $(document).ready(function() {
                     method: "POST",
                     data: {},
                     success: function(res){
-                        alert(res);
+                        result = JSON.parse(res);
+                        window.open(res.url);
                     }
                 })
             });
