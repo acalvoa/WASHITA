@@ -122,7 +122,7 @@ class OneClickWs
 
 	);
 
-	function __construct($url='https://webpay3g.orangepeople.cl/webpayserver/wswebpay/OneClickPaymentService?wsdl')
+	function __construct($url='https://webpay3gint.transbank.cl/webpayserver/wswebpay/OneClickPaymentService?wsdl')
 	{
 		$this->soapClient = new OneClickSoap($url,array("classmap"=>self::$classmap,"trace" => true,"exceptions" => true));
 	}
