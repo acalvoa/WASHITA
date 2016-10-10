@@ -24,6 +24,7 @@ class OneClick extends MySQLDB{
 	private $ONECLICK_URL_INSCRIPTION;
 	private $TBK_SUCCESS;
 	private $TBK_FAIL;
+	private $TBK_PROD_MODE;
 	function __construct(){
 		parent::__construct($GLOBALS["DBServer"],$GLOBALS["DBUser"],$GLOBALS["DBPass"],$GLOBALS["DBName"]);
 		$this->TBK_SERVER_CERT = $GLOBALS['TBK_CERT_FILE_WS'];
@@ -32,6 +33,8 @@ class OneClick extends MySQLDB{
 		$this->ONECLICK_URL_INSCRIPTION = $GLOBALS['ONECLICK_URL_INSCRIPTION'];
 		$this->TBK_SUCCESS = $GLOBALS["TBK_SUCCESS"];
 		$this->TBK_FAIL = $GLOBALS["TBK_FAIL"];
+		$this->TBK_PROD_MODE = $GLOBALS["WSH_PROD_MODE"];
+		$this->LOG_PATH = $GLOBALS["LOG_PATH"];
 		$this->CHECKCONFIG();
 	}
 	function INIT_INSCRIPTION($ws = false){
