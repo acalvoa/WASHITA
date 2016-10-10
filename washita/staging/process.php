@@ -386,12 +386,12 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
                 if($("input[name=payment_method]:checked", "#checkout_form").val() == "oneclick"){
                     $(".pay_tab").hide();
                     $(".oneclick_tab").show();
-                    $("#checkout_form").attr("action", '.$GLOBALS['TBK_AUTHORIZE_ONECLICK'].');
+                    $("#checkout_form").attr("action", "'.$GLOBALS['TBK_AUTHORIZE_ONECLICK'].'");
                 } 
                 else{
                     $(".pay_tab").show();
                     $(".oneclick_tab").hide();
-                    $("#checkout_form").attr("action", '.$GLOBALS['TBK_INIT_TRANS_LINK'].');
+                    $("#checkout_form").attr("action", "'.$GLOBALS['TBK_INIT_TRANS_LINK'].'");
                 }
             });
             $("#add_tc_action").on("click", function(){
