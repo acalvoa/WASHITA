@@ -37,6 +37,7 @@ class OrderGenerator extends MySQLDB{
 		if($this->TBK_ORDER == NULL) throw new Exception("No have data in TBK_ORDER");
 		$where['ID_ODC'] = $this->INSERT($this->TBK_ORDER,"TBK_PREORDER");
 		$in['TBK_ODC'] = date('YmdHis').$where['ID_ODC'];
+		echo $where['ID_ODC'];
 		$this->UPDATE($in,$where,"TBK_PREORDER");
 		return $in['TBK_ODC'];
 	}

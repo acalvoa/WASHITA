@@ -141,6 +141,7 @@ class OneClick extends MySQLDB{
 				echo $ID_PREORDER;
 				$preorder['TBK_ODC'] = $ID_PREORDER;
 				$order_param = $this->FIRST('TBK_PREORDER', $preorder);
+				print
 				unset($order_param['TBK_ODC']);
 				unset($order_param['ID_ODC']);
 				unset($order_param['ID_USER']);
