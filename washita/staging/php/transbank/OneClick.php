@@ -138,6 +138,7 @@ class OneClick extends MySQLDB{
 				$transactionId = $oneClickPayOutput->transactionId;
 				// CREAMOS LA ORDEN EN LA BASE DE DATOS
 				$this->LOG("Creamos la nueva orden de trabajo. Rescatamos el registro");
+				echo $ID_PREORDER;
 				$preorder['TBK_ODC'] = $ID_PREORDER;
 				$order_param = $this->FIRST('TBK_PREORDER', $preorder);
 				unset($order_param['TBK_ODC']);
