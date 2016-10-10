@@ -207,7 +207,7 @@ class OneClick extends MySQLDB{
 				else
 				{
 					printf('<form action="%s" name="frm" method="post">', $this->TBK_SUCCESS);
-					printf('<input type="hidden" name="TBK_ODC" value="%s"/>', $ID_PREORDER);
+					printf('<input type="hidden" name="TBK_ORDEN_COMPRA" value="%s"/>', $ID_PREORDER);
 					printf('<input type="hidden" name="TBK_AMOUNT" value="%s"/>', $PREORDER->GET_PRICE());
 					printf('<input type="hidden" name="TBK_AUTH_CODE" value="%s"/>', $authorizationCode);
 					printf('<input type="hidden" name="TBK_TC_DIGIT" value="%s"/>', $last4CardDigits);
