@@ -26,6 +26,7 @@ class OneClick extends MySQLDB{
 	private $TBK_FAIL;
 	private $TBK_PROD_MODE;
 	private $TBK_LOGPATH;
+	private $TBK_SESSION;
 	function __construct(){
 		parent::__construct($GLOBALS["DBServer"],$GLOBALS["DBUser"],$GLOBALS["DBPass"],$GLOBALS["DBName"]);
 		$this->TBK_SERVER_CERT = $GLOBALS['TBK_CERT_FILE_WS'];
@@ -320,7 +321,7 @@ class OneClick extends MySQLDB{
 	}
 	/** @method void GENERATE_SESION() this function check the MAC provided by transbank */
 	private function GENERATE_SESION(){
-		$user_id = $this->USER->Id;
+		$user_id = $this->WASHITA_USERNAME;
 		$time_hash = sha1(time());
 		$hash = $user_id."@".$time_hash;
 		$this->TBK_SESSION = md5($hash);
