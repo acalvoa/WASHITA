@@ -35,10 +35,8 @@ class OrderGenerator extends MySQLDB{
 	/* @method integer CREATE_PRE_ORDER() This method create a preorder for pay with the process */
 	function CREATE_PRE_ORDER(){
 		if($this->TBK_ORDER == NULL) throw new Exception("No have data in TBK_ORDER");
-		print_r($this->TBK_ORDER);
 		$where['ID_ODC'] = $this->INSERT($this->TBK_ORDER,"TBK_PREORDER");
 		$in['TBK_ODC'] = date('YmdHis').$where['ID_ODC'];
-		echo $where['ID_ODC'];
 		$this->UPDATE($in,$where,"TBK_PREORDER");
 		return $in['TBK_ODC'];
 	}
