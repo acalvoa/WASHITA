@@ -109,6 +109,8 @@ $TBK_PRIVATE_KEY_WS = "/home/washita/washita/staging/transbank/keys/597020000547
 $TBK_SERVER_CERT_FILE = "/home/washita/washita/staging/transbank/keys/tbk.pem";
 /* DEFINE EL LINK DEL RESULTADO DE INSCRIPCION DEL PROCESO ONECLICK*/
 $ONECLICK_URL_INSCRIPTION = "http://washita.teamnodes.com/php/transbank/ep_webpay.php?action=FINISH_ONECLICK_INSCRIPTION";
+/* BEGIN ONECLICK TRANSACTION LINK*/
+$TBK_AUTHORIZE_ONECLICK = "/php/transbank/ep_webpay.php?action=AUTHORIZE_ONECLICK";
 /***************************/
 
 

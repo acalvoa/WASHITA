@@ -41,5 +41,16 @@ if(!empty($action) AND !is_null($action)){
 			$oneclick->FINISH_INSCRIPTION($_POST['TBK_TOKEN']);
 		}
 	}
+	else if($action == "AUTHORIZE_ONECLICK"){
+		if(isset($_GET['ws']) && $_GET['ws'] == "true"){
+			$oneclick = new OneClick();
+			$oneclick->AUTHORIZE($_POST['TBK_USER'],true);
+		}
+		else
+		{
+			$oneclick = new OneClick();
+			$oneclick->AUTHORIZE($_POST['TBK_USER']);
+		}
+	}
 }
 ?>
