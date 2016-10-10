@@ -104,7 +104,8 @@ class OneClick extends MySQLDB{
 	function AUTHORIZE($TBK_USER, $ws = false){
 		$this->GETUSERPARAM();
 		if(!isset($this->WASHITA_USERNAME)) throw new Exception("The USER is not loged is not set", 1);
-		$this->LOG("#######################\nIniciamos la transaccion: ");
+		$this->GENERATE_SESION();
+		$this->LOG("#######################\nIniciamos la transaccion: ".$this->TBK_SESSION);
 		// GENERATE THE PREORDER
 		$PREORDER = new OrderGenerator($this->WASHITA_USERNAME);
 		$PREORDER->PROCESS_FIELDS();
@@ -307,6 +308,22 @@ class OneClick extends MySQLDB{
 			fwrite($fp, "\n".$message);
 			fclose($fp);
 		}
+	}
+	/** @method void REG_TRANS() this function register the transbank transaction */
+	public function REG_TRANS($odc, $amount){
+		$TRANSACTION = array();
+		$TRANSACTION['TBK_SESSION'] = $this->TBK_SESSION;
+		$TRANSACTION['TBK_ODC'] = $odc;
+		$TRANSACTION['TBK_AMOUNT'] = $amount;
+		$TRANSACTION['PAYMENT_STATUS'] = 0;
+		return $this->INSERT($TRANSACTION,"TBK_TRANSACTIONS");
+	}
+	/** @method void GENERATE_SESION() this function check the MAC provided by transbank */
+	private function GENERATE_SESION(){
+		$user_id = $this->USER->Id;
+		$time_hash = sha1(time());
+		$hash = $user_id."@".$time_hash;
+		$this->TBK_SESSION = md5($hash);
 	}
 }
 ?>
