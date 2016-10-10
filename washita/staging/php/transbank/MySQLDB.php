@@ -272,6 +272,7 @@ class MySQLDB implements DBCommon {
 		$fields = "(";
 		$intable = array();
 		print_r($insert);
+		echo "<br>";
 		foreach ($insert as $key => $value) {
 			if(!is_null($value)){
 				$argument .= "`".$key."`,";
