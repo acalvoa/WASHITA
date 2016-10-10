@@ -295,5 +295,14 @@ class OneClick extends MySQLDB{
 		$oneclick = new OneClick();
 		return $oneclick->PROVIDERS();
 	}
+	/** @method void LOG(string $message) this function finalice the transaction with transbank and close the process */
+	public function LOG($message){
+		if(!$this->TBK_PROD_MODE){
+			$logfile = $this->TBK_LOGPATH."/log.txt";
+			$fp=fopen($logfile,"a+");
+			fwrite($fp, "\n".$message);
+			fclose($fp);
+		}
+	}
 }
 ?>
