@@ -115,7 +115,9 @@ class MySQLDB implements DBCommon {
 		$this->LOGDB(json_encode($field));
 		$stmt = $this->MYSQL->prepare($query);
 		$this->LOGDB("Error: ".$this->MYSQL->error);
+		echo "<br>";
 		echo $query."<br>";
+		print_r($field)."<br>";
 		if(!$stmt){
 			throw new Exception("The statement is incorrect. Check the query", 7);
 		}
