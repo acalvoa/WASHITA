@@ -25,6 +25,7 @@ class OneClick extends MySQLDB{
 	private $TBK_SUCCESS;
 	private $TBK_FAIL;
 	private $TBK_PROD_MODE;
+	private $LOG_PATH;
 	function __construct(){
 		parent::__construct($GLOBALS["DBServer"],$GLOBALS["DBUser"],$GLOBALS["DBPass"],$GLOBALS["DBName"]);
 		$this->TBK_SERVER_CERT = $GLOBALS['TBK_CERT_FILE_WS'];
@@ -103,7 +104,7 @@ class OneClick extends MySQLDB{
 	function AUTHORIZE($TBK_USER, $ws = false){
 		$this->GETUSERPARAM();
 		if(!isset($this->WASHITA_USERNAME)) throw new Exception("The USER is not loged is not set", 1);
-		$this->LOG("#######################\nIniciamos la transaccion: ".$this->TBK_SESSION);
+		$this->LOG("#######################\nIniciamos la transaccion: ");
 		// GENERATE THE PREORDER
 		$PREORDER = new OrderGenerator($this->WASHITA_USERNAME);
 		$PREORDER->PROCESS_FIELDS();
