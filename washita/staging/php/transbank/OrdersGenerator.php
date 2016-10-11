@@ -66,6 +66,8 @@ class OrderGenerator extends MySQLDB{
 	    $this->PRICE_OBJ->kilo = 0;//default
 	    $this->PRICE_OBJ->WashType = $TBK_ORDER['WASH_TYPE'];
 
+	    $checkboxWashing = GetBooleanPost('checkbox_washing');
+
 	    $ironingItemLines=[];
 	    if($this->PRICE_OBJ->WashType == WashType::WashingAndIroning){
 
@@ -73,17 +75,50 @@ class OrderGenerator extends MySQLDB{
 	        $ironingItemLines =  OrderCustomItemLine::ConvertFromPost(WashType::OnlyIroning, $ironing_items_post);
 	        $this->PRICE_OBJ->TotalIroningItems = count($ironingItemLines);
 
-	        if(GetBooleanPost('checkbox_washing')){
+	        if($checkboxWashing){
 	            $orderWashitemLines = isset($_POST['washitems']) ? $_POST['washitems']: "";
-	            $this->PRICE_OBJ->WashItemLines = OrderWashItemLine::ConvertFromPost($orderWashitemLines);
+	            $this->PRICE_OBJ->WashItemLines = OrderWashItemLine::ConvertFromPost($this->PRICE_OBJ->WashType, $orderWashitemLines);
 	            $this->PRICE_OBJ->kilo = GetPost('weight');
 	        }
 	    }
-	    else if($this->PRICE_OBJ->WashType == WashType::DryCleaning){
-	        $orderDryCleaningItemLines = isset($_POST['dry_cleaning_items_post']) ? $_POST['dry_cleaning_items_post']: "";
-	        $this->PRICE_OBJ->WashItemLines = OrderWashItemLine::ConvertFromPost($orderDryCleaningItemLines);
+	    else if($this->PRICE_OBJ->WashType == WashType::OnlyIroning){
+	        $orderOnlyIroningItemLines = isset($_POST['only_ironing_items_post']) ? $_POST['only_ironing_items_post']: "";
+	        $this->PRICE_OBJ->WashItemLines = OrderWashItemLine::ConvertFromPost($this->PRICE_OBJ->WashType, $orderOnlyIroningItemLines);
 	        $this->PRICE_OBJ->kilo = GetPost('weight');
 	    }
+	    else if($this->PRICE_OBJ->WashType == WashType::DryCleaning){
+	        $orderDryCleaningItemLines = isset($_POST['dry_cleaning_items_post']) ? $_POST['dry_cleaning_items_post']: "";
+	        $this->PRICE_OBJ->WashItemLines = OrderWashItemLine::ConvertFromPost($this->PRICE_OBJ->WashType, $orderDryCleaningItemLines);
+	        $this->PRICE_OBJ->kilo = GetPost('weight');
+	    }
+	    
+	    
+
+	    if(($this->PRICE_OBJ->WashType == WashType::OnlyIroning ||
+	        $this->PRICE_OBJ->WashType == WashType::DryCleaning || 
+	        $this->PRICE_OBJ->WashType == WashType::SpecialCleaning)
+	        && count($this->PRICE_OBJ->WashItemLines) < 1){
+	        echo "Wash items should be selected for only ironing, dry and special cleaning!";
+			exit();
+	    }    
+	    // $ironingItemLines=[];
+	    // if($this->PRICE_OBJ->WashType == WashType::WashingAndIroning){
+
+	    //     $ironing_items_post = isset($_POST['ironing_items_post']) ? $_POST['ironing_items_post']: "";
+	    //     $ironingItemLines =  OrderCustomItemLine::ConvertFromPost(WashType::OnlyIroning, $ironing_items_post);
+	    //     $this->PRICE_OBJ->TotalIroningItems = count($ironingItemLines);
+
+	    //     if(GetBooleanPost('checkbox_washing')){
+	    //         $orderWashitemLines = isset($_POST['washitems']) ? $_POST['washitems']: "";
+	    //         $this->PRICE_OBJ->WashItemLines = OrderWashItemLine::ConvertFromPost($orderWashitemLines);
+	    //         $this->PRICE_OBJ->kilo = GetPost('weight');
+	    //     }
+	    // }
+	    // else if($this->PRICE_OBJ->WashType == WashType::DryCleaning){
+	    //     $orderDryCleaningItemLines = isset($_POST['dry_cleaning_items_post']) ? $_POST['dry_cleaning_items_post']: "";
+	    //     $this->PRICE_OBJ->WashItemLines = OrderWashItemLine::ConvertFromPost($orderDryCleaningItemLines);
+	    //     $this->PRICE_OBJ->kilo = GetPost('weight');
+	    // }
 	    // APLICAMOS DESCUENTOS EN CASO DE HABERLOS 
 	    $this->PRICE_OBJ->Discount = DiscountCoupon::GetDiscountByCoupon($TBK_ORDER['DISCOUNT_COUPON'], $TBK_ORDER['EMAIL']);
 	    // CALCULA OS EL PRECIO
