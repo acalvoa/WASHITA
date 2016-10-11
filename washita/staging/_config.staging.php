@@ -1,8 +1,8 @@
 <?php
 
-$site_root = 'http://test.washita.cl/staging';
-$DBServer = 'australbotscom.fatcowmysql.com';
-$DBName   = 'washita_2016';
+$site_root = 'http://washita.teamnodes.com/';
+$DBServer = 'localhost';
+$DBName   = 'washita';
 
 
 $smtpOrderVina = "eduardo.labarca@gmail.com";
