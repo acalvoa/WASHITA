@@ -13,7 +13,7 @@ $action = $_GET['action'];
 if(!empty($action) AND !is_null($action)){
 	if($action == "BEGIN_TRANS"){
 		$webpay = new Webpay();
-		$webpay->START_TRANS();
+		$webpay->START_TRANS_WS();
 	}
 	else if($action == "VERIFY_TRANS"){
 		$webpay = new Webpay();

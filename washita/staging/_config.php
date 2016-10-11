@@ -82,6 +82,8 @@ $AdminOrdersPassword = "3355.washita";
 *	
 *
 ***************************/
+/* BEGIN ONECLICK TRANSACTION LINK*/
+$TBK_COMMERCE_CODE = "597020000547";
 /* ABSOLUTE SERVER PATH*/
 $TBK_MAC_PATH = "/home/washita/washita/staging/transbank/comun";
 /* URL ABSOLUTE*/
@@ -112,6 +114,14 @@ $TBK_SERVER_CERT_FILE = "/home/washita/washita/staging/transbank/keys/tbk.pem";
 $ONECLICK_URL_INSCRIPTION = "http://washita.teamnodes.com/php/transbank/ep_webpay.php?action=FINISH_ONECLICK_INSCRIPTION";
 /* BEGIN ONECLICK TRANSACTION LINK*/
 $TBK_AUTHORIZE_ONECLICK = "/php/transbank/ep_webpay.php?action=AUTHORIZE_ONECLICK";
+/* BEGIN ONECLICK TRANSACTION LINK*/
+$TBK_AUTHORIZE_ONECLICK = "/php/transbank/ep_webpay.php?action=AUTHORIZE_ONECLICK";
+/* BEGIN ONECLICK TRANSACTION LINK*/
+$TBK_AUTHORIZE_ONECLICK = "/php/transbank/ep_webpay.php?action=AUTHORIZE_ONECLICK";
+/* WEBPAY WS RESULT LINK*/
+$TBK_WEBPAY_RESULT = "http://washita.teamnodes.com/tbk_result.php";
+/* WEBPAY WS END LINK*/
+$TBK_WEBPAY_END = "http://washita.teamnodes.com/tbk_end.php";
 /***************************/
 
 

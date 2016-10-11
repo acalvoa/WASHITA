@@ -10,6 +10,7 @@ require_once(dirname(__FILE__)."/../../_config.php");
 require_once(dirname(__FILE__)."/../hybridauth/WashitaUser.php");
 include_once(dirname(__FILE__)."/../MailService.class.php");
 require_once(dirname(__FILE__)."/OrdersGenerator.php");
+require_once(dirname(__FILE__).'/vendor/webpay/webpay.php' );
 require_once("MySQLDB.php");
 
 /**
@@ -42,6 +43,18 @@ class Webpay extends MySQLDB{
 	private $TBK_PROD_MODE = FALSE;
 	/** @var string $TBK_LOGPATH Indicate the log path when the system is not in PRODUCTION MODE */
 	private $TBK_LOGPATH;
+	/** @var string $TBK_SERVER_CERT Indicate the path of TRANSBANK CERT  */
+	private $TBK_SERVER_CERT;
+	/** @var string $TBK_PRIVATE_KEY Indicate the path of PRIVATE KEY WS */
+	private $TBK_PRIVATE_KEY;
+	/** @var string $TBK_CERT_FILE Indicate the path of PUBLIC CERT FILE WS  */
+	private $TBK_CERT_FILE;
+	/** @var string $TBK_CERT_FILE Indicate the commerce code for ws (Only WS)*/
+	private $TBK_COMMERCE_CODE;
+	/** @var string $TBK_WEBPAY_RESULT Indicate the result link for webpay ws (Only WS)*/
+	private $TBK_WEBPAY_RESULT;
+	/** @var string $TBK_WEBPAY_END Indicate the end link for webpay ws (Only WS)*/
+	private $TBK_WEBPAY_END;
 
 	/** @method __construct() represent the main constructor of class. this method get the database values from global configuration. */
 	function __construct(){
@@ -53,7 +66,13 @@ class Webpay extends MySQLDB{
 		$this->TBK_TIPO_TRANSACCION = $GLOBALS["TBK_TIPO_TRANSACCION"];
 		$this->TBK_CHECK_MAC_PATH = $GLOBALS["TBK_CHECK_MAC_PATH"];
 		$this->TBK_PROD_MODE  = $GLOBALS["WSH_PROD_MODE"];
-		$this->TBK_LOGPATH = $GLOBALS["LOG_PATH"];	
+		$this->TBK_LOGPATH = $GLOBALS["LOG_PATH"];
+		$this->TBK_SERVER_CERT = $GLOBALS['TBK_CERT_FILE_WS'];
+		$this->TBK_PRIVATE_KEY = $GLOBALS['TBK_PRIVATE_KEY_WS'];
+		$this->TBK_CERT_FILE = $GLOBALS['TBK_SERVER_CERT_FILE'];
+		$this->TBK_COMMERCE_CODE = $GLOBALS['TBK_COMMERCE_CODE'];
+		$this->TBK_WEBPAY_RESULT = $GLOBALS['TBK_WEBPAY_RESULT'];
+		$this->TBK_WEBPAY_END = $GLOBALS['TBK_WEBPAY_END'];
 		$this->VERIFY_CONFIG();
 	}
 	/** @method void VERIFY_CONFIG() this function verify when the config was set. */
@@ -85,6 +104,45 @@ class Webpay extends MySQLDB{
 			printf('<input type="hidden" name="TBK_ID_SESION" value="%s"/>', $this->TBK_SESSION);
 			printf('<input type="hidden" name="TBK_URL_EXITO" value="%s"/>', $this->TBK_SUCCESS);
 			printf('<input type="hidden" name="TBK_URL_FRACASO" value="%s"/>', $this->TBK_FAIL);
+			echo "</form>";
+			echo '<script type="text/javascript"> document.frm.submit(); </script>';
+		}
+		else
+		{
+			throw new Exception("Database transaction register has problems", 4);
+		}
+	}
+	/** @method void START_TRANS() this function start the transbank transaction */
+	public function START_TRANS_WS(){
+		// FIRST WE WILL GENERATE A SESION CODE
+		$this->USER = WashitaUser::CurrentUser();
+		if(!isset($this->USER)) throw new Exception("The USER is not loged is not set", 1);
+		$this->GENERATE_SESION();
+		$this->LOG("#######################\nIniciamos la transaccion: ".$this->TBK_SESSION);
+		// GENERATE THE PREORDER
+		$webpay_settings = array(
+			"MODO" => "INTEGRACION",
+			"PRIVATE_KEY" => file_get_contents($this->TBK_PRIVATE_KEY),
+			"PUBLIC_CERT" => file_get_contents($this->TBK_SERVER_CERT),
+			"WEBPAY_CERT" => file_get_contents($this->TBK_CERT_FILE),
+			"COMMERCE_CODE" => $this->TBK_COMMERCE_CODE,
+			"URL_RETURN" => $this->TBK_WEBPAY_RESULT,
+			"URL_FINAL" => $this->TBK_WEBPAY_END,
+		);
+
+		$webpay = new WebPaySOAP($webpay_settings); // Crea objeto WebPay
+		$webpay = $webpay->getNormalTransaction(); // Crea Transaccion Normal
+
+		$PREORDER = new OrderGenerator($this->USER->Id);
+		$PREORDER->PROCESS_FIELDS();
+		$ID_PREORDER = $PREORDER->CREATE_PRE_ORDER();
+		$this->LOG("Preorden creada: ".$ID_PREORDER.", Redirigiendo");
+		if($this->REG_TRANS($ID_PREORDER,$PREORDER->GET_PRICE()."00")){
+	 		$result = $webpay->initTransaction($PREORDER->GET_PRICE()."00", $this->TBK_SESSION, $ID_PREORDER);
+			$webpay_token = $result["token_ws"];
+			
+			printf('<form action="%s" name="frm" method="post">', $result["url"]);
+			printf('<input type="hidden" name="token_ws" value="%s"/>', $webpay_token);
 			echo "</form>";
 			echo '<script type="text/javascript"> document.frm.submit(); </script>';
 		}
