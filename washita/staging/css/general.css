@@ -674,3 +674,40 @@ p.help-block{
 #dry_cleaning_container{
     padding-bottom: 20px;
 }
+
+.payelement{
+    float: left;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.payelement .inputfield{
+    float: left;
+    margin-right: 10px;
+    padding-top: 30px;
+}
+.payelement .logofield{
+    float: left;
+}
+.oneclick_tab{
+    display: none;
+}
+.pay_tab{
+    display: block;
+}
+.oneclick_tab .tc_input_row{
+    float: left;
+    width: calc(100% - 250px);
+}
+.oneclick_tab .tc_add_row{
+    float: left;
+    width: 250px;
+}
+.oneclick_tab .add_tc_btn{
+    padding: 10px 50px;
+    color: white;
+    background-color: #66cdcc;
+    border-radius: 20px;
+    border: 0;
+    float: right;
+    font-size: 16px;
+}
