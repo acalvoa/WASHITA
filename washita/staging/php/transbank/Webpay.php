@@ -112,45 +112,7 @@ class Webpay extends MySQLDB{
 			throw new Exception("Database transaction register has problems", 4);
 		}
 	}
-	/** @method void START_TRANS() this function start the transbank transaction */
-	public function START_TRANS_WS(){
-		// FIRST WE WILL GENERATE A SESION CODE
-		$this->USER = WashitaUser::CurrentUser();
-		if(!isset($this->USER)) throw new Exception("The USER is not loged is not set", 1);
-		$this->GENERATE_SESION();
-		$this->LOG("#######################\nIniciamos la transaccion: ".$this->TBK_SESSION);
-		// GENERATE THE PREORDER
-		$webpay_settings = array(
-			"MODO" => "INTEGRACION",
-			"PRIVATE_KEY" => file_get_contents($this->TBK_PRIVATE_KEY),
-			"PUBLIC_CERT" => file_get_contents($this->TBK_SERVER_CERT),
-			"WEBPAY_CERT" => file_get_contents($this->TBK_CERT_FILE),
-			"COMMERCE_CODE" => $this->TBK_COMMERCE_CODE,
-			"URL_RETURN" => $this->TBK_WEBPAY_RESULT,
-			"URL_FINAL" => $this->TBK_WEBPAY_END,
-		);
 
-		$webpay = new WebPaySOAP($webpay_settings); // Crea objeto WebPay
-		$webpay = $webpay->getNormalTransaction(); // Crea Transaccion Normal
-
-		$PREORDER = new OrderGenerator($this->USER->Id);
-		$PREORDER->PROCESS_FIELDS();
-		$ID_PREORDER = $PREORDER->CREATE_PRE_ORDER();
-		$this->LOG("Preorden creada: ".$ID_PREORDER.", Redirigiendo");
-		if($this->REG_TRANS($ID_PREORDER,$PREORDER->GET_PRICE()."00")){
-	 		$result = $webpay->initTransaction($PREORDER->GET_PRICE()."00", $this->TBK_SESSION, $ID_PREORDER);
-			$webpay_token = $result["token_ws"];
-			
-			printf('<form action="%s" name="frm" method="post">', $result["url"]);
-			printf('<input type="hidden" name="token_ws" value="%s"/>', $webpay_token);
-			echo "</form>";
-			echo '<script type="text/javascript"> document.frm.submit(); </script>';
-		}
-		else
-		{
-			throw new Exception("Database transaction register has problems", 4);
-		}
-	}
 	/** @method void REG_TRANS() this function register the transbank transaction */
 	public function REG_TRANS($odc, $amount){
 		$TRANSACTION = array();
@@ -256,6 +218,68 @@ class Webpay extends MySQLDB{
 		 // SEND EMAIL
         $mailService = new MailService();
         $mailService->SendNotification($TBK_ORDER['WASHITA_ORDER']);
+	}
+	/** @method void START_TRANS_WS() this function start the WS transbank transaction */
+	public function START_TRANS_WS(){
+		// FIRST WE WILL GENERATE A SESION CODE
+		$this->USER = WashitaUser::CurrentUser();
+		if(!isset($this->USER)) throw new Exception("The USER is not loged is not set", 1);
+		$this->GENERATE_SESION();
+		$this->LOG("#######################\nIniciamos la transaccion: ".$this->TBK_SESSION);
+		// GENERATE THE PREORDER
+		$webpay_settings = array(
+			"MODO" => "INTEGRACION",
+			"PRIVATE_KEY" => file_get_contents($this->TBK_PRIVATE_KEY),
+			"PUBLIC_CERT" => file_get_contents($this->TBK_SERVER_CERT),
+			"WEBPAY_CERT" => file_get_contents($this->TBK_CERT_FILE),
+			"COMMERCE_CODE" => $this->TBK_COMMERCE_CODE,
+			"URL_RETURN" => $this->TBK_WEBPAY_RESULT,
+			"URL_FINAL" => $this->TBK_WEBPAY_END,
+		);
+
+		$webpay = new WebPaySOAP($webpay_settings); // Crea objeto WebPay
+		$webpay = $webpay->getNormalTransaction(); // Crea Transaccion Normal
+
+		$PREORDER = new OrderGenerator($this->USER->Id);
+		$PREORDER->PROCESS_FIELDS();
+		$ID_PREORDER = $PREORDER->CREATE_PRE_ORDER();
+		$this->LOG("Preorden creada: ".$ID_PREORDER.", Redirigiendo");
+		if($this->REG_TRANS($ID_PREORDER,$PREORDER->GET_PRICE())){
+	 		$result = $webpay->initTransaction($PREORDER->GET_PRICE(), $this->TBK_SESSION, $ID_PREORDER);
+			$webpay_token = $result["token_ws"];
+			
+			printf('<form action="%s" name="frm" method="post">', $result["url"]);
+			printf('<input type="hidden" name="token_ws" value="%s"/>', $webpay_token);
+			echo "</form>";
+			echo '<script type="text/javascript"> document.frm.submit(); </script>';
+		}
+		else
+		{
+			throw new Exception("Database transaction register has problems", 4);
+		}
+	}
+	/** @method void START_END_WS() this function start the WS transbank transaction */
+	public function END_WEBPAY_WS(){
+		// FIRST WE WILL GENERATE A SESION CODE
+		$this->USER = WashitaUser::CurrentUser();
+		if(!isset($this->USER)) throw new Exception("The USER is not loged is not set", 1);
+		$webpay = new WebPaySOAP($webpay_settings); // Crea objeto WebPay
+		$webpay_token = $_POST["token_ws"];
+		$webpay = $webpay->getNormalTransaction(); // Crea Transaccion Normal
+		$result = $webpay->getTransactionResult($webpay_token); 
+		// Verificamos resultado del pago
+		if ($result->detailOutput->responseCode===0) {
+			print_r($result);
+			$message = "Pago ACEPTADO por webpay (se deben guardatos para mostrar voucher)";
+			$next_page = $result->urlRedirection;
+			$next_page_title = "Finalizar Pago";
+			echo "<br>".$message;
+		} else {
+			print_r($result);
+			$message = "Pago RECHAZADO por webpay - ".utf8_decode($result->detailOutput->responseDescription);
+                        $next_page='';
+            echo "<br>".$message;
+		}
 	}
 	/** @method void LOG(string $message) this function finalice the transaction with transbank and close the process */
 	public function LOG($message){
