@@ -1,5 +1,6 @@
 <?php
 //start session in all pages
+error_reporting(E_ALL ^ E_NOTICE);
 if (session_status() == PHP_SESSION_NONE) { session_start(); } //PHP >= 5.4.0
 //if(session_id() == '') { session_start(); } //uncomment this line if PHP < 5.4.0 and comment out line above
 
