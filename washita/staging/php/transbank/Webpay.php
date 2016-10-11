@@ -263,6 +263,15 @@ class Webpay extends MySQLDB{
 		// FIRST WE WILL GENERATE A SESION CODE
 		$this->USER = WashitaUser::CurrentUser();
 		if(!isset($this->USER)) throw new Exception("The USER is not loged is not set", 1);
+		$webpay_settings = array(
+			"MODO" => "INTEGRACION",
+			"PRIVATE_KEY" => file_get_contents($this->TBK_PRIVATE_KEY),
+			"PUBLIC_CERT" => file_get_contents($this->TBK_SERVER_CERT),
+			"WEBPAY_CERT" => file_get_contents($this->TBK_CERT_FILE),
+			"COMMERCE_CODE" => $this->TBK_COMMERCE_CODE,
+			"URL_RETURN" => $this->TBK_WEBPAY_RESULT,
+			"URL_FINAL" => $this->TBK_WEBPAY_END,
+		);
 		$webpay = new WebPaySOAP($webpay_settings); // Crea objeto WebPay
 		$webpay_token = $_POST["token_ws"];
 		$webpay = $webpay->getNormalTransaction(); // Crea Transaccion Normal
