@@ -259,7 +259,7 @@ class Webpay extends MySQLDB{
 		}
 	}
 	/** @method void START_END_WS() this function start the WS transbank transaction */
-	public function END_WEBPAY_WS(){
+	public function RESULT_WEBPAY_WS(){
 		// FIRST WE WILL GENERATE A SESION CODE
 		$this->USER = WashitaUser::CurrentUser();
 		if(!isset($this->USER)) throw new Exception("The USER is not loged is not set", 1);
@@ -278,7 +278,9 @@ class Webpay extends MySQLDB{
 		$result = $webpay->getTransactionResult($webpay_token); 
 		// Verificamos resultado del pago
 		if ($result->detailOutput->responseCode===0) {
+			echo "<pre>";
 			print_r($result);
+			echo "</pre>";
 			$message = "Pago ACEPTADO por webpay (se deben guardatos para mostrar voucher)";
 			$next_page = $result->urlRedirection;
 			$next_page_title = "Finalizar Pago";
