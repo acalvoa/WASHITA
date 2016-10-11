@@ -2,7 +2,7 @@
 include_once(dirname(__FILE__)."/templates/header.general.php");
 require_once(dirname(__FILE__)."/php/transbank/Webpay.php");
 $webpay = new Webpay();
-$webpay->END_WEBPAY_WS();
+$webpay->RESULT_WEBPAY_WS();
 
 ?>
     <!-- <section>
