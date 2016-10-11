@@ -1,0 +1,3 @@
+
+ALTER TABLE `registration_code` ADD `INITIAL_PERSONAL_DISCOUNT` decimal(10) NOT NULL DEFAULT 0;
+ 

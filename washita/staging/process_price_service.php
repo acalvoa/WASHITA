@@ -1,5 +1,4 @@
 <?php  
-// Include confi.php
 require_once(dirname(__FILE__)."/_config.php");
 require_once(dirname(__FILE__)."/php/_helpers.php");
 require_once(dirname(__FILE__)."/php/Price.class.php");
@@ -28,13 +27,17 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     if($params->WashType == WashType::WashingAndIroning){
         $orderWashitemLines  = !empty($_POST['washitems'])? explode(";",$_POST['washitems']):"";
 
-        $params->WashItemLines = OrderWashItemLine::ConvertFromPost($orderWashitemLines);
+        $params->WashItemLines = OrderWashItemLine::ConvertFromPost($params->WashType, $orderWashitemLines);
 
         $params->TotalIroningItems = GetPost('total_ironing_items');
     }
+    else if($params->WashType == WashType::OnlyIroning){
+        $orderOnlyIroningItemLines = !empty($_POST['only_ironing_items'])? explode(";",$_POST['only_ironing_items']): "";
+        $params->WashItemLines = OrderWashItemLine::ConvertFromPost($params->WashType, $orderOnlyIroningItemLines);
+    }
     else if($params->WashType == WashType::DryCleaning){
         $orderDryCleaningItemLines = !empty($_POST['dry_cleaning_items'])? explode(";",$_POST['dry_cleaning_items']): "";
-        $params->WashItemLines = OrderWashItemLine::ConvertFromPost($orderDryCleaningItemLines);
+        $params->WashItemLines = OrderWashItemLine::ConvertFromPost($params->WashType, $orderDryCleaningItemLines);
     }
 
     $userCoupon = GetPostNoLongerThan('discount_coupon', 30);

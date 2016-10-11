@@ -31,7 +31,7 @@ $body = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body style="margin: 0; padding: 0; background:#fff; font-family:lucida sans unicode,lucida grande,sans-serif;">
- <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse; background:white; border-style:solid;border-color: #336799;margin:20px auto">
+ <table align="center" border="0" cellpadding="0" cellspacing="0" style="max-width:600px;border-collapse: collapse; background:white; border-style:solid;border-color: #336799;margin:20px auto">
  <tr style="background:#336799">
   <td style="padding:10px 20px;">';
  $body .= '<img src="'.$GLOBALS['site_root'].'/img/freeze/logo.png'.'" />';
@@ -41,7 +41,7 @@ $body = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
  <tr>
   <td style="padding:10px 20px; text-align: center;">
 
-    <p>Hola, '.$order->Name.'
+    <p>Hola '.$order->Name.',
         <br/>
         Hemos recibido tu pedido y ya ha sido agendado el retiro de tu ropa sucia en
         '.($cityAndArea != null? $cityAndArea->GetFullName():"").', '.$order->Address.'
@@ -67,7 +67,7 @@ $body = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
     }
 
     if(count($ironingItemLines)>0){
-        $body .= "<p>Ironing:</p>";        
+        $body .= "<p>Planchado:</p>";        
         $body .= "<div style='margin-left: 10px;'>";
         foreach ($ironingItemLines as $ironingItemLine) {
             $body .= "<p>".$ironingItemLine->Count."x ".$ironingItemLine->Name."</p>";
@@ -78,16 +78,17 @@ $body = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
 
 
     if(!empty($order->Comment)){
-        $body .= "<p>Comment: ".$order->Comment.".</p>";        
+        $body .= "<p>Peticiones Especiales: ".$order->Comment.".</p>";        
     }
 
     if($order->IsWeightRequired()){
-        $body .= "<p>Peso Estimado: ".NumberFormat($order->Weight)." Kg.</p>";
+        $body .= "<p>Peso Estimado: ".NumberFormatWithTens($order->Weight)." Kg.</p>";
     }
     $body .= "<p>Servicio: ".$order->WashingTypeText().".</p>";
  
 
-    $body .= '<p style="font-size:20px;line-height: 0px;text-align:right;margin-right: 50px;">Precio Estimado: '.MoneyFormat($order->PriceWithDiscount).'</p>';
+    $body .= '<p style="font-size:20px;line-height: 25px;text-align:right;margin-right: 50px;margin-top:-3px">
+                Precio Estimado: '.MoneyFormat($order->PriceWithDiscount).'</p>';
     $body .= '</td></tr></table>';
     // ORDER End
     

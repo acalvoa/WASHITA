@@ -1,14 +1,16 @@
 // Process items count
-var WASHING_TYPE = "washing";
-var IRONING_TYPE = "ironing";
-var DRYCLEANING_TYPE = "drycleaning";
-var SPECIALCLEANING_TYPE = "drycleaning";
+var WASHING_TYPE = "washing_and_ironing";
+var WASHING_IRONING_TYPE = "washing_ironing";
+var ONLY_IRONING_TYPE = "only_ironing";
+var DRYCLEANING_TYPE = "dry_cleaning";
+var SPECIALCLEANING_TYPE = "special_cleaning";
 
-function WashItem(type, id, name, weight /* kilos */, dryCleaningPrice, specialCleaningPrice, imageUri){
+function WashItem(type, id, name, weight /* kilos */, onlyIroningPrice, dryCleaningPrice, specialCleaningPrice, imageUri){
     this.Type = type;
     this.Id = id;
     this.Name = name;
     this.Weight = weight;
+    this.OnlyIroningPrice = onlyIroningPrice;
     this.DryCleaningPrice = dryCleaningPrice;
     this.SpecialCleaningPrice = specialCleaningPrice;
     this.ImageUri = imageUri;
@@ -25,7 +27,9 @@ WashItemLine.prototype.asText = function(){
 WashItemLine.prototype.getWeight = function(){
         return this.item.Weight * this.count;
 }
-
+WashItemLine.prototype.getOnlyIroningPrice = function(){
+        return this.item.OnlyIroningPrice * this.count;
+}
 WashItemLine.prototype.getDryCleaningPrice = function(){
         return this.item.DryCleaningPrice * this.count;
 }
@@ -42,7 +46,7 @@ function WashProduct(washItemLines){
 WashProduct.prototype.getWeight = function(type){
     var weight = 0;
     $.each(this.itemLines, function( key, value ) {
-        if(value.Type === type){
+        if(value.item.Type === type){
             weight += value.getWeight();
         }
     });
@@ -51,18 +55,26 @@ WashProduct.prototype.getWeight = function(type){
         weight = 1; // set minimum;
     }
 
-    return weight.toFixed(2);
+    return weight.toFixed(1);
 }
 WashProduct.prototype.getSanitizedWeight = function(type){
     var weight = this.getWeight(type);
-    return getSanitizedAndRoundedUpNumber(weight.toString(),2);
+    return getSanitizedAndRoundedUpNumber(weight.toString(),1);
 }
 
-
+WashProduct.prototype.getOnlyIroningPrice = function(){
+    var price = 0;
+    $.each(this.itemLines, function( key, value ) {
+        if(value.item.Type === ONLY_IRONING_TYPE){
+            price += value.getOnlyIroningPrice();
+        }
+    });
+    return price;
+}
 WashProduct.prototype.getDryCleaningPrice = function(){
     var price = 0;
     $.each(this.itemLines, function( key, value ) {
-        if(value.Type === DRYCLEANING_TYPE){
+        if(value.item.Type === DRYCLEANING_TYPE){
             price += value.getDryCleaningPrice();
         }
     });
@@ -72,7 +84,7 @@ WashProduct.prototype.getDryCleaningPrice = function(){
 WashProduct.prototype.getSpecialCleaningPrice = function(){
     var price = 0;
     $.each(this.itemLines, function( key, value ) {
-        if(value.Type === SPECIALCLEANING_TYPE){
+        if(value.item.Type === SPECIALCLEANING_TYPE){
             price += value.getSpecialCleaningPrice();
         }
     });
@@ -101,6 +113,7 @@ function WashItemsControl(type,modalWindowName){
         if(self.washItemsCached == null){
             $.ajax({
                 url: "process_washitems.php",
+                data: {"laundry_option": type},
                 dataType: 'json', 
             }).done(function(data){
                 //console.log(data);
@@ -108,9 +121,12 @@ function WashItemsControl(type,modalWindowName){
                 
                 var res = $.parseJSON(data);
                 $.each(res, function( key, value ) {
-                    self.washItemsCached.push(new WashItem(self.type, value.Id, value.Name, value.Weight, value.IroningPrice, value.DryCleanPrice, value.SpecialCleanPrice, value.ImageUri));
+                    self.washItemsCached.push(new WashItem(self.type, value.Id, value.Name, value.Weight, value.OnlyIroningPrice, value.DryCleanPrice, value.SpecialCleanPrice, value.ImageUri));
                 });
                 callback(self.washItemsCached);
+            })
+            .fail(function() {
+                console.log("error");
             });
         }
         else{
@@ -309,7 +325,7 @@ function IroningWashItemsControl(ironingPlaceHolderName, ironingCheckboxName) {
         }
     }
     this.addNewItem = function(){
-        var newWashItem = new WashItem(IRONING_TYPE, 0, "", 0, 0, 0,0,"");
+        var newWashItem = new WashItem(WASHING_IRONING_TYPE, 0, "", 0, 0, 0,0,"");
         var newWashItemLine = new WashItemLine(1, newWashItem);
         self.washProduct.itemLines.push(newWashItemLine);
         newWashItemLine.item.Id = self.washProduct.itemLines.indexOf(newWashItemLine);
@@ -392,6 +408,79 @@ function IroningWashItemsControl(ironingPlaceHolderName, ironingCheckboxName) {
 }
 
 
+
+
+// Inherit from WashItemsControl
+function OnlyIroningWashItemsControl(modalName, preload) {
+    WashItemsControl.call(this, ONLY_IRONING_TYPE, modalName, preload);
+
+    var self = this;
+
+    //preload wash items
+    if(preload){
+        self.getWashItems(function(w){});
+    }
+
+    //if first time
+    if(self.washProduct == null){
+        var emptyWashItems={};
+        self.SetWashItems(emptyWashItems, function(){
+                self.showInputItems();
+            });
+    }
+
+    this.showInputItems = function(){
+        var placeHolder = $(self.modalWindowName);
+        placeHolder.html('');
+        //populate placeholder in modal window 
+
+        var itemsInLefColumn = Math.ceil(self.washProduct.itemLines.length/2);
+        var leftColumn = $.parseHTML('<div class="only-ironing-column"></div>');
+        var rightColumn = $.parseHTML('<div class="only-ironing-column"></div>');
+        placeHolder.append(leftColumn);
+        placeHolder.append(rightColumn);
+
+
+        $.each(self.washProduct.itemLines, function( key, value ) {
+            
+            var inputItem = $.parseHTML(self.createInputItem(value));
+            column = ((key+1) <=itemsInLefColumn)? $(leftColumn): $(rightColumn);
+            column.append(inputItem);
+
+            
+            $(inputItem).find('input').bind("change paste keyup", function() {
+                var $input = $(this);
+                var itemLine = self.washProduct.findWashItemLine($input.attr('data-washitemid'));
+                itemLine.setCount(parseInt($input.val()));
+
+                $("#items_only_ironing_price").html("$"+JsFloatToChileanNumber(self.washProduct.getOnlyIroningPrice()));
+                self.onWashItemAmountChanged();
+            });
+         });
+    };
+
+    this.createInputItem = function (washItemLine) {
+       return '<div class="input-group washitem-line">'+
+                '<input class="form-control numbersOnly items" data-washitemid="'+washItemLine.item.Id+'" type="number" min="0" max="1000" step="1.0" value="'+washItemLine.count+'"'+
+                ' lang="es" />'+
+                '<span class="order-kg">'+washItemLine.item.Name+'</span>'+
+              '</div>'; 
+    };
+}
+
+
+OnlyIroningWashItemsControl.prototype = Object.create(WashItemsControl.prototype); // See note below
+// Set the "constructor" property to refer to WashItemsControl
+OnlyIroningWashItemsControl.prototype.constructor = OnlyIroningWashItemsControl;
+OnlyIroningWashItemsControl.prototype.onWashItemAmountChanged = function(){
+    
+};
+
+
+
+
+
+
 // Inherit from WashItemsControl
 function DryCleainigWashItemsControl(modalName, preload) {
     WashItemsControl.call(this, DRYCLEANING_TYPE, modalName, preload);
@@ -431,6 +520,7 @@ function DryCleainigWashItemsControl(modalName, preload) {
                 var $input = $(this);
                 var itemLine = self.washProduct.findWashItemLine($input.attr('data-washitemid'));
                 itemLine.setCount(parseInt($input.val()));
+                $("#items_dry_cleaning_price").html("$"+JsFloatToChileanNumber(self.washProduct.getDryCleaningPrice()));
                 self.onWashItemAmountChanged();
             });
          });
@@ -450,5 +540,4 @@ DryCleainigWashItemsControl.prototype = Object.create(WashItemsControl.prototype
 // Set the "constructor" property to refer to WashItemsControl
 DryCleainigWashItemsControl.prototype.constructor = DryCleainigWashItemsControl;
 DryCleainigWashItemsControl.prototype.onWashItemAmountChanged = function(){
-    $("#modal_possible_items_dry_cleaning_price").html("$"+JsFloatToChileanNumber(this.washProduct.getDryCleaningPrice()));
 };

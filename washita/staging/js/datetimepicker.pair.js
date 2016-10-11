@@ -97,7 +97,19 @@ function DateTimePickerPair(datetimepickerName, timeComboboxName, minDateTime, d
      this.minDate = function(minDate){
          this.minDateTime = minDate;
          this.DP.data("DateTimePicker").minDate(moment(minDate).startOf('day'));
+
          self.updateHoursSelection(minDate);
+     }
+
+     this.setDateAndTime = function(choosenDate){
+         this.DP.data("DateTimePicker").date(moment(choosenDate).startOf('day'));
+
+         var timeSelect = choosenDate.hours() < 16
+                        ? this.TIME.find("option[value='08:00-10:00']")
+                        : this.TIME.find("option[value='16:00-18:00']");
+         //bug in Safari, using 'prop' instead of 'attr' for an item selection
+         timeSelect.prop('selected', true);
+         this.updateHoursSelection(choosenDate);
      }
     
      this.TIME.change(function() {

@@ -28,10 +28,10 @@ $smtpAdminCc = 'a-artur@yandex.ru'; // where to send email
 
 
 
-$DBServer = 'localhost';//'localhost'; // e.g 'localhost' or '192.168.1.100'
-$DBUser   = 'root';
-$DBPass   = 'shadowfax';//'washit.334411';
-$DBName   = 'washita';
+$DBServer = 'australbotscom.fatcowmysql.com';//'localhost'; // e.g 'localhost' or '192.168.1.100'
+$DBUser   = 'washita_web';
+$DBPass   = 'U4Dnpq9ZbGzJMVsMzo';//'washit.334411';
+$DBName   = 'washita_2016';
 
 
 $OrdersNumberStart = 21000;
@@ -60,8 +60,8 @@ $DiscountInfluencerMaxUsageForFriends = 50; // how much times friends can apply 
 $DiscountPersonalCode = "MI_CREDITO";
 
 
-$reCaptchaPublicKey = "6LemzwYUAAAAAM477SNX92cU112VADJ2v-i0A7FW";
-$reCaptchaPrivateKey = "6LemzwYUAAAAACTTOQJpyP4iD2_n-s_9jDUjNqH5";
+$reCaptchaPublicKey = "6LcS3RsTAAAAAPsEAn-xp3inn1w3Dbg41JAXECKo";
+$reCaptchaPrivateKey = "6LcS3RsTAAAAABJY9Akz2RIGHZz1R6q0Xy2zXBwg";
 $BadLoginLimit = 5; // log in attempts before lock out
 $LockOutTime = 600; //in seconds
 
@@ -112,7 +112,6 @@ $ONECLICK_URL_INSCRIPTION = "http://washita.teamnodes.com/php/transbank/ep_webpa
 /* BEGIN ONECLICK TRANSACTION LINK*/
 $TBK_AUTHORIZE_ONECLICK = "/php/transbank/ep_webpay.php?action=AUTHORIZE_ONECLICK";
 /***************************/
-
 
 
 if(file_exists(dirname(__FILE__)."/_config.localhost.php")){

@@ -35,7 +35,7 @@ class MailService{
             // MAIL
         
             //Subject
-            $subject = 'WASHita Ropa Limpia. Order N '.$p_orderNumber;
+            $subject = 'WASHita Ropa Limpia. Orden N° '.$p_orderNumber;
             // Email body
             $body = GetEmailBody($order,$washItemLines,$ironingItemLines);
 
@@ -95,7 +95,7 @@ class MailService{
             // MAIL
         
             //Subject
-            $subject = 'WASHita Ropa Limpia. Order N '.$p_orderNumber;
+            $subject = 'WASHita Ropa Limpia. Orden N° '.$p_orderNumber;
             // Email body
             $body = GetPaymentRequestBody($order);
 
@@ -152,7 +152,7 @@ class MailService{
             // MAIL
         
             //Subject
-            $subject = 'WASHita Ropa Limpia. Order N '.$p_orderNumber;
+            $subject = 'WASHita Ropa Limpia. Orden N° '.$p_orderNumber;
             // Email body
             $body = GetZeroPaymentConfirmationBody($order);
 

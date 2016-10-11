@@ -266,8 +266,8 @@ class Order{
     }
 
     public function IsWeightRequired(){
-        return $this->WashType == WashType::WashingAndIroning
-            || $this->WashType == WashType::OnlyIroning;
+        return $this->WashType == WashType::WashingAndIroning;
+            //|| $this->WashType == WashType::OnlyIroning;
     }
 
     public function WashingTypeText(){

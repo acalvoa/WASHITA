@@ -22,7 +22,7 @@ function GetFeedbackRequestBody(OrderRequiredFeedback $orderRequiredFeedback, Or
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
     <body style="margin: 0; padding: 0; background:#fff; font-family:lucida sans unicode,lucida grande,sans-serif;">
-    <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse; background:white; border-style:solid;border-color: #336799;margin:20px auto">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" style="max-width:600px;border-collapse: collapse; background:white; border-style:solid;border-color: #336799;margin:20px auto">
     <tr style="background:#336799">
     <td style="padding:10px 20px;">';
     $body .= '<img src="'.$GLOBALS['site_root'].'/img/freeze/logo.png'.'" />';
@@ -44,7 +44,7 @@ function GetFeedbackRequestBody(OrderRequiredFeedback $orderRequiredFeedback, Or
                  en ".$order->GetFullAddress()."<br/>
                  Número de Orden: ".$order->OrderNumber."<br/>
                  Servicio: ".$order->WashingTypeText()."<br/>
-                 Peso: ".NumberFormat($order->Weight)." Kg <br/>
+                 Peso: ".NumberFormatWithTens($order->Weight)." Kg <br/>
                  Monto Cancelado: ".MoneyFormat($order->PriceWithDiscount)."<br/>
                 </p>";
 
@@ -53,16 +53,9 @@ function GetFeedbackRequestBody(OrderRequiredFeedback $orderRequiredFeedback, Or
                     <br/><b style="color: #30669B; font-size: 20px">Califica nuestro servicio</b>
                 </p>
                     <br/> 
-
-                  <div style="
-                                display: flex;
-                                flex-direction: row;
-                                flex-wrap: wrap;
-                                justify-content: flex-start;
-                                align-content: flex-start;
-                  ">  
+                  <div>  
                     <a href="'.$baseUrl.'&rating=1" style="  
-                                                    padding: 10px 30px;
+                                                    padding: 10px 25px;
                                                     margin: 5px;
                                                     font-size: 18px;
                                                     color: #fff;
@@ -70,11 +63,12 @@ function GetFeedbackRequestBody(OrderRequiredFeedback $orderRequiredFeedback, Or
                                                     background-color: #0E3E6C;
                                                     border-width: 1px;
                                                     text-decoration: initial;
+                                                    display: inline-block;
                         ">
                             Malo
                         </a>
                         <a href="'.$baseUrl.'&rating=2" style="  
-                                                    padding: 10px 30px;
+                                                    padding: 10px 25px;
                                                     margin: 5px;
                                                     font-size: 18px;
                                                     color: #fff;
@@ -82,11 +76,12 @@ function GetFeedbackRequestBody(OrderRequiredFeedback $orderRequiredFeedback, Or
                                                     background-color: #19538A;
                                                     border-width: 1px;
                                                     text-decoration: initial;
+                                                    display: inline-block;
                         ">
                             Regular
                         </a>
                         <a href="'.$baseUrl.'&rating=3" style="  
-                                                    padding: 10px 30px;
+                                                    padding: 10px 25px;
                                                     margin: 5px;
                                                     font-size: 18px;
                                                     color: #fff;
@@ -94,11 +89,12 @@ function GetFeedbackRequestBody(OrderRequiredFeedback $orderRequiredFeedback, Or
                                                     background-color: #4E7EAB;
                                                     border-width: 1px;
                                                     text-decoration: initial;
+                                                    display: inline-block;
                         ">
                             Bueno
                         </a>
                         <a href="'.$baseUrl.'&rating=4" style="  
-                                                    padding: 10px 30px;
+                                                    padding: 10px 25px;
                                                     margin: 5px;
                                                     font-size: 18px;
                                                     color: #fff;
@@ -106,6 +102,7 @@ function GetFeedbackRequestBody(OrderRequiredFeedback $orderRequiredFeedback, Or
                                                     background-color: #7BA3CA;
                                                     border-width: 1px;
                                                     text-decoration: initial;
+                                                    display: inline-block;
                         ">
                             ¡Excelente!
                         </a> 

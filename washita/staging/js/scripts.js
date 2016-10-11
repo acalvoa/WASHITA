@@ -35,7 +35,7 @@ function ChileanNumberToJsFloat(n){
 }
 
 function JsFloatToChileanNumber(n){
-    return n.toString().replace(".",",");
+    return n.toString().replace(".",",").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
 var appMaster = {
@@ -258,30 +258,48 @@ var appOrder = {
         var pickupMinDateTime = new Date($('#order_datepicker').attr('data-min-datetime'));
         var pickupMomentMinDate = moment(pickupMinDateTime);
         
-        function isMomentWeekDay(mDate){
-            var day = mDate.isoWeekday();
-            return day == 6 || day == 7;
-        }
-
-        function getDropoffDaytime(pickupDaytime){
-            var newDate = moment(pickupDaytime).add(1,'day');
-            while(isMomentWeekDay(newDate)){
-                newDate = newDate.add(1, "day");
+        function nextNearestPoint(choosenDateAndTime) {
+            function isMomentWeekDay(mDate){
+                var day = mDate.isoWeekday();
+                return day == 6 || day == 7;
             }
 
-            if(newDate.startOf('day').diff(pickupDaytime, 'days') > 1){
-                newDate = newDate.set({ hour: 8, minute: 0 });
-            }
+            var choosenMoment = moment(choosenDateAndTime);
 
-            return  newDate;
-        }        
+            // Is morning
+            if(choosenMoment.hours() === 8){
+                // today evening
+                return choosenMoment.startOf('day').add(16, 'hours');
+            }
+            else //Evening
+            {
+                var nextWorkingDay = choosenMoment.startOf('day').add(1, 'day');
+                while(isMomentWeekDay(nextWorkingDay)){
+                    nextWorkingDay = nextWorkingDay.add(1, 'day');
+                }
+                // morning
+                return nextWorkingDay.add(8, 'hours');
+            }
+      }
+
+     function nextDropOff(choosenDateAndTime){
+            var nextPickup = choosenDateAndTime;
+            //1.5 day
+            for(var i=0; i<3;i++){
+                nextPickup = nextNearestPoint(nextPickup);
+            }
+            return nextPickup;        
+        }   
+       
         var dppPickup = new DateTimePickerPair("order_datepicker", "pickuptime", pickupMomentMinDate, true);
         $(dppPickup).on('dpp.change', function(e, data){
             $('#pickup_datetime').val(data.asText());
-            dppDropOff.minDate(getDropoffDaytime(data.from));
+            var minDropOff = nextDropOff(data.from);
+            dppDropOff.minDate(minDropOff);
+            dppDropOff.setDateAndTime(minDropOff);
         });
 
-        var dropOffMomentMinDate = getDropoffDaytime(pickupMinDateTime.from);
+        var dropOffMomentMinDate = nextDropOff(pickupMinDateTime.from);
         var dppDropOff = new DateTimePickerPair("dropoff_datepicker", "dropofftime", dropOffMomentMinDate, true);
         $(dppDropOff).on('dpp.change', function(e, data){
             $('#dropoff_datetime').val(data.asText());
@@ -313,12 +331,26 @@ var appOrder = {
             if (this.value != sanitized) {
                 this.value = sanitized;
             }
-            appOrder.recalculatePrice();
+        });  
+
+        var decimalsWithTens = $('.decimals-with-tens');
+        decimalsWithTens.focusout(function () {
+            var sanitized = getSanitizedAndRoundedUpNumber(this.value, 1);
+
+            var minValue = $(this).attr("min");
+            if(minValue && sanitized < minValue){
+                sanitized = minValue;
+            }
+            
+            if (this.value != sanitized) {
+                this.value = sanitized;
+            }
         });  
         
         // decimalsWithHundreds.attr("pattern", "[0-9]+([\.][0-9]+)?");
     },
     totalIroningItems: 0,
+    onlyIroningItemLines: [],
     dryCleaningItemLines: [],
     recalculatePrice: function(){
         var weight = Number($('#weight').val());
@@ -328,7 +360,7 @@ var appOrder = {
         $('#total_price').text(totalPrice);
         $('#one_kilo_pack_price').text(oneKiloPrice);
         $('#dicount_procent').text(discountProcent);
-        $('#selected_washing_text').text(washTypeText.toUpperCase());
+        $('.selected_washing_text').text(washTypeText.toUpperCase());
 
         $('#ironing_item_price').text(priceForIroningPerItemText);
         $('.selected_ironing_items_total').text(totalIroningItems);
@@ -341,6 +373,7 @@ var appOrder = {
                      'laundry_option': $('input[name="laundry_option"]:checked').val(),
                      'discount_coupon':$('#discount_coupon').val(),
                      'washitems': $('input[name="washitems[]"]').map(function(){return trimChar($(this).val(), ',')}).get().join(';'),
+                     'only_ironing_items': $.map(appOrder.onlyIroningItemLines, function(itemLine){return itemLine.item.Id +','+itemLine.count}).join(';'),
                      'dry_cleaning_items': $.map(appOrder.dryCleaningItemLines, function(itemLine){return itemLine.item.Id +','+itemLine.count}).join(';'),
                      'total_ironing_items': appOrder.totalIroningItems,
                      'email': $('input[name="email"]').val()

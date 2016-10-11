@@ -103,7 +103,7 @@ class TestOfPickupTime extends UnitTestCase {
     function testPreviousEveningPickupTimeMonday() {
         CurrentDateTime::SetCurrentDateTime(DateTime::createFromFormat('d-M-Y H:i', '05-Sep-2016 07:00'));
         $pickuptime = PickupTime::GetMinPickupTime();
-        $dateRange = $pickuptime->Previous();
+        $dateRange = $pickuptime->PreviousNearestPoint();
         $this->assertIdentical($dateRange->from->format("d-M-Y H:i"), "02-Sep-2016 16:00");
         $this->assertIdentical($dateRange->to->format("d-M-Y H:i"), "02-Sep-2016 18:00");
     }
@@ -111,7 +111,7 @@ class TestOfPickupTime extends UnitTestCase {
     function testPreviousMorningPickupTimeFriday() {
         CurrentDateTime::SetCurrentDateTime(DateTime::createFromFormat('d-M-Y H:i', '02-Sep-2016 00:00'));
         $pickuptime = PickupTime::GetMinPickupTime();
-        $dateRange = $pickuptime->Previous();
+        $dateRange = $pickuptime->PreviousNearestPoint();
         $this->assertIdentical($dateRange->from->format("d-M-Y H:i"), "01-Sep-2016 16:00");
         $this->assertIdentical($dateRange->to->format("d-M-Y H:i"), "01-Sep-2016 18:00");
     }

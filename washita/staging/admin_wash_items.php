@@ -31,7 +31,7 @@ if($adminLogin->CanEditWashItems()){
             $dbh = OpenPDOConnection();
             // create LM object, pass in PDO connection
             $lm = new lazy_mofo($dbh);
-            $sql = "SELECT `ID`, `NAME`, `ITEM_WEIGHT`, `ITEM_DRY_CLEAN_PRICE`, `ITEM_SPECIAL_CLEAN_PRICE`, `IMAGE_FILE_NAME`, `ID` FROM `wash_item`";
+            $sql = "SELECT `ID`, `NAME`, `ITEM_WEIGHT`, `ITEM_ONLY_IRONING_PRICE`, `ITEM_DRY_CLEAN_PRICE`, `IMAGE_FILE_NAME`, `WASH_TYPE`, `ID` FROM `wash_item`";
             // table name for updates, inserts and deletes
             $lm->table = 'wash_item';
             // identity / primary key for table
@@ -46,6 +46,7 @@ if($adminLogin->CanEditWashItems()){
             $lm->grid_output_control['IMAGE_FILE_NAME'] = '--image';
             $lm->form_input_control['IMAGE_FILE_NAME'] = '--image';
             $lm->exclude_field['CREATE_DATE'] = '';
+            $lm->grid_output_control['WASH_TYPE'] = '--lazy_mofo_wash_type';
 
             $lm->return_to_edit_after_insert=false;
             $lm->return_to_edit_after_update=false;

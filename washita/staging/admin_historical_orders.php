@@ -32,10 +32,9 @@ if($_POST && $_GET["_export"]=="1"){
     $from = DateTimeImmutable::createFromFormat("Y-m-d H:i", GetPostNoLongerThan('from', 20)); 
     $to = DateTimeImmutable::createFromFormat("Y-m-d H:i", GetPostNoLongerThan('to', 20)); 
     $onlyPaid = GetBooleanPost("onlyPaid");
-    $allColumns = GetBooleanPost("allColumns");
     $cityId = GetPost("cityId");
     
-    DisplayGrid($from,$to,$onlyPaid,$allColumns,$cityId);
+    DisplayGrid($from,$to,$onlyPaid,$cityId);
     exit;
 }
 
@@ -86,33 +85,13 @@ if($adminLogin->CanEditWashItems() ||
                         
                             <label><input type="checkbox" id="onlyPaid" name="onlyPaid" value="True" 
                             <?php
-                            if(!$_POST || GetBooleanPost('onlyPaid')) {
+                            if($_POST && GetBooleanPost('onlyPaid')) {
                                 echo ' checked';
                             }
                             ?>
                             />Only Paid</label>
                         </div>
                         
-                        <div class="checkbox">
-                        
-                            <label><input type="checkbox" id="allColumns" name="allColumns" value="True" 
-                            <?php
-                            if($_POST && GetBooleanPost('allColumns')) {
-                                echo ' checked';
-                            }
-                            ?>
-                            />Show all columns</label>
-                        </div>
-                        <div class="checkbox">
-                        
-                            <label><input type="checkbox" id="groupByDateTime" name="groupByDateTime" value="True" 
-                            <?php
-                            if($_POST && GetBooleanPost('groupByDateTime')) {
-                                echo ' checked';
-                            }
-                            ?>
-                            />Group by date and time</label>
-                        </div>
                     </div>
                 
                     
@@ -127,26 +106,16 @@ if($adminLogin->CanEditWashItems() ||
     <br/>
     
 <?php
-function DisplayGrid(DateTimeImmutable $from, DateTimeImmutable $to,$onlyPaid,$allColumns,$cityId){//"d/m/Y"
+function DisplayGrid(DateTimeImmutable $from, DateTimeImmutable $to,$onlyPaid,$cityId){//"d/m/Y"
 // echo $from."|".$to."}".$onlyPaid;
- $select = $allColumns? 
-            "SELECT orders.ID,orders.ORDER_NUMBER, orders.NAME, 
-            city_area.NAME + ', ' + orders.ADDRESS as ADDRESS, 
-            `EMAIL`, `PHONE`, `WEIGHT`, `DISCOUNT_COUPON`, `PRICE_WITH_DISCOUNT`, `PRICE_WITHOUT_DISCOUNT`, `PAYMENT_STATUS`, 
-            orders.CREATE_DATE, 
-            DATE_FORMAT(PICKUP_FROM, '%d-%b-%Y %H:%i') as PICKUP_FROM, DATE_FORMAT(PICKUP_TILL, '%d-%b-%Y %H:%i') as 'PICKUP_TILL', 
-            DATE_FORMAT(DROPOFF_FROM, '%d-%b-%Y %H:%i') as DROPOFF_FROM, DATE_FORMAT(DROPOFF_TILL, '%d-%b-%Y %H:%i') as 'DROPOFF_TILL', 
-            WASH_TYPE
-            FROM orders
-            join city_area on orders.CITY_AREA_ID = city_area.ID
-            "
-            :  
+ $select =  
         "SELECT orders.ID,orders.ORDER_NUMBER, orders.NAME, 
-                city_area.NAME + ', ' + orders.ADDRESS as ADDRESS,  
+                CONCAT(city_area.NAME, ', ', orders.ADDRESS) as ADDRESS,  
                 orders.EMAIL,orders.PHONE, 
          WASH_TYPE,
          CONCAT(DATE_FORMAT(PICKUP_FROM, '%d-%b-%Y %l:%i%p'),'-', DATE_FORMAT(PICKUP_TILL, '%l:%i%p')) as PICKUP,
          CONCAT(DATE_FORMAT(DROPOFF_FROM, '%d-%b-%Y %l:%i%p'),'-', DATE_FORMAT(DROPOFF_TILL, '%l:%i%p')) as DROPOFF,
+         PAYMENT_STATUS,
          order_feedback.RATING_OVERALL
          FROM orders
          join city_area on orders.CITY_AREA_ID = city_area.ID
@@ -189,7 +158,8 @@ function DisplayGrid(DateTimeImmutable $from, DateTimeImmutable $to,$onlyPaid,$a
 
     $lm->grid_output_control['WASH_TYPE'] = '--lazy_mofo_wash_type';
 
-    
+    $lm->grid_output_control['PAYMENT_STATUS'] = '--lazy_mofo_payment_status';
+
     $lm->grid_add_link = '';
     $lm->grid_export_link = '
         <form method="post" action="'.$_SERVER["PHP_SELF"].'?_export=1&amp;[qs]" target="_blank">
@@ -202,7 +172,7 @@ function DisplayGrid(DateTimeImmutable $from, DateTimeImmutable $to,$onlyPaid,$a
         </form>
     ';
 
-    echo "<h2>".$from->format("d-M H:i")."-".$to->format("H:i")."</h2>";
+    echo "<h2>".$from->format("d-M")." - ".$to->format("d-M")."</h2>";
 
     // use the lm controller
     $lm->run();
@@ -217,24 +187,14 @@ if(IsSamePagePost()) //Post Data received from order list page.
 	$search =  GetPostNoLongerThan('search', 20); 
     
     $onlyPaid = GetBooleanPost('onlyPaid');
-    $allColumns = GetBooleanPost('allColumns');
    
     $from =  GetPostNoLongerThan('from', 20); 
     $to =  GetPostNoLongerThan('to', 20); 
-    $groupByDateTime = GetBooleanPost('groupByDateTime');
     
     $fromDateTime = DateTimeImmutable::createFromFormat("d/m/Y H:i",$from." 00:00");
     $toDateTime = DateTimeImmutable::createFromFormat("d/m/Y H:i",$to." 23:59");
     
-    if($groupByDateTime){
-        $dates = PickupTime::GetPickupTimesForDuration($fromDateTime,$toDateTime);
-        foreach ($dates as $d) {
-            DisplayGrid($d->from,$d->to,$onlyPaid,$allColumns,$currentCity->Id);
-        }
-    }
-    else{
-          DisplayGrid($fromDateTime,$toDateTime,$onlyPaid,$allColumns,$currentCity->Id);
-    }
+    DisplayGrid($fromDateTime,$toDateTime,$onlyPaid,$currentCity->Id);
 }
 
 

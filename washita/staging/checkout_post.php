@@ -50,21 +50,28 @@ if($_POST) //Post Data received from order list page.
 
         if($checkboxWashing){
             $orderWashitemLines = isset($_POST['washitems']) ? $_POST['washitems']: "";
-            $params->WashItemLines = OrderWashItemLine::ConvertFromPost($orderWashitemLines);
+            $params->WashItemLines = OrderWashItemLine::ConvertFromPost($params->WashType, $orderWashitemLines);
             $params->kilo = GetPost('weight');
         }
     }
+    else if($params->WashType == WashType::OnlyIroning){
+        $orderOnlyIroningItemLines = isset($_POST['only_ironing_items_post']) ? $_POST['only_ironing_items_post']: "";
+        $params->WashItemLines = OrderWashItemLine::ConvertFromPost($params->WashType, $orderOnlyIroningItemLines);
+        $params->kilo = GetPost('weight');
+    }
     else if($params->WashType == WashType::DryCleaning){
         $orderDryCleaningItemLines = isset($_POST['dry_cleaning_items_post']) ? $_POST['dry_cleaning_items_post']: "";
-        $params->WashItemLines = OrderWashItemLine::ConvertFromPost($orderDryCleaningItemLines);
+        $params->WashItemLines = OrderWashItemLine::ConvertFromPost($params->WashType, $orderDryCleaningItemLines);
         $params->kilo = GetPost('weight');
     }
     
     
 
-    if(($params->WashType == WashType::DryCleaning || $params->WashType == WashType::SpecialCleaning)
+    if(($params->WashType == WashType::OnlyIroning ||
+        $params->WashType == WashType::DryCleaning || 
+        $params->WashType == WashType::SpecialCleaning)
         && count($params->WashItemLines) < 1){
-        echo "Wash items should be selected for dry and special cleaning!";
+        echo "Wash items should be selected for only ironing, dry and special cleaning!";
 		exit();
     }    
     $termsAccepted = GetBooleanPost('terms');

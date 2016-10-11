@@ -3,9 +3,8 @@ require_once(dirname(__FILE__).'/php/PickupTime.class.php');
 require_once(dirname(__FILE__)."/php/City.class.php");
 require_once(dirname(__FILE__)."/php/hybridauth/WashitaUser.php");
 require_once(dirname(__FILE__)."/_config.php");
-
-include_once(dirname(__FILE__)."/templates/header.general.php");
 include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
+include_once(dirname(__FILE__)."/templates/header.general.php");
 
 
 // UNCOMMENT ONLY FOR TEST
@@ -42,6 +41,11 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
                                         </label>
                                         <label class="btn btn-primary">
                                             <br class="hidden-lg"/>
+                                            <input type="radio" name="laundry_option" id="only_ironing" value="only_ironing" autocomplete="off" 
+                                            > SOLO Planchado 
+                                        </label>
+                                        <label class="btn btn-primary">
+                                            <br class="hidden-lg"/>
                                             <input type="radio" name="laundry_option" id="dry_cleaning" value="dry_cleaning" autocomplete="off" 
                                             > Lavaseco 
                                         </label>
@@ -57,16 +61,16 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
                             </div>                        
                             <div class="col col-sm-6 col-no-left-border">
                                 <div id="washing_ironing_container">
-                                <div class="checkbox">
-                                    <label><input type="checkbox" id="checkbox_washing" name="checkbox_washing" value="true" checked>
+                                <div class="checkbox" style="padding-left:0">
+                                    <label style="display:none"><input type="checkbox" id="checkbox_washing" name="checkbox_washing" value="true" checked>
                                         <span>Lavado y Doblado</span>
                                     </label>
                                     <div id="washing_details_container">
                                         <p class="washing-checkbox-subtitle">¿Cuánta Ropa?</p>
                                                     <div class="input-group">
                                                         <div id="weight-block">
-                                                                <input class="form-control decimals-with-hundreds items" 
-                                                                id="weight" name="weight" type="number" min="1" max="1000" step="0.01" value="1" 
+                                                                <input class="form-control decimals-with-tens items" 
+                                                                id="weight" name="weight" type="number" min="1" max="1000" step="0.1" value="1" 
                                                                 lang="es" 
                                                                 />
                                                             <div class="order-kg-cell">
@@ -139,18 +143,26 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
                                                 <input type="checkbox" id="checkbox_ironing" value="true">
                                                 <span>Agregar planchado</span>
                                             </label>
-                                            <p class="washing-checkbox-subtitle">desde $3.000 x Kg</p>
+                                            <p class="washing-checkbox-subtitle">($400 x prenda)</p>
                                             <div id="ironing_placeholder" style="display: none;">
                                                 <div class="ironing_placeholder_items">
                                                 </div>
                                                 <button type="button" class="btn btn-primary ironing-add-more-item">
-                                                    <i class="fa fa-plus"></i> append one more
+                                                    <i class="fa fa-plus"></i> agregar otra prenda
                                                 </button>
                                                 <div id="ironing_items_post_hidden"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div> <!--washing_ironing_container-->
+
+                             <div id="only_ironing_container" style="display: none;">
+                                    <div id="only-ironing-possible-items-placeholder">
+                                    </div>
+                                    <div id="only_ironing_items_post_hidden"></div>
+                               </div> <!--only_ironing_container-->
+
+
 
                                 <div id="dry_cleaning_container" style="display: none;">
                                     <div id="dry-cleaning-possible-items-placeholder">
@@ -170,10 +182,14 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
                             </div>
                             <div class="col col-sm-6">
                                 <p>Resumen de Orden</p>
-                                <div id="order_line_weight" class="order-line"><span class="order-line-label">Cantidad de Kg a <span id="selected_washing_text"></span></span><span id="one_kilo_pack_price" class="order-line-value">0</span></div>
-                                <div id="order_line_ironing" class="order-line" style="display: none;"><span class="order-line-label"><span class="selected_ironing_items_total"></span> items <span class="order-line-capitalized">Planchado</span> </span>    
+                                <div id="order_line_weight" class="order-line"><span class="order-line-label">Cantidad de Kg a <span class="selected_washing_text"></span></span><span id="one_kilo_pack_price" class="order-line-value">0</span></div>
+                                <div id="order_line_ironing" class="order-line" style="display: none;"><span class="order-line-label"><span class="selected_ironing_items_total"></span> prenda <span class="order-line-capitalized">Planchado</span> </span>    
                                                                                 <span class="order-line-value"> <span class="selected_ironing_items_total"></span> x <span id="ironing_item_price">$0</span></span>
                                 </div>
+                                <div id="order_line_only_ironing" class="order-line" style="display: none;"><span class="order-line-label">Prendas en <span class="selected_washing_text"></span></span><span id="items_only_ironing_price" class="order-line-value">0</span></div>
+                                <div id="order_line_dry_cleaning" class="order-line" style="display: none;"><span class="order-line-label">Prendas en <span class="selected_washing_text"></span></span><span id="items_dry_cleaning_price" class="order-line-value">0</span></div>
+
+                                
                                 <div class="order-line"><span class="order-line-label">Descuento</span><span id="dicount_procent" class="order-line-value">0</span></div>
                                 <div class="divider-wide"></div>
                                 <div>
@@ -227,7 +243,7 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
                                 />
                             </div>
                             <div class="col col-sm-6 col-md-3 input-group-vertical">
-                                <p>Horario de Retiro*</p>
+                                <p>Horario de Retiro**</p>
                                 <input type='hidden' id="pickup_datetime" name="pickup_datetime" />
                             <?php echo '<div class="input-group datepicker date" id="order_datepicker" data-min-datetime="'.PickupTime::GetMinPickupTime()->from->format('Y/m/d H:i:s').'">' ?>
                                             <input type='text' id="pickupdate" name="pickupdate" class="form-control" />
@@ -235,7 +251,6 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
                                                 <span class="fa fa-calendar"></span>
                                             </span>
                                         </div>
-                                <p class="help-block">*only working days</p>
                                    
                             </div>
                             <div class="col col-sm-6 col-md-3 input-group-vertical">
@@ -250,10 +265,9 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
                                             </select>
                                        
                                    </div>
-                                <p class="help-block">&nbsp</p>
                             </div>
                             <div class="col col-sm-6 col-md-3 input-group-vertical">
-                                <p>Horario de Entrega*</p>
+                                <p style="white-space: nowrap;">Horario de Entrega**</p>
                                 <div class="input-group datepicker date" id="dropoff_datepicker">
                                     <input type='hidden' id="dropoff_datetime" name="dropoff_datetime" />
                                             <input type='text' id="dropoffdate" name="dropoffdate" class="form-control" />
@@ -261,7 +275,6 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
                                                 <span class="fa fa-calendar"></span>
                                             </span>
                                 </div>   
-                                <p class="help-block">*only working days</p>
                             </div>
                             <div class="col col-sm-6 col-md-3 input-group-vertical">
                                 <p class="hidden-xxs">&nbsp;</p>
@@ -275,7 +288,9 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
                                             </select> 
                                        
                                    </div>
-                                <p class="help-block">&nbsp</p>
+                            </div>
+                            <div class="col col-sm-12 input-group-vertical ">
+                                <p class="help-block">**sólo días hábiles</p>
                             </div>
                               <div class="col col-sm-12 input-group-vertical ">
                                 <p>Peticiones Especiales</p>
@@ -295,7 +310,6 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
                 
                             
                         </div>
-
                         <div class="row item checkout-block">
                             <div class="input-group-vertical">
                                 <p>Elige tu medio de pago</p>
@@ -312,7 +326,7 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
                             </div>
                         </div>
                         <div class="row item checkout_footer pay_tab">
-                            <button type="submit" class="pay_btn hvr-glow">Pagar</button>
+                            <button type="submit" class="pay_btn hvr-glow">CONFIRMAR PEDIDO</button>
                         </div>
                         <div class="row item checkout-block oneclick_tab">
                             <div class="input-group-vertical">
@@ -336,15 +350,14 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
                             </div>
                         </div>
                         <div class="row item checkout_footer oneclick_tab">
-                            <button type="submit" class="pay_btn hvr-glow">Pagar</button>
+                            <button type="submit" class="pay_btn hvr-glow">CONFIRMAR PEDIDO</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </section>
-<script>
-</script>
+
 
  <?php 
  if(!isset($SCRIPTS_FOOTER)){
@@ -396,22 +409,14 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
             });
             $("#add_tc_action").on("click", function(){
                 location.href="php/transbank/ep_webpay.php?action=ONECLICK_INSCRIPTION";
-                // $.ajax({
-                //     url: "",
-                //     method: "POST",
-                //     data: {},
-                //     success: function(res){
-                //         result = JSON.parse(res);
-                //         window.open(result.url);
-                //     }
-                // })
             });
+            
             
 
             var washingControl = new WashingWashItemsControl("#modal_possible_items", true);
             washingControl.OnWashItemChoosed = function(){
                     $("#modal_selected_items_placeholder").html(this.GetHtmlForChosenItems());
-                    $("#weight").val(this.washProduct.getSanitizedWeight());
+                    $("#weight").val(this.washProduct.getSanitizedWeight(WASHING_TYPE));
 
                     appOrder.recalculatePrice();
             };
@@ -419,6 +424,12 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
             ironingControl.onWashItemAmountChanged = function(){
                     appOrder.totalIroningItems = this.totalItems();
                     appOrder.recalculatePrice();
+            };
+
+            var onlyIroningControl = new OnlyIroningWashItemsControl("#only-ironing-possible-items-placeholder", true);
+            onlyIroningControl.onWashItemAmountChanged = function(){
+                appOrder.onlyIroningItemLines = onlyIroningControl.washProduct.itemLines;
+                appOrder.recalculatePrice();
             };
 
             var drycleaningControl = new DryCleainigWashItemsControl("#dry-cleaning-possible-items-placeholder", true);
@@ -432,11 +443,40 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
                     var selectedLaundry = $(this).val();
                     if(selectedLaundry == "washing_and_ironing"){
                         $("#washing_ironing_container").show();
+                        $("#order_line_weight").show();
+                        if($("#checkbox_ironing").is(":checked")){
+                            $("#order_line_ironing").show();
+                        }
+
+                        $("#only_ironing_container").hide();
+                        $("#order_line_only_ironing").hide();
+
                         $("#dry_cleaning_container").hide();
+                        $("#order_line_dry_cleaning").hide();
+
+
+                    }
+                    else if(selectedLaundry == "only_ironing"){
+                        $("#washing_ironing_container").hide();
+                        $("#order_line_weight").hide();
+                        $("#order_line_ironing").hide();
+
+                        $("#only_ironing_container").show();
+                        $("#order_line_only_ironing").show();
+   
+                        $("#dry_cleaning_container").hide();
+                        $("#order_line_dry_cleaning").hide();
                     }
                     else{
                         $("#washing_ironing_container").hide();
+                        $("#order_line_weight").hide();
+                        $("#order_line_ironing").hide();
+
+                        $("#only_ironing_container").hide();
+                        $("#order_line_only_ironing").hide();
+
                         $("#dry_cleaning_container").show();
+                        $("#order_line_dry_cleaning").show();
                     }                    
                     
                     appOrder.recalculatePrice();
@@ -451,9 +491,13 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
 
             $("#checkout_form").submit(function( event ) {
                 var selectedLaundry = $(\'input[name="laundry_option"]:checked\').val();
-                var isLaundrybyItem = selectedLaundry === "dry_cleaning" || selectedLaundry === "special_cleaning"; 
+                var isLaundrybyItem = selectedLaundry === "only_ironing" ||
+                                      selectedLaundry === "dry_cleaning" || 
+                                      selectedLaundry === "special_cleaning"; 
 
-                if(isLaundrybyItem && (!washingControl.HasAnyItem() && !drycleaningControl.HasAnyItem())){
+                if((selectedLaundry === "only_ironing" && !onlyIroningControl.HasAnyItem()) ||
+                   (selectedLaundry === "dry_cleaning" && !drycleaningControl.HasAnyItem())
+                   ){
                     event.preventDefault();
                     $("#message-fail").show().html("<strong>¡Atención!</strong> Debe seleccionar las prendas que desea enviar.");
                 }
@@ -462,7 +506,7 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
                     $("#message-fail").show().html("<strong>¡Atención!</strong> El precio mínimo es $350.");
                 }
 
-                //Ironing
+                //Wash and Ironing
                 var ironing_items_post_hidden = $("#ironing_items_post_hidden");
                 ironing_items_post_hidden.html("");
 
@@ -472,6 +516,21 @@ include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
                          
                          var hiddenInputItem = $.parseHTML(inputHtml);
                         ironing_items_post_hidden.append(hiddenInputItem);
+                    });
+                }
+
+                //Only cleaning
+                var only_ironing_items_post_hidden = $("#only_ironing_items_post_hidden");
+                only_ironing_items_post_hidden.html("");
+
+                if(selectedLaundry === "only_ironing" && onlyIroningControl.HasAnyItem()){
+                    $.each(onlyIroningControl.washProduct.itemLines, function( key, washItemLine ) {
+                        if(washItemLine.count > 0){
+                            var inputHtml =  \'<input type="checkbox" style="display:none" name="only_ironing_items_post[]" value="\'+washItemLine.item.Id+\',\'+washItemLine.count+\'" checked>\';
+                            
+                            var hiddenInputItem = $.parseHTML(inputHtml);
+                            only_ironing_items_post_hidden.append(hiddenInputItem);
+                        }
                     });
                 }
 

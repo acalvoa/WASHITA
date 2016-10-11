@@ -153,10 +153,10 @@ class OrderWashItemLine{
 
     }
 
-    public static function ConvertFromPost($washitems){
+    public static function ConvertFromPost($washType, $washitems){
             $orderWashItemLines = [];
             if(!empty($washitems)) {
-                $dbWahItems = WashItem::GetAll();
+                $dbWahItems = WashItem::GetAllByType($washType);
                 foreach ($washitems as $str) {
                     $obj = explode(",",$str);
                     $line = new OrderWashItemLine();

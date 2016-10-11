@@ -80,6 +80,14 @@ class Price {
             // ironing
             $result->priceWithoutDiscount += ($this->priceForIroningPerItem * $params->TotalIroningItems);
         }
+        else if($params->WashType == WashType::OnlyIroning){
+            $result->priceWithoutDiscount = 0;
+            if(!empty($params->WashItemLines)){
+                foreach ($params->WashItemLines as $washItemLine) {
+                    $result->priceWithoutDiscount += ($washItemLine->Count * $washItemLine->WashItem->OnlyIroningPrice);
+                }
+            }
+        }
         else if($params->WashType == WashType::DryCleaning){
             $result->priceWithoutDiscount = 0;
             if(!empty($params->WashItemLines)){

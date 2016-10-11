@@ -1,7 +1,11 @@
 <?php
 require_once(dirname(__FILE__)."/php/WashItem.class.php");
+require_once(dirname(__FILE__)."/php/WashType.enum.php");
 
-$washItems = WashItem::GetAll();
+$washTypeGet = GetGet('laundry_option');
+$washType = WashType::ConvertFromPost($washTypeGet);
+
+$washItems = WashItem::GetAllByType($washType);
 
 $json = json_encode($washItems);
 

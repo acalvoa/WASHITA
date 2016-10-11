@@ -82,14 +82,14 @@ if($adminLogin->CanEditWashItems() ||
 
 
 $futurePickup = PickupTime::GetMinPickupTime();
-$previousPickup = $futurePickup->Previous();
+$previousPickup = $futurePickup->PreviousNearestPoint();
 DisplayGrid($futurePickup->from,$futurePickup->to, "Next",$currentCity->Id);
 DisplayGrid($previousPickup->from,$previousPickup->to, "Previous", $currentCity->Id);
 
 
 function DisplayGrid(DateTimeImmutable $from, DateTimeImmutable $to,$caption,$cityId){//"d/m/Y"
     $select = "SELECT orders.ID,ORDER_NUMBER, orders.NAME, 
-               city_area.NAME + ', ' + orders.ADDRESS as ADDRESS, 
+               CONCAT(city_area.NAME, ', ', orders.ADDRESS) as ADDRESS,  
                EMAIL,
                PHONE, 
                WASH_TYPE,

@@ -162,7 +162,7 @@ ol.checkout-block li:before {
     font-size: 20px;
 }
 #order form .form-control:not(.numbersOnly),
-#order form .form-control:not(.decimals-with-hundreds){
+#order form .form-control:not(.decimals-with-tens){
     color: #555555;
 }
 
@@ -182,7 +182,7 @@ ol.checkout-block li:before {
 
 
 
-#selected_washing_text,
+.selected_washing_text,
 .order-line-capitalized{
     color:#66cdcc;
     font-weight: bold;
@@ -637,22 +637,25 @@ p.washing-checkbox-subtitle{
      cursor: hand;    
 }
 
-
+#only-ironing-possible-items-placeholder .washitem-line .order-kg,
 #dry-cleaning-possible-items-placeholder .washitem-line .order-kg{
     font-size: 16px;
     vertical-align: middle;
     display: inline-block;
     position: initial;
 }
+#only-ironing-possible-items-placeholder .washitem-line  .numbersOnly,
 #dry-cleaning-possible-items-placeholder .washitem-line  .numbersOnly{
     max-width: 90px;
     border-radius: 0;
 }
 
 @media (min-width: 992px) {
+    #only-ironing-possible-items-placeholder,
     #dry-cleaning-possible-items-placeholder{
         display: table;
     }
+    .only-ironing-column,
     .dry-cleaning-column{
         width:50%;
         display: table-cell;
@@ -667,42 +670,7 @@ p.help-block{
     margin-top: -10px;
 }
 
+#only_ironing_container,
 #dry_cleaning_container{
     padding-bottom: 20px;
-}
-.payelement{
-    float: left;
-    padding-left: 20px;
-    padding-right: 20px;
-}
-.payelement .inputfield{
-    float: left;
-    margin-right: 10px;
-    padding-top: 30px;
-}
-.payelement .logofield{
-    float: left;
-}
-.oneclick_tab{
-    display: none;
-}
-.pay_tab{
-    display: block;
-}
-.oneclick_tab .tc_input_row{
-    float: left;
-    width: calc(100% - 250px);
-}
-.oneclick_tab .tc_add_row{
-    float: left;
-    width: 250px;
-}
-.oneclick_tab .add_tc_btn{
-    padding: 10px 50px;
-    color: white;
-    background-color: #66cdcc;
-    border-radius: 20px;
-    border: 0;
-    float: right;
-    font-size: 16px;
 }

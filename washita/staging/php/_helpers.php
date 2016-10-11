@@ -8,7 +8,7 @@ function allExceptionHandler($exception) {
     
     RedirectToErrorPage("", "Fatal eror occured");
 }
-// set_exception_handler('allExceptionHandler');
+set_exception_handler('allExceptionHandler');
 
 
 function IsSamePagePost(){
@@ -43,8 +43,8 @@ function MoneyFormat($number, $decimals = 0){
     return "$".number_format($number, $decimals, ',', '.');
 }
 
-function NumberFormat($number){
-    $res = number_format($number, 2, ',', '.');
+function NumberFormatWithTens($number){
+    $res = number_format($number, 1, ',', '.');
     return str_replace(",00", "", $res);
 }
 
@@ -83,7 +83,7 @@ function OpenPDOConnection(){
 
 function RedirectToErrorPage($orderNumber,$text){
     // Redirect to success page
-    // header("Location: ".$GLOBALS['site_root']."/error.php?order_number=".urlencode($orderNumber)."&text=".urlencode($text)); 
+    header("Location: ".$GLOBALS['site_root']."/error.php?order_number=".urlencode($orderNumber)."&text=".urlencode($text)); 
     exit();
 }
 

@@ -46,7 +46,8 @@ class PickupTime{
     public function IsEvening(){
         return $this->from->format("H:i")=="16:00";
     }
-    public function Previous(){
+    //Previous morning or evening
+    public function PreviousNearestPoint(){
         if($this->IsEvening()){
             return self::CreateMorningPickup($this->from);
         }
@@ -59,7 +60,9 @@ class PickupTime{
             return self::CreateEveningPickup($previousWorkingDay);
         }
     }
-    public function Next(){
+
+    //Next morning or evening
+    public function NextNearestPoint(){
         if($this->IsMorning()){
             return self::CreateEveningPickup($this->from);
         }
@@ -72,7 +75,14 @@ class PickupTime{
             return self::CreateMorningPickup($nextWorkingDay);
         }
     }
-    
+    public function NextPickup(){
+        $nextPickup;
+        //1.5 day
+        for($i=0; $i<3;$i++){
+            $nextPickup =$this->NextNearestPoint();
+        }
+        return $nextPickup;        
+    }  
     
     public static function CreatePickupTime(DateTimeImmutable $from, DateTimeImmutable $to){
         $obj = new PickupTime();
@@ -103,7 +113,7 @@ class PickupTime{
                 $resultDate = PickupTime::TodayEvening();
           }
           else{ //$currentHours >= 16 => next morning
-                $resultDate = PickupTime::TodayEvening()->Next();
+                $resultDate = PickupTime::TodayEvening()->NextNearestPoint();
           }
          
           return $resultDate;
@@ -118,10 +128,10 @@ class PickupTime{
             $dates[] = $pickup;
             
             //Evening
-            $pickup = $pickup->Next();
+            $pickup = $pickup->NextNearestPoint();
             $dates[] = $pickup;
             
-            $pickup = $pickup->Next();
+            $pickup = $pickup->NextNearestPoint();
         }
         
         return $dates;

@@ -11,7 +11,7 @@ $order = Order::GetOrderByNumber($orderNumber);
      
      
 $flowAPI = new flowAPI();
-$descritption = "Washita.cl, Order N".$order->OrderNumber.". Payment.";
+$descritption = "Washita.cl, Orden N°".$order->OrderNumber.". Pago.";
 $flow_pack = $flowAPI->new_order($order->OrderNumber, $order->ActualPriceWithDiscount, $descritption, $order->Email);
    
 ?>

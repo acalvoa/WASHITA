@@ -42,10 +42,13 @@ function GetAdditionalPaymentBody(Order $order){
         }
         else{
             $initWashItemLines = OrderWashItemLine::GetInitialItemsForOrder($order->OrderNumber);
-            $body .= "<p>Wash items real: ".OrderWashItemLine::LinesToString($initWashItemLines)." Kg.</p>";
-
+            if(count($actualWashItemLines) > 0){
+                $body .= "<p>Wash items real: ".OrderWashItemLine::LinesToString($initWashItemLines)." Kg.</p>";
+            }
             $actualWashItemLines = OrderWashItemLine::GetActualItemsForOrder($order->OrderNumber);
-            $body .= "<p>Wash items ingresado: ".OrderWashItemLine::LinesToString($actualWashItemLines)." Kg.</p>";
+            if(count($actualIroningItemLines) > 0){
+                $body .= "<p>Wash items ingresado: ".OrderWashItemLine::LinesToString($actualWashItemLines)." Kg.</p>";
+            }
         }
 
         $body .= '</td></tr></table>';

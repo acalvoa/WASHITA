@@ -145,7 +145,7 @@ include_once(dirname(__FILE__)."/templates/header.php");
                         <div class="about-item scrollpoint sp-effect5">
                             <i class="fa fa-clock-o fa-5x"></i>
                             <h3>Ropa limpia en tus manos</h3>
-                            <p>Al día siguiente tendrás tu ropa <font color='#66cdcc'>LAVADA</font>, <font color='#66cdcc'>PLANCHADA</font> y <font color='#66cdcc'>DOBLADA </font>lista para usarla.</p>
+                            <p>En poco tiempo tendrás tu ropa <font color='#66cdcc'>LAVADA</font>, <font color='#66cdcc'>PLANCHADA</font> y <font color='#66cdcc'>DOBLADA </font>lista para usarla.</p>
                         </div>
                     </div>
 
@@ -227,7 +227,7 @@ include_once(dirname(__FILE__)."/templates/header.php");
                             </a>
                             <div class="media-body">
                                 <h3 class="media-heading">¿Cuándo llegará mi ropa limpia?</h3>
-                                Tu ropa llegará al siguiente día hábil. <br/>
+                                Tu ropa llegará en menos de 48 horas. <br/>
                                 Los retiros en horario PM se procesarán a contar del siguiente día hábil.
                             </div>
                         </div>
@@ -392,9 +392,9 @@ include_once(dirname(__FILE__)."/templates/header.php");
                                         <a class="pull-left">
                                             <i class="fa fa-phone fa-2x"></i>
                                         </a>
-                                        <div class="media-body">
+                                        <!--<div class="media-body">
                                             <h4 class="media-heading">+56 (22) 405-3056</h4>
-                                        </div>
+                                        </div>-->
                                     </div>
                                 </div>
                         </div>

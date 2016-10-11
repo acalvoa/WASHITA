@@ -48,23 +48,28 @@ function PutActualData($order){
                     WHERE ORDER_NUMBER='".$mysqli->real_escape_string($order->OrderNumber)."'";
 
             if(!$mysqli->query($query)){
-                echo "Cannot update actual weight for order!";
+                echo "ERROR, no fue posible actualizar el peso actual a ésta orden!!!";
                 exit(); 
             }                          
              
 
             if($order->WashType == WashType::WashingAndIroning){
                 $orderWashitemLinesPost = isset($_POST['washitems'])? $_POST['washitems'] : "";
-                $orderWashitemLines = OrderWashItemLine::ConvertFromPost($orderWashitemLinesPost);
+                $orderWashitemLines = OrderWashItemLine::ConvertFromPost($order->WashType, $orderWashitemLinesPost);
                 OrderWashItemLine::SetActualItemsForOrder($order->OrderNumber, $orderWashitemLines);
 
                 $ironing_items_post = isset($_POST['ironing_items_post']) ? $_POST['ironing_items_post']: "";
                 $ironingItemLines =  OrderCustomItemLine::ConvertFromPost(WashType::OnlyIroning, $ironing_items_post);
                 OrderCustomItemLine::SetCustomOrderItems($order->OrderNumber, $ironingItemLines, true);
             }
+            else if($order->WashType == WashType::OnlyIroning){
+                $orderOnlyIroningItemLinesPost = isset($_POST['only_ironing_items_post']) ? $_POST['only_ironing_items_post']: "";
+                $orderOnlyIroningItemLines  = OrderWashItemLine::ConvertFromPost($order->WashType, $orderOnlyIroningItemLinesPost);
+                OrderWashItemLine::SetActualItemsForOrder($order->OrderNumber, $orderOnlyIroningItemLines);
+            }
             else if($order->WashType == WashType::DryCleaning){
                 $orderDryCleaningItemLinesPost = isset($_POST['dry_cleaning_items_post']) ? $_POST['dry_cleaning_items_post']: "";
-                $orderDryCleaningItemLines  = OrderWashItemLine::ConvertFromPost($orderDryCleaningItemLinesPost);
+                $orderDryCleaningItemLines  = OrderWashItemLine::ConvertFromPost($order->WashType, $orderDryCleaningItemLinesPost);
                 OrderWashItemLine::SetActualItemsForOrder($order->OrderNumber, $orderDryCleaningItemLines);
             }
 
@@ -127,7 +132,7 @@ $LINKS.= '<style>
         } 
     ?>
     
-    <h3 >Order N 
+    <h3 >Orden N° 
     <?php echo $orderNumber ?>
     </h3>
      <a class="btn btn-default" onclick="window.history.back()" href="#" style="float:right;margin-top:-40px;margin-right:20px;" role="button">Back</a>
@@ -153,13 +158,14 @@ $LINKS.= '<style>
                 <p><?php echo ($order != null && !empty($order->Phone))? $order->Phone : "-" ?></p>
             </fieldset>
             <fieldset class="form-group">
-                <label>Wash Type</label>
+                <label>Tipo de Servicio</label>
                 <p><?php echo $order != null? $order->WashingTypeText() : "-" ?></p>
             </fieldset>
 
             <?php 
             $initWashItemLines = [];
             $initIroningItemLines = [];
+            $initOnlyIroningItemLines = [];
             $initDryCleaningItemLines = [];
 
                 if($order->WashType == WashType::WashingAndIroning){
@@ -177,6 +183,15 @@ $LINKS.= '<style>
                     </fieldset> 
                     ';
                 }
+                else if($order->WashType == WashType::OnlyIroning){
+                    $initOnlyIroningItemLines = OrderWashItemLine::GetInitialItemsForOrder($orderNumber);
+                     echo'
+                    <fieldset class="form-group">
+                        <label>Only ironing items</label>
+                        <p>'.OrderWashItemLine::LinesToString($initOnlyIroningItemLines).'</p>
+                    </fieldset>
+                    ';
+                }
                 else if($order->WashType == WashType::DryCleaning){
                     $initDryCleaningItemLines = OrderWashItemLine::GetInitialItemsForOrder($orderNumber);
                      echo'
@@ -192,9 +207,9 @@ $LINKS.= '<style>
                     if(!empty($actualWashItemLines)){
                         echo '
                          <fieldset class="form-group">
-                                <label class="changed-value">Actual wash items</label>
+                                <label class="changed-value">Prendas Validadas a Lavar por staff</label>
                                 <p class="changed-value">'.OrderWashItemLine::LinesToString($actualWashItemLines).'</p>
-                                <small class="text-muted">Actual items as they are. Additional payment will be requested for dry and special cleaning only if the new price is more than the initial price.</small>
+                                <small class="text-muted">Lista de prendas validadas. Se solicitará pago adicional para lavaseco si es que el nuevo valor es mayor que el inicial.</small>
                         </fieldset>
                         ';
                     }
@@ -203,9 +218,9 @@ $LINKS.= '<style>
                     if(!empty($actualIroningItemLines)){
                         echo '
                          <fieldset class="form-group">
-                                <label class="changed-value">Actual ironing items</label>
+                                <label class="changed-value">Prendas Validadas a Planchar</label>
                                 <p class="changed-value">'.OrderCustomItemLine::LinesToString($actualIroningItemLines).'</p>
-                                <small class="text-muted">Actual items as they are. Additional payment will be requested for dry and special cleaning only if the new price is more than the initial price.</small>
+                                <small class="text-muted">Lista de prendas validadas a planchar.  Se solicitará pago adicional para lavaseco si es que el nuevo valor es mayor que el inicial.</small>
                         </fieldset>
                         ';
                     }
@@ -219,7 +234,7 @@ $LINKS.= '<style>
                     echo '
                     <fieldset class="form-group">
                         <label>Peso, Kg</label>
-                        <p>'.(!empty($order->Weight)? NumberFormat($order->Weight) : "-").'</p>
+                        <p>'.(!empty($order->Weight)? NumberFormatWithTens($order->Weight) : "-").'</p>
                         <small class="text-muted">Precio según ha ingresado el cliente</small>
                     </fieldset>
                     ';
@@ -234,7 +249,7 @@ $LINKS.= '<style>
                 <p><?php echo MoneyFormat($order->PriceWithDiscount) ?></p>
                   <?php
                      if($order != null && !empty($order->IsWeightRequired)){
-                        echo '<small class="text-muted">Precio por '.NumberFormat($order->Weight).' Kg con descuento si existe</small>';
+                        echo '<small class="text-muted">Precio por '.NumberFormatWithTens($order->Weight).' Kg con descuento si existe</small>';
                      }
                      else{
                         echo '<small class="text-muted">Precio con descuento si existe</small>';
@@ -243,20 +258,20 @@ $LINKS.= '<style>
             </fieldset>
 
         <?php
-        if($order != null && !empty($order->ActualWeight)){
+        if($order != null && $order->IsWeightRequired() && !empty($order->ActualWeight)){
             echo  
         '<fieldset class="form-group changed-value">
-            <label>Actual weight, Kg</label>
-            <p class="changed-value"> '.NumberFormat($order->ActualWeight).'</p>
-            <small class="text-muted">Actual weight is weighing by Washita staff</small>
+            <label>Peso Validado (Kg)</label>
+            <p class="changed-value"> '.NumberFormatWithTens($order->ActualWeight).'</p>
+            <small class="text-muted">Peso validado por staff de Washita</small>
          </fieldset>';
         }
         if($order != null && $order->ActualPriceWithDiscount != null){
             echo  
         '<fieldset class="form-group changed-value">
-            <label>Actual price with discount</label>
+            <label>Precio validado (con descuento si aplica)</label>
             <p>'.MoneyFormat($order->ActualPriceWithDiscount).'</p>
-            <small class="text-muted">Final price</small>
+            <small class="text-muted">Precio Final</small>
          </fieldset>';
         }
        ?>
@@ -271,26 +286,27 @@ $LINKS.= '<style>
 
 
     <form method="post" id="actual_form">
-            <h3>Actual price</h3>
+            <h3>Precio Validado por Staff</h3>
                 <fieldset class="form-group">
-                    <label>Put actual price</label>
-                    <input id="actual_price" name="actual_price" class="form-control decimals-with-hundreds" type="number" min="0" step="1" 
+                    <label>Ingresar precio final</label>
+                    <input id="actual_price" name="actual_price" class="form-control numbersOnly" type="number" min="0" step="1" 
                             placeholder="Price" value="<?php echo ($order != null? $order->ActualPriceWithDiscount:0)?>">
-                    <small class="text-muted">Put actual price to request order purchasing</small>
+                    <small class="text-muted">Ingresar el precio validado para solicitar pago al cliente</small>
                 </fieldset>
 
 
-            <h3>Peso Validado</h3>
         <?php 
            if($order != null && $order->IsWeightRequired()){
             echo '      
+            <h3>Peso Validado</h3>
                 <fieldset class="form-group">
-                    <label>Ingrese Peso actual</label>
-                    <input id="actual_weight" name="actual_weight" class="form-control decimals-with-hundreds" type="number" min="0" max="1000" step="0.01" 
+                    <label>Ingrese Peso actual <span id="actual_weight_new"></span></label>
+                    <input id="actual_weight" name="actual_weight" class="form-control decimals-with-tens" type="number" min="0" max="1000" step="0.1" 
                         value="'.($order != null? $order->ActualWeight:0).'"
-                        placeholder="Ingrese peso actual, mayor que '.NumberFormat($order->Weight).'">
-                    <small class="text-muted">Ingrese el peso actual que ha validado en el lugar, si es diferente a lo que ha informado el cliente, se enviará automáticamente un email cobrando la diferencia.ient\s input.</small>
+                        placeholder="Ingrese peso actual, mayor que '.NumberFormatWithTens($order->Weight).'">
+                    <small class="text-muted">Ingrese el peso validado por el staff.</small>
                 </fieldset>
+                
             ';
         }
     ?>
@@ -299,10 +315,10 @@ $LINKS.= '<style>
         <?php 
         if($order != null)
         {
-            echo '<h3>Actual items correction</h3>';
+            echo '<h3>Corregir Cantidad de Prendas</h3>';
 
                 if($order->WashType == WashType::WashingAndIroning){
-                    echo '<button type="button" id="btn_actual_items" class="btn btn-primary" data-toggle="modal" data-target="#modal_possible_items">Change washing items</button>
+                    echo '<button type="button" id="btn_actual_items" class="btn btn-primary" data-toggle="modal" data-target="#modal_possible_items">Modificar Prendas</button>
                     
                      <!-- Modal -->
                                     <div id="modal_possible_items" class="modal fade modal-possible-items" role="dialog">
@@ -358,6 +374,15 @@ $LINKS.= '<style>
                     
                     ';
                 }
+                else if($order->WashType == WashType::OnlyIroning){
+                    echo '
+                                <div id="only_ironing_container">
+                                    <div id="only-ironing-possible-items-placeholder">
+                                    </div>
+                                    <div id="only_ironing_items_post_hidden"></div>
+                               </div> <!--only_ironing_container-->
+                    ';
+                }
                 else if($order->WashType == WashType::DryCleaning){
                     echo '
                                 <div id="dry_cleaning_container">
@@ -375,7 +400,7 @@ $LINKS.= '<style>
            
                                           
                 <input name="action_type" type="hidden" value="put_actual_data">
-                <button type="submit" class="btn btn-primary">Enviar</button>
+                <button type="submit" class="btn btn-primary">Enviar</button><span id="actual_form_saving_message"></span>
             </form>     
         </div>
            
@@ -392,7 +417,7 @@ $LINKS.= '<style>
                 echo '
                          <div class="form-group">
                                 <label for="rating_overall" class="col-sm-6 control-label">
-                                    Overall experience
+                                    Evaluación General
                                 </label>
                                 <div class="col-sm-6 text-left star-rating-large">
                                     '.RatingControl('rating_overall', $orderFeedback->RatingOverall).'
@@ -468,11 +493,11 @@ $LINKS.= '<style>
 if($order != null)
         echo '
          <form method="post">
-            <h3>Resend confirmation email</h3>
+            <h3>Reenviar email de confirmación de pedido a cliente.</h3>
             <fieldset class="form-group">
                 <input name="action_type" type="hidden" value="resend_confirmation">
             </fieldset>
-            <button type="submit" class="btn btn-primary">Resend</button>
+            <button type="submit" class="btn btn-primary">Reenviar</button>
         </form>
         ';
 ?>        
@@ -515,26 +540,35 @@ if($order != null)
 
 <?php
 $jsInitWashItems = 'var actualWashItems = {};'; 
-$washItemLines = count($actualWashItemLines) > 0? $actualWashItemLines : $initWashItemLines;
+$isModifiedByAdmin = ($order->ActualWeight !== null) || ($order->ActualPriceWithDiscount !== null);
+
+$washItemLines = $isModifiedByAdmin? $actualWashItemLines : $initWashItemLines;
 foreach ($washItemLines as $washItemLine) {
     $jsInitWashItems.='actualWashItems["'.$washItemLine->WashItem->Id.'"]='.$washItemLine->Count.';';
 }
 
-
 $jsInitIroningItemLines = 'var ironingItemLines = [];'; 
-$ironingItemLines = count($actualIroningItemLines) > 0? $actualIroningItemLines : $initIroningItemLines;
+$ironingItemLines = $isModifiedByAdmin? $actualIroningItemLines : $initIroningItemLines;
 
 for($x =0; $x < count($ironingItemLines); $x++){
     $ironingItemLine = $ironingItemLines[$x];
 
-    $jsInitIroningItemLines.='var customItem = new WashItem(IRONING_TYPE, '.$x.', "'.$ironingItemLine->Name.'", 0, 0, 0,0,"");';
+    $jsInitIroningItemLines.='var customItem = new WashItem(WASHING_IRONING_TYPE, '.$x.', "'.$ironingItemLine->Name.'", 0, 0, 0,0,"");';
     $jsInitIroningItemLines.='var customItemLine = new WashItemLine('.$ironingItemLine->Count.', customItem);';
     $jsInitIroningItemLines.='ironingItemLines.push(customItemLine);';
 } 
 
 
+$jsInitOnlyIroningItems = 'var actualOnlyIroningItems = {};'; 
+$onlyIroningItemLines = $isModifiedByAdmin? $actualWashItemLines : $initOnlyIroningItemLines;
+foreach ($onlyIroningItemLines as $onlyIroningItemLine) {
+    $jsInitOnlyIroningItems.='actualOnlyIroningItems["'.$onlyIroningItemLine->WashItem->Id.'"]='.$onlyIroningItemLine->Count.';';
+}
+
+
+
 $jsInitDryCleaningItems = 'var actualDryCleaningItems = {};'; 
-$dryCleaningItemLines = count($actualWashItemLines) > 0? $actualWashItemLines : $initDryCleaningItemLines;
+$dryCleaningItemLines = $isModifiedByAdmin? $actualWashItemLines : $initDryCleaningItemLines;
 foreach ($dryCleaningItemLines as $dryCleaningItemLine) {
     $jsInitDryCleaningItems.='actualDryCleaningItems["'.$dryCleaningItemLine->WashItem->Id.'"]='.$dryCleaningItemLine->Count.';';
 }
@@ -548,6 +582,7 @@ foreach ($dryCleaningItemLines as $dryCleaningItemLine) {
 
     '.$jsInitIroningItemLines.'
 
+    '.$jsInitOnlyIroningItems.'
     '.$jsInitDryCleaningItems.'
         $(document).ready(function() {
             appOrder.sanitizeNumberInput();
@@ -572,6 +607,7 @@ $SCRIPTS_FOOTER.= '
                 ironingControl.enable();
             }
             $("#actual_form").submit(function( event ) {
+                event.preventDefault();
                 //updateHiddenIroningItems
                      var ironing_items_post_hidden = $("#ironing_items_post_hidden");
                     ironing_items_post_hidden.html("");
@@ -584,11 +620,58 @@ $SCRIPTS_FOOTER.= '
                             ironing_items_post_hidden.append(hiddenInputItem);
                         });
                     }
+
+                var data = $(this).serialize();
+                $(this).find(":input").prop("disabled", true);
+                $("#actual_form_saving_message").html("Saving is in process ...");
+                
+                $.post("'.$_SERVER['REQUEST_URI'].'", data)
+                .done(function(data) {
+                    location.reload();
+                });
             });
 
            
 
             ';
+}
+else if($order->WashType == WashType::OnlyIroning){
+$SCRIPTS_FOOTER.= '
+            var onlyIroningControl = new OnlyIroningWashItemsControl("#only-ironing-possible-items-placeholder", true);
+            onlyIroningControl.SetWashItems(actualOnlyIroningItems, function(){
+                onlyIroningControl.showInputItems();
+            });
+
+            $("#actual_form").submit(function( event ) {
+                event.preventDefault();
+
+                //Only ironing
+                var only_ironing_items_post_hidden = $("#only_ironing_items_post_hidden");
+                only_ironing_items_post_hidden.html("");
+
+                if(onlyIroningControl.HasAnyItem()){
+                    $.each(onlyIroningControl.washProduct.itemLines, function( key, washItemLine ) {
+                        if(washItemLine.count > 0){
+                            var inputHtml =  \'<input type="checkbox" style="display:none" name="only_ironing_items_post[]" value="\'+washItemLine.item.Id+\',\'+washItemLine.count+\'" checked>\';
+                         
+                            var hiddenInputItem = $.parseHTML(inputHtml);
+                            only_ironing_items_post_hidden.append(hiddenInputItem);
+                        }
+                    });
+                }
+            
+                var data = $(this).serialize();
+                $(this).find(":input").prop("disabled", true);
+                $("#actual_form_saving_message").html("Saving is in process ...");
+                
+                $.post("'.$_SERVER['REQUEST_URI'].'", data)
+                .done(function(data) {
+                    location.reload();
+                });
+            });
+
+
+     ';
 }
 else if($order->WashType == WashType::DryCleaning){
 $SCRIPTS_FOOTER.= '
@@ -598,6 +681,8 @@ $SCRIPTS_FOOTER.= '
             });
 
             $("#actual_form").submit(function( event ) {
+                event.preventDefault();
+
                 //Dry cleaning
                 var dry_cleaning_items_post_hidden = $("#dry_cleaning_items_post_hidden");
                 dry_cleaning_items_post_hidden.html("");
@@ -612,6 +697,16 @@ $SCRIPTS_FOOTER.= '
                         }
                     });
                 }
+            
+            
+                var data = $(this).serialize();
+                $(this).find(":input").prop("disabled", true);
+                $("#actual_form_saving_message").html("Saving is in process ...");
+                
+                $.post("'.$_SERVER['REQUEST_URI'].'", data)
+                .done(function(data) {
+                    location.reload();
+                });
             });
 
 
@@ -619,10 +714,28 @@ $SCRIPTS_FOOTER.= '
 }
 
 $SCRIPTS_FOOTER.='
+                        $("#actual_weight").bind("change paste keyup", function() {
+                                var sanitized = getSanitizedAndRoundedUpNumber(this.value, 1);
 
+                                var minValue = $(this).attr("min");
+                                if(minValue && sanitized < minValue){
+                                    sanitized = minValue;
+                                }
+                                
+                                $("#actual_weight_new").html("(New value: "+sanitized+")");
+                        });
+                    
+                    
+            
+      ';
 
-        });
-    </script>';
+//end of document ready
+$SCRIPTS_FOOTER.='
+});
+</script>';
+
 include_once(dirname(__FILE__)."/templates/footer.admin.php");
+
+
 
 ?>

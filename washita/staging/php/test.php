@@ -7,25 +7,25 @@ require_once(dirname(__FILE__)."/PickupTime.class.php");
 require_once(dirname(__FILE__)."/hybridauth/WashitaUser.php");
 
 
-$address="a-artur@yandex.ru,aa@2.com";
-if(!empty($address)){
-    foreach(explode(",",$address) as $bcc){
-        echo $bcc;
-    }
-}
+// $address="a-artur@yandex.ru,aa@2.com";
+// if(!empty($address)){
+//     foreach(explode(",",$address) as $bcc){
+//         echo $bcc;
+//     }
+// }
 // $order = Order::GetOrderByNumber("21039");
 // echo $order->GetFullAddress();
 
-// $mailService = new MailService();
-// $mailService->SendNotification('21036');
+$mailService = new MailService();
+//$mailService->SendNotification('21127');
 
-// $order = new OrderRequiredFeedback();
-//                 $order->OrderNumber = '21064';
-//                 $order->FeedbackCode = 'test';
-//                 $order->Email = 'artur.ampilogov@gmail.com';
-//                 $order->Name = 'Arturio';
-//                 $order->CityAreaId = 2;
-// $r = $mailService->SendFeedbackRequest($order);
+$order = new OrderRequiredFeedback();
+                $order->OrderNumber = '21127';
+                $order->FeedbackCode = 'test';
+                $order->Email = '2dot718281828@gmail.com';
+                $order->Name = 'Arturio';
+                $order->CityAreaId = 2;
+$r = $mailService->SendFeedbackRequest($order);
 
 // var_dump($r);
 
