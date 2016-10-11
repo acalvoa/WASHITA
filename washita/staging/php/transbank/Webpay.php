@@ -278,13 +278,34 @@ class Webpay extends MySQLDB{
 		$result = $webpay->getTransactionResult($webpay_token); 
 		// Verificamos resultado del pago
 		if ($result->detailOutput->responseCode===0) {
-			echo "<pre>";
-			print_r($result);
-			echo "</pre>";
-			$message = "Pago ACEPTADO por webpay (se deben guardatos para mostrar voucher)";
-			$next_page = $result->urlRedirection;
-			$next_page_title = "Finalizar Pago";
-			echo "<br>".$message;
+			$this->LOG("Creamos la nueva orden de trabajo. Rescatamos el registro");
+			$preorder['TBK_ODC'] = $result->buyOrder;
+			$order_param = $this->FIRST('TBK_PREORDER', $preorder);
+			unset($order_param['TBK_ODC']);
+			unset($order_param['ID_USER']);
+			$this->LOG("Creamos la nueva orden de trabajo. Creamos el registro");
+			$order = $this->INSERT($order_param,"orders");
+			$TBK_ORDER['WASHITA_ORDER'] = $GLOBALS["OrdersNumberStart"] + $order;
+			$TBK_ORDER['PAYMENT_STATUS'] = 1;
+			$order_resp = $this->UPDATE($TBK_ORDER,$preorder,"TBK_TRANSACTIONS");
+			if(!($order_resp)){
+				die('RECHAZADO');
+			}
+			$ORDER_FINAL['ORDER_NUMBER'] = $TBK_ORDER['WASHITA_ORDER'];
+			$ORDER_FINAL['PAYMENT_STATUS'] = 1;
+			$ORDER_WHERE['ID']  = $order;
+			$order_result = $this->UPDATE($ORDER_FINAL,$ORDER_WHERE,"orders");
+			if(!($order_result)){
+				die('RECHAZADO');
+			}
+			 // SEND EMAIL
+	        $mailService = new MailService();
+	        $mailService->SendNotification($TBK_ORDER['WASHITA_ORDER']);
+	        //REDIRECCIONAMOS
+			printf('<form action="%s" name="frm" method="post">', $result->urlRedirection);
+			printf('<input type="hidden" name="token_ws" value="%s"/>', $webpay_token);
+			echo "</form>";
+			echo '<script type="text/javascript"> document.frm.submit(); </script>';
 		} else {
 			print_r($result);
 			$message = "Pago RECHAZADO por webpay - ".utf8_decode($result->detailOutput->responseDescription);

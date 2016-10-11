@@ -114,12 +114,8 @@ $TBK_SERVER_CERT_FILE = "/home/washita/washita/staging/transbank/keys/tbk.pem";
 $ONECLICK_URL_INSCRIPTION = "http://washita.teamnodes.com/php/transbank/ep_webpay.php?action=FINISH_ONECLICK_INSCRIPTION";
 /* BEGIN ONECLICK TRANSACTION LINK*/
 $TBK_AUTHORIZE_ONECLICK = "/php/transbank/ep_webpay.php?action=AUTHORIZE_ONECLICK";
-/* BEGIN ONECLICK TRANSACTION LINK*/
-$TBK_AUTHORIZE_ONECLICK = "/php/transbank/ep_webpay.php?action=AUTHORIZE_ONECLICK";
-/* BEGIN ONECLICK TRANSACTION LINK*/
-$TBK_AUTHORIZE_ONECLICK = "/php/transbank/ep_webpay.php?action=AUTHORIZE_ONECLICK";
 /* WEBPAY WS RESULT LINK*/
-$TBK_WEBPAY_RESULT = "http://washita.teamnodes.com/tbk_result.php";
+$TBK_WEBPAY_RESULT = "http://washita.teamnodes.com/php/transbank/ep_webpay.php?action=VERIFY_TRANS_WS";
 /* WEBPAY WS END LINK*/
 $TBK_WEBPAY_END = "http://washita.teamnodes.com/tbk_end.php";
 /***************************/

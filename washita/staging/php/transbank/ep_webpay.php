@@ -12,12 +12,22 @@ if(!empty($action) AND !is_null($action)){
 	if($action == "BEGIN_TRANS"){
 		require_once(dirname(__FILE__)."/Webpay.php");
 		$webpay = new Webpay();
+		$webpay->START_TRANS();
+	}
+	else if($action == "BEGIN_TRANS_WS"){
+		require_once(dirname(__FILE__)."/Webpay.php");
+		$webpay = new Webpay();
 		$webpay->START_TRANS_WS();
 	}
 	else if($action == "VERIFY_TRANS"){
 		require_once(dirname(__FILE__)."/Webpay.php");
 		$webpay = new Webpay();
 		$webpay->VERIFY();
+	}
+	else if($action == "VERIFY_TRANS_WS"){
+		require_once(dirname(__FILE__)."/Webpay.php");
+		$webpay = new Webpay();
+		$webpay->RESULT_WEBPAY_WS();
 	}
 	else if($action == "ONECLICK_INSCRIPTION"){
 		require_once(dirname(__FILE__)."/OneClick.php");
