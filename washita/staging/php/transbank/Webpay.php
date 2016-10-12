@@ -281,6 +281,8 @@ class Webpay extends MySQLDB{
 		if ($result->detailOutput->responseCode===0) {
 			$this->LOG("Creamos la nueva orden de trabajo. Rescatamos el registro");
 			$preorder['TBK_ODC'] = $result->buyOrder;
+			$update['TOKEN'] = $webpay_token;
+			$tk_in = $this->UPDATE($update,$preorder,'TBK_PREORDER');
 			$order_param = $this->FIRST('TBK_PREORDER', $preorder);
 			unset($order_param['ID_ODC']);
 			unset($order_param['TBK_ODC']);
@@ -289,6 +291,7 @@ class Webpay extends MySQLDB{
 			$order = $this->INSERT($order_param,"orders");
 			$TBK_ORDER['WASHITA_ORDER'] = $GLOBALS["OrdersNumberStart"] + $order;
 			$TBK_ORDER['PAYMENT_STATUS'] = 1;
+			$TBK_ORDER['TOKEN'] = $webpay_token;
 			$order_resp = $this->UPDATE($TBK_ORDER,$preorder,"TBK_TRANSACTIONS");
 			if(!($order_resp)){
 				die('RECHAZADO');
@@ -301,8 +304,8 @@ class Webpay extends MySQLDB{
 				die('RECHAZADO');
 			}
 			 // SEND EMAIL
-	        $mailService = new MailService();
-	        $mailService->SendNotification($TBK_ORDER['WASHITA_ORDER']);
+	        // $mailService = new MailService();
+	        // $mailService->SendNotification($TBK_ORDER['WASHITA_ORDER']);
 	        //REDIRECCIONAMOS
 			printf('<form action="%s" name="frm" method="post">', $result->urlRedirection);
 			printf('<input type="hidden" name="token_ws" value="%s"/>', $webpay_token);

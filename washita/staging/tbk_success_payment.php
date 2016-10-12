@@ -4,7 +4,14 @@ require_once(dirname(__FILE__)."/php/transbank/OrdersGenerator.php");
 print_r($_POST);
 $USER = WashitaUser::CurrentUser();
 $order = new OrderGenerator($USER->Id);
-$data_order = $order->ORDER_INFO($_POST["TBK_ORDEN_COMPRA"]);
+if(isset($_POST["TBK_ORDEN_COMPRA"])){
+    $data_order = $order->ORDER_INFO($_POST["TBK_ORDEN_COMPRA"]);
+}
+else
+{
+    $data_order = $order->ORDER_INFO_TOKEN($_POST["token_ws"]);
+}
+
 ?>
     <section>
         <div class="container">

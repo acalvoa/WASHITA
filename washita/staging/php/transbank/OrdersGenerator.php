@@ -194,5 +194,12 @@ class OrderGenerator extends MySQLDB{
 		$retorno['TBK_PREORDER'] = $this->FIRST('TBK_PREORDER',$ORDER);
 		return $retorno;
 	}
+	/* @method object ORDER_INFO_TOKEN() This method get the info of order emited by transbank from transaction token */
+	public function ORDER_INFO_TOKEN($TOKEN){
+		$ORDER['TOKEN'] = $TOKEN;
+		$retorno['TBK_PREORDER'] = $this->FIRST('TBK_PREORDER',$ORDER);
+		$retorno['TBK_TRANSACTION'] = $this->FIRST('TBK_TRANSACTIONS',$ORDER);
+		return $retorno;
+	}
 }
 ?>
