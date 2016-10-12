@@ -305,8 +305,8 @@ class Webpay extends MySQLDB{
 				die('RECHAZADO');
 			}
 			 // SEND EMAIL
-	        // $mailService = new MailService();
-	        // $mailService->SendNotification($TBK_ORDER['WASHITA_ORDER']);
+	        $mailService = new MailService();
+	        $mailService->SendNotification($TBK_ORDER['WASHITA_ORDER']);
 	        //REDIRECCIONAMOS
 			printf('<form action="%s" name="frm" method="post">', $result->urlRedirection);
 			printf('<input type="hidden" name="token_ws" value="%s"/>', $webpay_token);
