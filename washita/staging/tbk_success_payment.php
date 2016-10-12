@@ -1,6 +1,7 @@
  <?php 
 include_once(dirname(__FILE__)."/templates/header.general.php");
 require_once(dirname(__FILE__)."/php/transbank/OrdersGenerator.php");
+print_r($_POST);
 $USER = WashitaUser::CurrentUser();
 $order = new OrderGenerator($USER->Id);
 $data_order = $order->ORDER_INFO($_POST["TBK_ORDEN_COMPRA"]);
