@@ -97,7 +97,7 @@ $TBK_CHECK_MAC_PATH = "/home/washita/washita/staging/transbank/tbk_check_mac.cgi
 /* TYPE OF TRANSACTION*/
 $TBK_TIPO_TRANSACCION = "TR_NORMAL";
 /* BEGIN TRANSACTION LINK*/
-$TBK_INIT_TRANS_LINK = "/php/transbank/ep_webpay.php?action=BEGIN_TRANS";
+$TBK_INIT_TRANS_LINK = "/php/transbank/ep_webpay.php?action=BEGIN_TRANS_WS";
 /* VERIFY TRANSACTION LINK*/
 $TBK_VERIFY_TRANS_LINK = "/php/transbank/ep_webpay.php?action=VERIFY_TRANS";
 /* DEFINE IF THE SYSTEM IS IN PRODUCTION MODE*/
