@@ -117,7 +117,7 @@ $TBK_AUTHORIZE_ONECLICK = "/php/transbank/ep_webpay.php?action=AUTHORIZE_ONECLIC
 /* WEBPAY WS RESULT LINK*/
 $TBK_WEBPAY_RESULT = "http://washita.teamnodes.com/php/transbank/ep_webpay.php?action=VERIFY_TRANS_WS";
 /* WEBPAY WS END LINK*/
-$TBK_WEBPAY_END = "http://washita.teamnodes.com/tbk_end.php";
+$TBK_WEBPAY_END = "";
 /***************************/
 
 

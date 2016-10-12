@@ -234,7 +234,7 @@ class Webpay extends MySQLDB{
 			"WEBPAY_CERT" => file_get_contents($this->TBK_CERT_FILE),
 			"COMMERCE_CODE" => $this->TBK_COMMERCE_CODE,
 			"URL_RETURN" => $this->TBK_WEBPAY_RESULT,
-			"URL_FINAL" => $this->TBK_WEBPAY_END,
+			"URL_FINAL" => $this->TBK_SUCCESS,
 		);
 
 		$webpay = new WebPaySOAP($webpay_settings); // Crea objeto WebPay
@@ -270,7 +270,7 @@ class Webpay extends MySQLDB{
 			"WEBPAY_CERT" => file_get_contents($this->TBK_CERT_FILE),
 			"COMMERCE_CODE" => $this->TBK_COMMERCE_CODE,
 			"URL_RETURN" => $this->TBK_WEBPAY_RESULT,
-			"URL_FINAL" => $this->TBK_WEBPAY_END,
+			"URL_FINAL" => $this->TBK_SUCCESS,
 		);
 		$webpay = new WebPaySOAP($webpay_settings); // Crea objeto WebPay
 		$webpay_token = $_POST["token_ws"];
@@ -307,10 +307,11 @@ class Webpay extends MySQLDB{
 			echo "</form>";
 			echo '<script type="text/javascript"> document.frm.submit(); </script>';
 		} else {
-			print_r($result);
-			$message = "Pago RECHAZADO por webpay - ".utf8_decode($result->detailOutput->responseDescription);
-                        $next_page='';
-            echo "<br>".$message;
+            printf('<form action="%s" name="frm" method="post">', $this->TBK_FAIL);
+			printf('<input type="hidden" name="TBK_ORDEN_COMPRA" value="%s"/>', $result->buyOrder);
+			printf('<input type="hidden" name="TBK_DESCRIPTION" value="%s"/>', $result->detailOutput->responseDescription);
+			echo "</form>";
+			echo '<script type="text/javascript"> document.frm.submit(); </script>';
 		}
 	}
 	/** @method void LOG(string $message) this function finalice the transaction with transbank and close the process */
