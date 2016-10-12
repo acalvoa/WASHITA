@@ -287,6 +287,7 @@ class Webpay extends MySQLDB{
 			unset($order_param['ID_ODC']);
 			unset($order_param['TBK_ODC']);
 			unset($order_param['ID_USER']);
+			unset($order_param['TOKEN']);
 			$this->LOG("Creamos la nueva orden de trabajo. Creamos el registro");
 			$order = $this->INSERT($order_param,"orders");
 			$TBK_ORDER['WASHITA_ORDER'] = $GLOBALS["OrdersNumberStart"] + $order;
