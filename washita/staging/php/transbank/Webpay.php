@@ -198,6 +198,7 @@ class Webpay extends MySQLDB{
 		$this->LOG("Creamos la nueva orden de trabajo. Rescatamos el registro");
 		$preorder['TBK_ODC'] = $this->TBK_ODC;
 		$order_param = $this->FIRST('TBK_PREORDER', $preorder);
+		unset($order_param['ID_ODC']);
 		unset($order_param['TBK_ODC']);
 		unset($order_param['ID_USER']);
 		$this->LOG("Creamos la nueva orden de trabajo. Creamos el registro");
@@ -281,6 +282,7 @@ class Webpay extends MySQLDB{
 			$this->LOG("Creamos la nueva orden de trabajo. Rescatamos el registro");
 			$preorder['TBK_ODC'] = $result->buyOrder;
 			$order_param = $this->FIRST('TBK_PREORDER', $preorder);
+			unset($order_param['ID_ODC']);
 			unset($order_param['TBK_ODC']);
 			unset($order_param['ID_USER']);
 			$this->LOG("Creamos la nueva orden de trabajo. Creamos el registro");
