@@ -1,0 +1,4 @@
+[2016-02-24 03:52:58.000000 ::1  - new_order ] Iniciando nueva Orden
+[2016-02-24 03:52:58.000000 ::1  - flow_pack ] Orden N°: 21015 -empaquetado correcto
+[2016-02-24 05:29:11.000000 ::1  - new_order ] Iniciando nueva Orden
+[2016-02-24 05:29:11.000000 ::1  - flow_pack ] Orden N°: 21016 -empaquetado correcto

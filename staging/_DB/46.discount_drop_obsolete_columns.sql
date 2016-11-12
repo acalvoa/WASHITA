@@ -1,0 +1,6 @@
+
+ALTER TABLE `discount`
+  DROP `IS_ONE_TIME`,
+  DROP `IS_ONE_TIME_USED`;
+
+

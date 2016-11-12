@@ -1,0 +1,8 @@
+CREATE TABLE `order_custom_wash_items` (
+  `ORDER_NUMBER` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
+  `WASH_TYPE` tinyint(4) NOT NULL, 
+  `NAME` varchar(100) NOT NULL,
+  `COUNT` int(11) NOT NULL,
+  `CREATE_DATE` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `IS_ACTUAL` tinyint(1) NOT NULL DEFAULT '0'
+) 

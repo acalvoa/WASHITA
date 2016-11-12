@@ -1,0 +1,23 @@
+[2016-02-14 12:41:05.000000 ::1  - new_order ] Iniciando nueva Orden
+[2016-02-14 12:41:05.000000 ::1  - flow_pack ] Orden N°: 21089 -empaquetado correcto
+[2016-02-14 12:41:30.000000 ::1  - new_order ] Iniciando nueva Orden
+[2016-02-14 12:41:30.000000 ::1  - flow_pack ] Orden N°: 21090 -empaquetado correcto
+[2016-02-14 12:44:32.000000 ::1  - new_order ] Iniciando nueva Orden
+[2016-02-14 12:44:32.000000 ::1  - flow_pack ] Orden N°: 21091 -empaquetado correcto
+[2016-02-14 13:00:09.000000 ::1  - new_order ] Iniciando nueva Orden
+[2016-02-14 13:00:09.000000 ::1  - flow_pack ] Orden N°: 21092 -empaquetado correcto
+[2016-02-14 13:03:22.000000 ::1  - new_order ] Iniciando nueva Orden
+[2016-02-14 13:03:22.000000 ::1  - flow_pack ] Orden N°: 21093 -empaquetado correcto
+[2016-02-14 13:03:37.000000 ::1  - new_order ] Iniciando nueva Orden
+[2016-02-14 13:03:37.000000 ::1  - flow_pack ] Orden N°: 21094 -empaquetado correcto
+[2016-02-14 13:03:57.000000 ::1  - new_order ] Iniciando nueva Orden
+[2016-02-14 13:03:57.000000 ::1  - flow_pack ] Orden N°: 21095 -empaquetado correcto
+[2016-02-14 13:04:15.000000 ::1  - new_order ] Iniciando nueva Orden
+[2016-02-14 13:04:15.000000 ::1  - flow_pack ] Orden N°: 21096 -empaquetado correcto
+[2016-02-14 13:11:55.000000 ::1  - new_order ] Iniciando nueva Orden
+[2016-02-14 13:11:55.000000 ::1  - flow_pack ] Orden N°: 21097 -empaquetado correcto
+[2016-02-14 14:17:09.000000 ::1  - read_result ] Respuesta Inválida
+[2016-02-14 14:17:22.000000 ::1  - read_result ] Respuesta Inválida
+[2016-02-14 17:18:57.000000 ::1  - read_result ] Respuesta Inválida
+[2016-02-14 17:19:21.000000 ::1  - read_result ] Respuesta Inválida
+[2016-02-14 17:19:33.000000 ::1  - read_result ] Respuesta Inválida

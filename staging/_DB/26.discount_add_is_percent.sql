@@ -1,0 +1,13 @@
+
+
+ALTER TABLE `discount` MODIFY VALUE decimal(10,2) NOT NULL,
+                       MODIFY COUPON varchar(30) NOT NULL,
+                       ADD IS_PERCENT BOOL NOT NULL DEFAULT 1,
+                       ADD IS_ONE_TIME BOOL NOT NULL DEFAULT 0;
+
+
+
+ALTER TABLE `discount` ADD IS_ONE_TIME_USED BOOL NOT NULL DEFAULT 0;
+
+
+ALTER TABLE `orders` MODIFY DISCOUNT_COUPON varchar(30) NOT NULL;

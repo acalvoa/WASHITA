@@ -1,0 +1,5 @@
+
+
+UPDATE `orders` o1, `orders` o2 
+SET o1.WASH_TYPE = (SELECT CASE WHEN o2.IS_ONLY_IRONING THEN 1 ELSE 0 END) 
+WHERE o1.ID = o2.ID
