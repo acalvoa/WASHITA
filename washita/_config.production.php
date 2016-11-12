@@ -2,8 +2,8 @@
 
 $site_root = 'http://www.washita.cl';
 
-$DBServer = 'localhost';
-$DBName   = 'washita';
+$DBServer = 'australbotscom.fatcowmysql.com';
+$DBName   = 'washita_2016_prod';
 
 
 $smtpOrderVina = "orders@washita.cl";

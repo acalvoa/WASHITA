@@ -142,7 +142,7 @@ class WashitaUser{
      * @param integer $id
      * @return WashitaUser
      */
-    public function GetUserById( $id )
+    public static function GetUserById( $id )
 	{
         global $DBName;
 

@@ -4,6 +4,7 @@ require_once(dirname(__FILE__)."/../../_config.php");
 require_once(dirname(__FILE__)."/../_helpers.php");
 require_once(dirname(__FILE__)."/flowAPI.php");
 
+LogHttpHeaders();
 
 // Inicializa la clase de flowAPI
 $flowAPI = new flowAPI();

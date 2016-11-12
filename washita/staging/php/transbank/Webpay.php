@@ -114,12 +114,15 @@ class Webpay extends MySQLDB{
 	}
 
 	/** @method void REG_TRANS() this function register the transbank transaction */
-	public function REG_TRANS($odc, $amount){
+	public function REG_TRANS($odc, $amount, $order, $email, $description){
 		$TRANSACTION = array();
 		$TRANSACTION['TBK_SESSION'] = $this->TBK_SESSION;
 		$TRANSACTION['TBK_ODC'] = $odc;
 		$TRANSACTION['TBK_AMOUNT'] = $amount;
 		$TRANSACTION['PAYMENT_STATUS'] = 0;
+		$TRANSACTION['WASHITA_ORDER'] = $order;
+		$TRANSACTION['PAYER_EMAIL'] = $email;
+		$TRANSACTION['TBK_DESCRIPTION'] = $description;
 		return $this->INSERT($TRANSACTION,"TBK_TRANSACTIONS");
 	}
 	/** @method void VERIFY() this function verify the result of transbank in the two-ways transbank verify process */
@@ -171,10 +174,18 @@ class Webpay extends MySQLDB{
 	}
 	/** @method void GENERATE_SESION() this function check the MAC provided by transbank */
 	private function GENERATE_SESION(){
-		$user_id = $this->USER->Id;
+		// $user_id = $this->USER->Id;
 		$time_hash = sha1(time());
-		$hash = $user_id."@".$time_hash;
+		$hash = $this->GENERATECODE(20)."@".$time_hash;
 		$this->TBK_SESSION = md5($hash);
+	}
+	//GENERA CARACTERES ALEATORIOS PARA GENERAR EL TOKEN DE SESION
+	private function GENERATECODE($longitud) {
+		$key = '';
+		$pattern = '1234567890abcdefghijklmnopqrstuvwxyz';
+		$max = strlen($pattern)-1;
+		for($i=0;$i < $longitud;$i++) $key .= $pattern{mt_rand(0,$max)};
+		return $key;
 	}
 	/** @method void CHECK_MAC() this function check the MAC provided by transbank */
 	private function CHECK_MAC(){
@@ -221,10 +232,10 @@ class Webpay extends MySQLDB{
         $mailService->SendNotification($TBK_ORDER['WASHITA_ORDER']);
 	}
 	/** @method void START_TRANS_WS() this function start the WS transbank transaction */
-	public function START_TRANS_WS(){
+	public function START_TRANS_WS($PRICE, $ORDER, $EMAIL, $DESCRIPTION){
 		// FIRST WE WILL GENERATE A SESION CODE
-		$this->USER = WashitaUser::CurrentUser();
-		if(!isset($this->USER)) throw new Exception("The USER is not loged is not set", 1);
+		//$this->USER = WashitaUser::CurrentUser();
+		//if(!isset($this->USER)) throw new Exception("The USER is not loged is not set", 1);
 		$this->GENERATE_SESION();
 		$this->LOG("#######################\nIniciamos la transaccion: ".$this->TBK_SESSION);
 		// GENERATE THE PREORDER
@@ -241,12 +252,13 @@ class Webpay extends MySQLDB{
 		$webpay = new WebPaySOAP($webpay_settings); // Crea objeto WebPay
 		$webpay = $webpay->getNormalTransaction(); // Crea Transaccion Normal
 
-		$PREORDER = new OrderGenerator($this->USER->Id);
-		$PREORDER->PROCESS_FIELDS();
-		$ID_PREORDER = $PREORDER->CREATE_PRE_ORDER();
+		// $PREORDER = new OrderGenerator($this->USER->Id);
+		// $PREORDER->PROCESS_FIELDS();
+		// $ID_PREORDER = $PREORDER->CREATE_PRE_ORDER();
+		$ID_PREORDER = date('YmdHis').$this->COUNT("TBK_TRANSACTIONS");
 		$this->LOG("Preorden creada: ".$ID_PREORDER.", Redirigiendo");
-		if($this->REG_TRANS($ID_PREORDER,$PREORDER->GET_PRICE())){
-	 		$result = $webpay->initTransaction($PREORDER->GET_PRICE(), $this->TBK_SESSION, $ID_PREORDER);
+		if($this->REG_TRANS($ID_PREORDER,$PRICE,$ORDER,$EMAIL,$DESCRIPTION)){
+	 		$result = $webpay->initTransaction($PRICE, $this->TBK_SESSION, $ID_PREORDER);
 			$webpay_token = $result["token_ws"];
 			
 			printf('<form action="%s" name="frm" method="post">', $result["url"]);
@@ -262,8 +274,8 @@ class Webpay extends MySQLDB{
 	/** @method void START_END_WS() this function start the WS transbank transaction */
 	public function RESULT_WEBPAY_WS(){
 		// FIRST WE WILL GENERATE A SESION CODE
-		$this->USER = WashitaUser::CurrentUser();
-		if(!isset($this->USER)) throw new Exception("The USER is not loged is not set", 1);
+		// $this->USER = WashitaUser::CurrentUser();
+		// if(!isset($this->USER)) throw new Exception("The USER is not loged is not set", 1);
 		$webpay_settings = array(
 			"MODO" => "INTEGRACION",
 			"PRIVATE_KEY" => file_get_contents($this->TBK_PRIVATE_KEY),
@@ -282,31 +294,31 @@ class Webpay extends MySQLDB{
 			$this->LOG("Creamos la nueva orden de trabajo. Rescatamos el registro");
 			$preorder['TBK_ODC'] = $result->buyOrder;
 			$update['TOKEN'] = $webpay_token;
-			$tk_in = $this->UPDATE($update,$preorder,'TBK_PREORDER');
-			$order_param = $this->FIRST('TBK_PREORDER', $preorder);
-			unset($order_param['ID_ODC']);
-			unset($order_param['TBK_ODC']);
-			unset($order_param['ID_USER']);
-			unset($order_param['TOKEN']);
+			// $tk_in = $this->UPDATE($update,$preorder,'TBK_PREORDER');
+			// $order_param = $this->FIRST('TBK_PREORDER', $preorder);
+			// unset($order_param['ID_ODC']);
+			// unset($order_param['TBK_ODC']);
+			// unset($order_param['ID_USER']);
+			// unset($order_param['TOKEN']);
 			$this->LOG("Creamos la nueva orden de trabajo. Creamos el registro");
-			$order = $this->INSERT($order_param,"orders");
-			$TBK_ORDER['WASHITA_ORDER'] = $GLOBALS["OrdersNumberStart"] + $order;
+			// $order = $this->INSERT($order_param,"orders");
+			// $TBK_ORDER['WASHITA_ORDER'] = $GLOBALS["OrdersNumberStart"] + $order;
 			$TBK_ORDER['PAYMENT_STATUS'] = 1;
 			$TBK_ORDER['TOKEN'] = $webpay_token;
 			$order_resp = $this->UPDATE($TBK_ORDER,$preorder,"TBK_TRANSACTIONS");
+			$tbk_re_order = $this->$this->FIRST('TBK_TRANSACTIONS', $preorder);
 			if(!($order_resp)){
 				die('RECHAZADO');
 			}
-			$ORDER_FINAL['ORDER_NUMBER'] = $TBK_ORDER['WASHITA_ORDER'];
 			$ORDER_FINAL['PAYMENT_STATUS'] = 1;
-			$ORDER_WHERE['ID']  = $order;
+			$ORDER_WHERE['ORDER_NUMBER']  = $tbk_re_order['WASHITA_ORDER'];
 			$order_result = $this->UPDATE($ORDER_FINAL,$ORDER_WHERE,"orders");
 			if(!($order_result)){
 				die('RECHAZADO');
 			}
 			 // SEND EMAIL
-	        $mailService = new MailService();
-	        $mailService->SendNotification($TBK_ORDER['WASHITA_ORDER']);
+	        // $mailService = new MailService();
+	        // $mailService->SendNotification($TBK_ORDER['WASHITA_ORDER']);
 	        //REDIRECCIONAMOS
 			printf('<form action="%s" name="frm" method="post">', $result->urlRedirection);
 			printf('<input type="hidden" name="token_ws" value="%s"/>', $webpay_token);

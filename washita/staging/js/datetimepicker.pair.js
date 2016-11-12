@@ -8,18 +8,21 @@ PickupTime.prototype.asText = function(){
         return this.from.format('DD/MM/YYYY HH:mm')+" |"+this.to.format('DD/MM/YYYY HH:mm');
 }
 
-function DateTimePickerPair(datetimepickerName, timeComboboxName, minDateTime, disableWeekends){
+function DateTimePickerPair(datetimepickerName, timeComboboxName, minDateTime, disableWeekends, disabledDates){
       var self = this;
       var datetimepickerName = datetimepickerName;
       var timeComboboxName = timeComboboxName;
       this.minDateTime = minDateTime;
       this.TIME = $("#"+timeComboboxName);
       this.disableWeekends = disableWeekends;
-      
+      this.disabledDates = disabledDates;
+
       var daysOfWeekDisabled = [];
       if(disableWeekends){
         daysOfWeekDisabled = [0, 6]; //Sat, Sun
       }
+
+
       
       this.DP  = $('#'+datetimepickerName).datetimepicker(
                             {
@@ -29,6 +32,7 @@ function DateTimePickerPair(datetimepickerName, timeComboboxName, minDateTime, d
                                 minDate: moment(self.minDateTime).startOf('day'),
                                 maxDate: moment(self.minDateTime).startOf('day').add(3, 'months'),
                                 daysOfWeekDisabled: daysOfWeekDisabled,
+                                disabledDates: disabledDates || []
                             }
                     );
       
@@ -41,15 +45,32 @@ function DateTimePickerPair(datetimepickerName, timeComboboxName, minDateTime, d
                 return day == 6 || day == 7;
             }
 
+            function isMomentNonWorkingDay(mDate){
+                var isNonWorkingDay = false;
+                self.disabledDates.forEach(function(disabledDate){
+                    if(disabledDate.isSame(mDate, 'year') &&
+                       disabledDate.isSame(mDate, 'month') &&
+                       disabledDate.isSame(mDate, 'day')
+                    ){
+                        isNonWorkingDay = true;
+                    }
+                });
+
+                return isNonWorkingDay;
+            }
+
             function getAvailableDaytime(pickupDaytime){
                 var newDate = moment(pickupDaytime);
-                while(isMomentWeekDay(newDate)){
+                while(isMomentWeekDay(newDate) ||
+                      isMomentNonWorkingDay(newDate)){
+
                     newDate = newDate.add(1, "day");
                 }
 
+
                 return  newDate;
             } 
-            if(self.disableWeekends && isMomentWeekDay(e.date)){
+            if(self.disableWeekends && isMomentWeekDay(e.date) || self.disabledDates){
                 var newDateTime = getAvailableDaytime(e.date.toDate()); 
                 $('#'+datetimepickerName+ ' input').val(moment(newDateTime).format("DD/MM/YYYY"));
             }

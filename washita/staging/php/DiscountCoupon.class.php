@@ -72,18 +72,24 @@ class DiscountCoupon{
                 $discount->WarningMessage = "Este código ya fue utilizado";
                 return $discount;
             } 
-
-            if($discount->CouponType == DiscountCouponType::StarterKitByInfluencer) {
-                
+            elseif($discount->CouponType == DiscountCouponType::StarterKitByInfluencer) {              
                 $user = WashitaUser::CurrentSessionUser();
                 if($user != null && $user->UserType == UserType::Influencer){
                     $discount->Value = null;
                     $discount->WarningMessage = "El código de invitación no puede ser usado por ti mismo";
+                    return $discount;
                 }
-                else if(self::isUsedStarterCouponByUser($email,$ignoreOrderNumberUsage)){
+                elseif(self::isCouponUsedByUser($email, $coupon, $ignoreOrderNumberUsage)){
                     $discount->Value = null;
                     $discount->WarningMessage = "Ya haz utilizado un código de invitación para primer pedido";
+                    return $discount;
                 }
+            }
+            elseif($discount->CouponType = DiscountCouponType::OneTimePerEmail && 
+                    self::isCouponUsedByUser($email, $coupon, $ignoreOrderNumberUsage)){
+                $discount->Value = null;
+                $discount->WarningMessage = "Ya haz utilizado un código de invitación para primer pedido";
+                return $discount;
             }
         }
         
@@ -121,7 +127,7 @@ class DiscountCoupon{
         try{
             $mysqli = OpenMysqlConnection(); 
              $query = "SELECT ID, COUPON, VALUE, (VALID_TILL > NOW()) as IS_VALID_BY_TIME, 
-                              IS_PERCENT, IS_ONE_TIME, IS_ONE_TIME_USED, INFLUENCER_USER_ID, USED, MAX_USAGE
+                              IS_PERCENT, INFLUENCER_USER_ID, USED, MAX_USAGE, IS_ONE_TIME_PER_EMAIL
                   FROM `".$DBName."`.`discount` WHERE `COUPON`='".$mysqli->real_escape_string($coupon)."' LIMIT 1";
 
             $sql_result = $mysqli->query($query);
@@ -139,7 +145,7 @@ class DiscountCoupon{
         return $result;
     }
 
-     private static function isUsedStarterCouponByUser($email,$ignoreOrderNumberUsage){
+     private static function isCouponUsedByUser($email, $coupon, $ignoreOrderNumberUsage){
         global $DBName;
         if(empty($email)){
             return false;
@@ -153,8 +159,8 @@ class DiscountCoupon{
                         WHERE orders.EMAIL ='".$mysqli->real_escape_string($email)."'
                               AND  orders.PAYMENT_STATUS = 2
                               AND orders.ORDER_NUMBER <> '".$ignoreOrderNumberUsage."'
+                              AND orders.DISCOUNT_COUPON = '".$coupon."'
                               AND orders.DISCOUNT_COUPON = discount.COUPON
-                              AND discount.INFLUENCER_USER_ID IS NOT NULL
                         LIMIT 1";
 
             $sql_result = $mysqli->query($query);
@@ -199,6 +205,9 @@ class DiscountCoupon{
         if(!empty($row["INFLUENCER_USER_ID"])){
             $discount->CouponType = DiscountCouponType::StarterKitByInfluencer;
         }
+        else if($row["IS_ONE_TIME_PER_EMAIL"]){
+            $discount->CouponType = DiscountCouponType::OneTimePerEmail;
+        }
         else{
             $discount->CouponType = DiscountCouponType::Normal;
         }
@@ -227,16 +236,17 @@ class DiscountCoupon{
 
             global $DiscountInfluencerMaxUsageForFriends;
             // Write to the database requested data
-            $query = "INSERT INTO `".$DBName."`.`discount`(COUPON, VALUE, IS_PERCENT, IS_ONE_TIME, IS_ONE_TIME_USED, VALID_TILL, INFLUENCER_USER_ID,
-                                                        MAX_USAGE, USED)
+            $query = "INSERT INTO `".$DBName."`.`discount`(COUPON, VALUE, IS_PERCENT, VALID_TILL, INFLUENCER_USER_ID,
+                                                        MAX_USAGE, 
+                                                        USED, 
+                                                        IS_ONE_TIME_PER_EMAIL)
                     values('".$mysqli->real_escape_string($registrationCode)."'
                           ,'".$mysqli->real_escape_string($DiscountInfluencerValue)."'
-                          , 0
-                          , 0
                           , 0
                           ,'".$validTill->format("Y-m-d")."'
                           ,'".$mysqli->real_escape_string($userId)."'
                           , ".$DiscountInfluencerMaxUsageForFriends."
+                          , 0
                           , 0
                     )";
 

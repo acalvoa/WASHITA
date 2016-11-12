@@ -1,6 +1,11 @@
 <?php
+
+$HOME_DIR = dirname(__FILE__);
+ini_set("log_errors", 1);
+ini_set("error_log", $HOME_DIR."/logs/php-error.".date("Y-m-d").".log");
+
+
 //start session in all pages
-error_reporting(E_ALL ^ E_NOTICE ^ E_STRICT);
 if (session_status() == PHP_SESSION_NONE) { session_start(); } //PHP >= 5.4.0
 //if(session_id() == '') { session_start(); } //uncomment this line if PHP < 5.4.0 and comment out line above
 
@@ -26,13 +31,16 @@ $smtpOrderSantiago = 'a-artur@yandex.ru';
 $smtpAdmin = 'a-artur@yandex.ru'; // where to send email
 $smtpAdminCc = 'a-artur@yandex.ru'; // where to send email
 
+// Feature toggle
+
+$PaymentService = "webpay";
+//$PaymentService = "webpay"; enable when will be ready
 
 
-
-$DBServer = 'localhost';//'localhost'; // e.g 'localhost' or '192.168.1.100'
-$DBUser   = 'root';
-$DBPass   = 'shadowfax';//'washit.334411';
-$DBName   = 'washita';
+$DBServer = 'australbotscom.fatcowmysql.com';//'localhost'; // e.g 'localhost' or '192.168.1.100'
+$DBUser   = 'washita_web';
+$DBPass   = 'U4Dnpq9ZbGzJMVsMzo';//'washit.334411';
+$DBName   = 'washita_2016';
 
 
 $OrdersNumberStart = 21000;
@@ -43,7 +51,11 @@ $OrderSendFeedbackSince = '2016-04-01'; // YYYY-MM-DD min date to check
 $PricePerOneKilo = 1400; //DOES NOT includes ironing
 $PricePerKiloStartingFiveKiloPack = 1200; //DOES not includes ironing
 $PriceForIroningPerKilo = 3000; //only ironing
-$PriceForIroningPerItem = 400; //only ironing
+$PriceForIroningPerItem = 400; // washing
+
+$PriceWashingDetergentEcoFriendlyPerKilo = 100; 
+$PriceWashingDetergentHypoallergenicFriendlyPerKilo = 100; 
+$PriceWashingDetergentSoftForInfantsPerKilo = 200; 
 
 
 $Subscription_1_Kilos = 10;
@@ -61,8 +73,8 @@ $DiscountInfluencerMaxUsageForFriends = 50; // how much times friends can apply 
 $DiscountPersonalCode = "MI_CREDITO";
 
 
-$reCaptchaPublicKey = "6LemzwYUAAAAAM477SNX92cU112VADJ2v-i0A7FW";
-$reCaptchaPrivateKey = "6LemzwYUAAAAACTTOQJpyP4iD2_n-s_9jDUjNqH5";
+$reCaptchaPublicKey = "6LcS3RsTAAAAAPsEAn-xp3inn1w3Dbg41JAXECKo";
+$reCaptchaPrivateKey = "6LcS3RsTAAAAABJY9Akz2RIGHZz1R6q0Xy2zXBwg";
 $BadLoginLimit = 5; // log in attempts before lock out
 $LockOutTime = 600; //in seconds
 

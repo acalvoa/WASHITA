@@ -12,28 +12,31 @@ require_once(dirname(__FILE__)."/php/AdminLoginService.class.php");
 AdminLoginService::ThrowIfNotLogined();
 
 $adminLogin = AdminLoginService::CurrentLogin();
-AdminLoginService::Required($adminLogin->CanEditWashItems());
+AdminLoginService::Required($adminLogin->CanEditNonWorkingDays());
 
 ?>
 <div class="container">
-    
-    <h3>Wash items</h3>
-     <br/>
-     <?php 
+<?php
 if($adminLogin->CanEditWashItems()){
-     echo '<a href="'.CreateFullUrl('admin.php').'"class="btn btn-default" style="float:right;margin-top:-70px;margin-right:20px;" role="button">Admin panel</a>
+     echo '<a href="'.CreateFullUrl('admin.php').'"class="btn btn-default" style="float:right;margin-top:20px;margin-right:20px;" role="button">Admin panel</a>
     <br/>';
-}
+}    
 ?>
+    <h3>Blocked days</h3>
+    <span>Repeat every year</span>
+     <br/>
+     <br/>
+     <br/>
+
     <div class="row item">
         <?php
 
             $dbh = OpenPDOConnection();
             // create LM object, pass in PDO connection
             $lm = new lazy_mofo($dbh);
-            $sql = "SELECT `ID`, `NAME`, `ITEM_WEIGHT`, `ITEM_DRY_CLEAN_PRICE`, `IMAGE_FILE_NAME`, `WASH_TYPE`, `ID` FROM `wash_item`";
+            $sql = "SELECT `ID`, `DAY`, `MONTH`, `DESCRIPTION`, `ID` FROM `blockedday`";
             // table name for updates, inserts and deletes
-            $lm->table = 'wash_item';
+            $lm->table = 'blockedday';
             // identity / primary key for table
             $lm->identity_name = 'ID';
             // optional, make friendly names for fields
@@ -41,12 +44,6 @@ if($adminLogin->CanEditWashItems()){
 
             //$lm->grid_add_link = '';
             $lm->grid_export_link = '';
-
-            $lm->rename["ITEM_WEIGHT"] = "Item weight, Kg";
-            $lm->grid_output_control['IMAGE_FILE_NAME'] = '--image';
-            $lm->form_input_control['IMAGE_FILE_NAME'] = '--image';
-            $lm->exclude_field['CREATE_DATE'] = '';
-            $lm->grid_output_control['WASH_TYPE'] = '--lazy_mofo_wash_type';
 
             $lm->return_to_edit_after_insert=false;
             $lm->return_to_edit_after_update=false;
@@ -61,7 +58,6 @@ if($adminLogin->CanEditWashItems()){
         
     </div>
 </div>
-<br>
 <br>
 
 

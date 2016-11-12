@@ -5,7 +5,6 @@ require_once(dirname(__FILE__)."/_helpers.php");
 require_once(dirname(__FILE__)."/email/SmtpOrderTo.class.php");
 require_once(dirname(__FILE__)."/email/PHPMailerAutoload.php");
 require_once(dirname(__FILE__)."/email/confirmation_template.php");
-require_once(dirname(__FILE__)."/email/additional_payment_template.php");
 require_once(dirname(__FILE__)."/email/restore_password_template.php");
 require_once(dirname(__FILE__)."/email/order_feedback_template.php");
 require_once(dirname(__FILE__)."/email/payment_request_template.php");

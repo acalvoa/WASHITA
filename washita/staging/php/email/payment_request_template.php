@@ -50,8 +50,7 @@ function GetPaymentRequestBody(Order $order){
             }
         }
         else if($order->WashType == WashType::OnlyIroning){
-            $actualWashItemLines = OrderWashItemLine::GetActualItemsForOrder($order->OrderNumber);
-            $body .= "<p>Prendas a solol planchado: ".OrderWashItemLine::LinesToString($actualWashItemLines)."</p>";
+            $body .= "<p>Peso: ".$order->ActualWeight." Kg.</p>";
         }
         else if($order->WashType == WashType::DryCleaning){
             $actualWashItemLines = OrderWashItemLine::GetActualItemsForOrder($order->OrderNumber);

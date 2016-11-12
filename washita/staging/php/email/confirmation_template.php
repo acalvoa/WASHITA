@@ -6,12 +6,13 @@ include_once(dirname(__FILE__)."/../OrderWashItemLine.class.php");
 include_once(dirname(__FILE__)."/../OrderCustomItemLine.class.php");
 include_once(dirname(__FILE__)."/../WashItem.class.php");
 include_once(dirname(__FILE__)."/../WashType.enum.php");
+require_once(dirname(__FILE__).'/../WashDetergent.enum.php');
 
 // UNCOMMENT ONLY FOR A TEST and open page  /staging/php/email/confirmation_template.php
 // 
 // Find in the database correct order number
 
-//   $order_number = '21119';
+//   $order_number = '21138';
 //   $order = Order::GetOrderByNumber($order_number);
 //   $washItemLines = OrderWashItemLine::GetCurrentItemsForOrder($order_number);
 //   $ironingItemLines = OrderCustomItemLine::GetCurrentItemsForOrder(WashType::OnlyIroning, $order_number, false);
@@ -74,7 +75,9 @@ $body = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://
         }
         $body .= "</div>";
     }
-
+  
+    // $body .= "<p>Detergent: ".WashDetergent::ToString($order->WashDetergent).".</p>";        
+    
 
 
     if(!empty($order->Comment)){

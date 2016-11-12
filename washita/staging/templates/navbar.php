@@ -35,8 +35,7 @@
                                   ';
                         }
                         else{
-                            //echo '<li><a href="login.php">Sign-in</a></li>';
-                            
+                            echo '<li><a href="login.php">Sign-in</a></li>';                            
                         }                       
                         ?>
                     </ul>

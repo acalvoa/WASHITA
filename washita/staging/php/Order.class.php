@@ -72,6 +72,7 @@ class Order{
     /** @var int */
     var $WashType;
 
+    var $WashDetergent;
 
     
     public static function GetOrderByNumber($orderNumber){
@@ -89,7 +90,8 @@ class Order{
             ACTUAL_WEIGHT, ADDITIONAL_PRICE_WITHOUT_DISCOUNT, ADDITIONAL_PRICE_WITH_DISCOUNT,
             PAYMENT_STATUS, WASH_TYPE,
             PICKUP_FROM, PICKUP_TILL,
-            DROPOFF_FROM, DROPOFF_TILL, COMMENT, ACTUAL_PRICE_WITH_DISCOUNT
+            DROPOFF_FROM, DROPOFF_TILL, COMMENT, ACTUAL_PRICE_WITH_DISCOUNT, 
+            WASH_DETERGENT
             FROM `".$DBName."`.`orders` WHERE ORDER_NUMBER = '".$mysqli->real_escape_string($orderNumber)."'";
             
             $sql_result = $mysqli->query($query);
@@ -125,7 +127,8 @@ class Order{
             ACTUAL_WEIGHT, ADDITIONAL_PRICE_WITHOUT_DISCOUNT, ADDITIONAL_PRICE_WITH_DISCOUNT,
             PAYMENT_STATUS, WASH_TYPE,
             PICKUP_FROM, PICKUP_TILL,
-            DROPOFF_FROM, DROPOFF_TILL, COMMENT, ACTUAL_PRICE_WITH_DISCOUNT
+            DROPOFF_FROM, DROPOFF_TILL, COMMENT, ACTUAL_PRICE_WITH_DISCOUNT, 
+            WASH_DETERGENT
             FROM `".$DBName."`.`orders` WHERE FEEDBACK_CODE = '".$mysqli->real_escape_string($feedbackCode)."'";
             
             $sql_result = $mysqli->query($query);
@@ -176,6 +179,8 @@ class Order{
         $order->PaymentStatus = $row['PAYMENT_STATUS'];
         $order->WashType = $row['WASH_TYPE'];
         
+        $order->WashDetergent = $row['WASH_DETERGENT'];
+
         $order->Comment = $row['COMMENT'];
         
         $pickupFrom = CreateDateTimeImmutableFromMutable(new DateTime($row["PICKUP_FROM"]));
@@ -266,8 +271,8 @@ class Order{
     }
 
     public function IsWeightRequired(){
-        return $this->WashType == WashType::WashingAndIroning;
-            //|| $this->WashType == WashType::OnlyIroning;
+        return $this->WashType == WashType::WashingAndIroning
+            || $this->WashType == WashType::OnlyIroning;
     }
 
     public function WashingTypeText(){

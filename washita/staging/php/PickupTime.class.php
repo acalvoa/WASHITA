@@ -2,6 +2,7 @@
 
 include_once(dirname(__FILE__)."/../_config.php");
 include_once(dirname(__FILE__)."/CurrentDateTime.class.php");
+require_once(dirname(__FILE__)."/NonworkingDays.class.php");
 include_once(dirname(__FILE__)."/_helpers.php");
 
 class PickupTime{
@@ -17,6 +18,21 @@ class PickupTime{
     static function isWeekend(DateTimeImmutable $dateImmutable) {
         return $dateImmutable->format('N') >= 6;    
     }
+
+    static function isNonWorkingDate(DateTimeImmutable $dateImmutable) {
+        $result = false;
+        $nonWorkingDates = NonworkingDays::GetNonWokingDaysForFuturePeriod(93/*nearest days*/);
+        foreach($nonWorkingDates as $nonWorkingDate){
+            if($dateImmutable ==  $nonWorkingDate){
+                $result = true;
+                break; 
+            }
+        }
+
+        return $result;
+    }
+
+    
     
     public static function CreateMorningPickup(DateTimeImmutable $dateImmutable){
         $fromMorning = $dateImmutable->setTime(8, 0);
@@ -54,7 +70,8 @@ class PickupTime{
         else
         {
             $previousWorkingDay = $this->from->modify("-1 days");
-            while(self::isWeekend($previousWorkingDay)){
+            while(self::isWeekend($previousWorkingDay) ||
+                 self::isNonWorkingDate($previousWorkingDay)){
                 $previousWorkingDay = $previousWorkingDay->modify("-1 days");
             }
             return self::CreateEveningPickup($previousWorkingDay);
@@ -69,7 +86,8 @@ class PickupTime{
         else
         {
             $nextWorkingDay = $this->from->modify("+1 days");
-            while(self::isWeekend($nextWorkingDay)){
+            while(self::isWeekend($nextWorkingDay)||
+                 self::isNonWorkingDate($nextWorkingDay)){
                 $nextWorkingDay = $nextWorkingDay->modify("+1 days");
             }
             return self::CreateMorningPickup($nextWorkingDay);
@@ -104,11 +122,14 @@ class PickupTime{
           $currentHours = intval($currentDatetime->format('H'));
           $resultDate = null;
           
-          if($currentHours < 8 && !self::isWeekend($currentDatetime)){
+          if($currentHours < 8 && 
+            !self::isWeekend($currentDatetime) &&
+            !self::isNonWorkingDate($currentDatetime)){
                 $resultDate = PickupTime::TodayMorning();
           }
           else if($currentHours >= 8 && $currentHours < 16 &&
-                    !self::isWeekend($currentDatetime))
+                    !self::isWeekend($currentDatetime)&&
+                    !self::isNonWorkingDate($currentDatetime))
           {
                 $resultDate = PickupTime::TodayEvening();
           }

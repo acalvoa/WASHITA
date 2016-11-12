@@ -5,6 +5,7 @@ require_once(dirname(__FILE__)."/php/Price.class.php");
 require_once(dirname(__FILE__)."/php/WashType.enum.php");
 require_once(dirname(__FILE__)."/php/OrderWashItemLine.class.php");
 require_once(dirname(__FILE__)."/php/DiscountCoupon.class.php");
+include_once(dirname(__FILE__)."/php/WashDetergent.enum.php");
 
 // TEST 
 
@@ -30,6 +31,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         $params->WashItemLines = OrderWashItemLine::ConvertFromPost($params->WashType, $orderWashitemLines);
 
         $params->TotalIroningItems = GetPost('total_ironing_items');
+        $params->WashDetergent = WashDetergent::ConvertFromPost(GetPost('washing-detergent'));
     }
     else if($params->WashType == WashType::OnlyIroning){
         $orderOnlyIroningItemLines = !empty($_POST['only_ironing_items'])? explode(";",$_POST['only_ironing_items']): "";

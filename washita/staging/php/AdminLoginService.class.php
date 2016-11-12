@@ -34,23 +34,23 @@ class AdminLoginService {
         switch($password){
             case $AdminOrdersPasswordVina:
                 $city = City::GetCityById($AdminOrdersCityIdVina);
-                //($currentCity,$canChangeCity,$canEditWashItems,$canViewOrders,$canViewInfluencers)
-                $adminLogin = new AdminLogin($city,false,false,true, false);
+                //($currentCity,$canChangeCity,$canEditWashItems,$canViewOrders,$canViewInfluencers,$canEditNonWorkingDays,$canEditDiscounts)
+                $adminLogin = new AdminLogin($city,false,false,true, false, false, false);
                 break;
             case $AdminOrdersPasswordSantiago:
                 $city = City::GetCityById($AdminOrdersCityIdSantiago);
-                //($currentCity,$canChangeCity,$canEditWashItems,$canViewOrders,$canViewInfluencers)
-                $adminLogin = new AdminLogin($city,false,false,true, false);
+                //($currentCity,$canChangeCity,$canEditWashItems,$canViewOrders,$canViewInfluencers,$canEditNonWorkingDays,$canEditDiscounts)
+                $adminLogin = new AdminLogin($city,false,false,true, false, false, false);
                 break;
             case $AdminOrdersPasswordSantiagoAndInfluencers:
                 $city = City::GetCityById($AdminOrdersCityIdSantiago);
-                //($currentCity,$canChangeCity,$canEditWashItems,$canViewOrders,$canViewInfluencers)
-                $adminLogin = new AdminLogin($city,false,false,true, true);
+                //($currentCity,$canChangeCity,$canEditWashItems,$canViewOrders,$canViewInfluencers,$canEditNonWorkingDays,$canEditDiscounts)
+                $adminLogin = new AdminLogin($city,false,false,true, true, false, true);
                 break;
             case $AdminOrdersPassword:
                 $city = City::GetCityById($AdminOrdersCityIdVina);
-                //($currentCity,$canChangeCity,$canEditWashItems,$canViewOrders,$canViewInfluencers)
-                $adminLogin = new AdminLogin($city,true,true,true, true);
+                //($currentCity,$canChangeCity,$canEditWashItems,$canViewOrders,$canViewInfluencers,$canEditNonWorkingDays,$canEditDiscounts)
+                $adminLogin = new AdminLogin($city,true,true,true, true, true, true);
                 break;
         }
        

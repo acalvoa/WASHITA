@@ -1,9 +1,15 @@
 <?php 
+require_once(dirname(__FILE__).'/_config.php');
+require_once(dirname(__FILE__).'/php/_helpers.php');
+require_once(dirname(__FILE__).'/php/WashDetergent.enum.php');
 require_once(dirname(__FILE__).'/php/PickupTime.class.php');
 require_once(dirname(__FILE__)."/php/City.class.php");
+require_once(dirname(__FILE__)."/php/NonworkingDays.class.php");
 require_once(dirname(__FILE__)."/php/hybridauth/WashitaUser.php");
-require_once(dirname(__FILE__)."/_config.php");
-include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
+
+
+
+
 include_once(dirname(__FILE__)."/templates/header.general.php");
 
 
@@ -12,7 +18,10 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
 //  CurrentDateTime::SetCurrentDateTime(DateTime::createFromFormat('d-M-Y H:i', '04-Sep-2016 07:05'));
 
   $user = WashitaUser::CurrentUser();
-  global $DiscountPersonalCode;
+
+  global $PriceWashingDetergentEcoFriendlyPerKilo; 
+  global $PriceWashingDetergentHypoallergenicFriendlyPerKilo; 
+  global $PriceWashingDetergentSoftForInfantsPerKilo; 
 ?>
 
     <section id="order">
@@ -21,7 +30,7 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                 <h1>Lavar Ahora</h1>
                 <div class="divider"></div>
                 <div class="page padding">
-                    <form id="checkout_form" method="post" action="<?php echo $GLOBALS['TBK_INIT_TRANS_LINK'];?>">
+                    <form id="checkout_form" method="post" action="checkout_post.php">
                         
                         <div class="row item checkout-block border-between">
                             <div class="col col-sm-12">
@@ -37,17 +46,17 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                                             <?php if($is_washing_and_ironing) echo 'checked'; ?>
                                             > Lavado y 
                                                 <br class="hidden-lg"/>
-                                                Planchado
+                                                Doblado
                                         </label>
                                         <label class="btn btn-primary">
                                             <br class="hidden-lg"/>
                                             <input type="radio" name="laundry_option" id="only_ironing" value="only_ironing" autocomplete="off" 
-                                            > SOLO Planchado 
+                                            > Sólo Planchado 
                                         </label>
                                         <label class="btn btn-primary">
                                             <br class="hidden-lg"/>
                                             <input type="radio" name="laundry_option" id="dry_cleaning" value="dry_cleaning" autocomplete="off" 
-                                            > Lavaseco 
+                                            > Lavado Especial/Lavaseco
                                         </label>
                                         <!--
                                         <label class="btn btn-primary">
@@ -66,7 +75,11 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                                         <span>Lavado y Doblado</span>
                                     </label>
                                     <div id="washing_details_container">
-                                        <p class="washing-checkbox-subtitle">¿Cuánta Ropa?</p>
+                                        <p class="washing-checkbox-subtitle">
+                                            Lavado y Secado a Máquina, y luego Doblado con Sutileza
+                                            <br/>
+                                            <span class="washing-checkbox-subtitle-hint">(no incluye desmanchado)</span>
+                                        </p>
                                                     <div class="input-group">
                                                         <div id="weight-block">
                                                                 <input class="form-control decimals-with-tens items" 
@@ -76,58 +89,12 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                                                             <div class="order-kg-cell">
                                                                 <span class="order-kg">Kg</span>
                                                             </div>
-                                                            <div class="btn-state-washing-items-cell hidden-sm-or-less">
-                                                                <button type="button" class="btn btn-primary btn-state-washing-items" data-toggle="modal">
-                                                                    ¿No sabes el peso?
-                                                                </button>
-                                                            </div>
                                                         </div>    
-                                                        <div class="table-row hidden-md-or-greater">
-                                                                <div class="btn-state-washing-items-cell">
-                                                                    <button type="button" class="btn btn-primary btn-state-washing-items" data-toggle="modal">
-                                                                        ¿No sabes el peso?
-                                                                    </button>
-                                                                </div>
-                                                        </div>
                                                     </div>
 
                                         <div id="modal_selected_items_placeholder">
                                         </div>
-                                        <!-- Modal -->
-                                            <div id="modal_possible_items" class="modal fade modal-possible-items" role="dialog">
-                                                <div class="modal-dialog">
-                                                    <!-- Modal content-->
-                                                    <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                        <h4 class="modal-title">Calculadora de peso</h4>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <p>Esta calculadora sólo da un aproximado, confirmaremos el peso real cuando nos llegue tu ropa.</p>
-                                                        <div class="modal-possible-items-placeholder">
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <span class="modal-possible-items-weight">
-                                                            TOTAL ESTIMADO <span id="modal_possible_items_weight">1</span> 
-                                                            <span class="modal-possible-items-kilos">Kg</span>
-                                                        </span> 
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <p>
-                                                            <span class="highliht-text">Importante</span>.
-                                                            Al enviarnos esta lista con prendas, nos ayudas a
-                                                            controlar mejor que no hayan prendas extraviadas y te
-                                                            sirve de comprobante.
-                                                            <br/><b>TE RECOMENDAMOS USARLA</b> 
-                                                        </p>
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                                                    </div>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        <!-- End Modal --> 
+                                        
                                 </div><!-- washing_details_container -->
 
                                        
@@ -154,13 +121,41 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                                             </div>
                                         </div>
                                     </div>
+
+
+                                    <div class="washing-detergent-block">
+                                        <!--<p class="washing-detergent-title">¿Detergente Especial? </p>
+                                        <label class="radio-inline"><input type="radio" name="washing-detergent" value="normal" checked>
+                                            <?php echo WashDetergent::ToString(WashDetergent::Normal) ?>
+                                        </label>
+                                        <label class="radio-inline"><input type="radio" name="washing-detergent" value="ecofriendly">
+                                            <?php echo WashDetergent::ToString(WashDetergent::EcoFriendly) ?>
+                                            <span class="washing-detergent-price">(+<?php echo MoneyFormat($PriceWashingDetergentEcoFriendlyPerKilo) ?> x Kg)</span>
+                                        </label>
+                                        <label class="radio-inline"><input type="radio" name="washing-detergent" value="hypoallergenic">
+                                            <?php echo WashDetergent::ToString(WashDetergent::Hypoallergenic) ?>
+                                            <span class="washing-detergent-price">(+<?php echo MoneyFormat($PriceWashingDetergentHypoallergenicFriendlyPerKilo) ?> x Kg)</span>
+                                        </label>
+                                        <label class="radio-inline"><input type="radio" name="washing-detergent" value="soft-for-infants">
+                                            <?php echo WashDetergent::ToString(WashDetergent::SoftForInfants) ?>
+                                            <span class="washing-detergent-price">(+<?php echo MoneyFormat($PriceWashingDetergentSoftForInfantsPerKilo) ?> x Kg)</span>
+                                        </label>-->
+                                    </div>
+
                                 </div> <!--washing_ironing_container-->
 
                              <div id="only_ironing_container" style="display: none;">
-                                    <div id="only-ironing-possible-items-placeholder">
+                                <p class="washing-checkbox-subtitle">¿Cuánta Ropa?</p>
+                                <div class="input-group">
+                                    <input class="form-control decimals-with-tens items" 
+                                        id="only_ironing_weight" name="only_ironing_weight" type="number" min="1" max="1000" step="0.1" 
+                                        value="1" 
+                                        lang="es" />
+                                    <div class="order-kg-cell">
+                                        <span class="order-kg">Kg</span>
                                     </div>
-                                    <div id="only_ironing_items_post_hidden"></div>
-                               </div> <!--only_ironing_container-->
+                                </div>
+                             </div> <!--only_ironing_container-->
 
 
 
@@ -182,12 +177,19 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                             </div>
                             <div class="col col-sm-6">
                                 <p>Resumen de Orden</p>
-                                <div id="order_line_weight" class="order-line"><span class="order-line-label">Cantidad de Kg a <span class="selected_washing_text"></span></span><span id="one_kilo_pack_price" class="order-line-value">0</span></div>
+                                <div id="order_line_weight" class="order-line"><span class="order-line-label">Cantidad de Kg a <span class="selected_washing_text"></span></span><span id="one_kilo_pack_price" class="order-line-value">$0</span></div>
                                 <div id="order_line_ironing" class="order-line" style="display: none;"><span class="order-line-label"><span class="selected_ironing_items_total"></span> prenda <span class="order-line-capitalized">Planchado</span> </span>    
                                                                                 <span class="order-line-value"> <span class="selected_ironing_items_total"></span> x <span id="ironing_item_price">$0</span></span>
                                 </div>
-                                <div id="order_line_only_ironing" class="order-line" style="display: none;"><span class="order-line-label">Prendas en <span class="selected_washing_text"></span></span><span id="items_only_ironing_price" class="order-line-value">0</span></div>
+                                <!--<div id="order_line_washing_detergent" class="order-line"><span class="order-line-label">Detergent</span><span id="selected_washing_detergent" class="order-line-value">$0</span></div>-->
+
+                                <div id="order_line_only_ironing" class="order-line" style="display: none;"><span class="order-line-label">Prendas en <span class="selected_washing_text"></span></span>
+                                    <span class="order-line-value"> <span id="selected_only_ironing_items_weight">$0</span> </span>
+                                </div>
+
                                 <div id="order_line_dry_cleaning" class="order-line" style="display: none;"><span class="order-line-label">Prendas en <span class="selected_washing_text"></span></span><span id="items_dry_cleaning_price" class="order-line-value">0</span></div>
+
+
 
                                 
                                 <div class="order-line"><span class="order-line-label">Descuento</span><span id="dicount_procent" class="order-line-value">0</span></div>
@@ -266,6 +268,15 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                                        
                                    </div>
                             </div>
+                            
+                            <?php 
+                            $nonWorkingDates = NonworkingDays::GetNonWokingDaysForFuturePeriod(93);
+                            $nonWorkingSatesStr = "";
+                            foreach($nonWorkingDates as $date){
+                                $nonWorkingSatesStr.= $date->format("d.m.Y").";";
+                            }
+                            ?>
+                            <div id="nonworkingdates" style="display:none;"><?php echo $nonWorkingSatesStr; ?></div>
                             <div class="col col-sm-6 col-md-3 input-group-vertical">
                                 <p style="white-space: nowrap;">Horario de Entrega**</p>
                                 <div class="input-group datepicker date" id="dropoff_datepicker">
@@ -310,47 +321,9 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                 
                             
                         </div>
-                        <div class="row item checkout-block">
-                            <div class="input-group-vertical">
-                                <p>Elige tu medio de pago</p>
-                            </div>
-                            <div class="input-group-horizontal">
-                                <div class="payelement">
-                                    <div class="inputfield"><input class="payment_method" type="radio" name="payment_method" value="webpay" checked></div>  
-                                    <div class="logofield"><img class="webpay-logo" src="img/logo-webpay.png" height="100"></div>
-                                </div>
-                                <div class="payelement">
-                                    <div class="inputfield"><input class="payment_method" type="radio" name="payment_method" value="oneclick"></div> 
-                                    <div class="logofield" style="padding-top:5px;"><img class="webpay-logo" src="img/oneclick.png" height="80"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row item checkout_footer pay_tab">
+                        <div class="row item checkout_footer">
                             <button type="submit" class="pay_btn hvr-glow">CONFIRMAR PEDIDO</button>
-                        </div>
-                        <div class="row item checkout-block oneclick_tab">
-                            <div class="input-group-vertical">
-                                <p>Elige La tarjeta de pago</p>
-                            </div>
-                            <div class="input-group-horizontal">
-                                <div class="tc_input_row">
-                                    <select name="TBK_USER" class="form-control" required>
-                                        <option value="-1">Seleccione la tarjeta de pago</option>
-                                        <?php 
-                                            $providers = OneClick::GETPROVIDERS();
-                                            foreach ($providers as $provider) {
-                                                echo '<option value="'.$provider['TBK_USER'].'" >('.strtoupper($provider['CREDIT_CARD_TYPE']).')  XXXX XXXX XXXX '.$provider['LAST4NUMBER'].'</option>';
-                                            }
-                                        ?>                               
-                                    </select>
-                                </div>
-                                <div class="tc_add_row">
-                                    <button type="button" class="add_tc_btn" id="add_tc_action">+ Agregar tarjeta</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row item checkout_footer oneclick_tab">
-                            <button type="submit" class="pay_btn hvr-glow">CONFIRMAR PEDIDO</button>
+                            <!--<img class="webpay-logo" src="img/logo-webpay.png">-->
                         </div>
                     </form>
                 </div>
@@ -394,43 +367,16 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                     $("#order_line_ironing").hide();
                 }
             });
-
-            $("#checkout_form input[name=payment_method]").on("click", function() {
-                if($("input[name=payment_method]:checked", "#checkout_form").val() == "oneclick"){
-                    $(".pay_tab").hide();
-                    $(".oneclick_tab").show();
-                    $("#checkout_form").attr("action", "'.$GLOBALS['TBK_AUTHORIZE_ONECLICK'].'");
-                } 
-                else{
-                    $(".pay_tab").show();
-                    $(".oneclick_tab").hide();
-                    $("#checkout_form").attr("action", "'.$GLOBALS['TBK_INIT_TRANS_LINK'].'");
-                }
-            });
-            $("#add_tc_action").on("click", function(){
-                location.href="php/transbank/ep_webpay.php?action=ONECLICK_INSCRIPTION";
-            });
-            
             
 
-            var washingControl = new WashingWashItemsControl("#modal_possible_items", true);
-            washingControl.OnWashItemChoosed = function(){
-                    $("#modal_selected_items_placeholder").html(this.GetHtmlForChosenItems());
-                    $("#weight").val(this.washProduct.getSanitizedWeight(WASHING_TYPE));
-
-                    appOrder.recalculatePrice();
-            };
             var ironingControl = new IroningWashItemsControl("#ironing_placeholder","#checkbox_ironing");
             ironingControl.onWashItemAmountChanged = function(){
                     appOrder.totalIroningItems = this.totalItems();
                     appOrder.recalculatePrice();
             };
 
-            var onlyIroningControl = new OnlyIroningWashItemsControl("#only-ironing-possible-items-placeholder", true);
-            onlyIroningControl.onWashItemAmountChanged = function(){
-                appOrder.onlyIroningItemLines = onlyIroningControl.washProduct.itemLines;
-                appOrder.recalculatePrice();
-            };
+
+           
 
             var drycleaningControl = new DryCleainigWashItemsControl("#dry-cleaning-possible-items-placeholder", true);
             drycleaningControl.onWashItemAmountChanged = function(){
@@ -448,18 +394,19 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                             $("#order_line_ironing").show();
                         }
 
+                        $("#order_line_washing_detergent").show();
+
                         $("#only_ironing_container").hide();
                         $("#order_line_only_ironing").hide();
 
                         $("#dry_cleaning_container").hide();
                         $("#order_line_dry_cleaning").hide();
-
-
                     }
                     else if(selectedLaundry == "only_ironing"){
                         $("#washing_ironing_container").hide();
                         $("#order_line_weight").hide();
                         $("#order_line_ironing").hide();
+                        $("#order_line_washing_detergent").hide();
 
                         $("#only_ironing_container").show();
                         $("#order_line_only_ironing").show();
@@ -471,6 +418,7 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                         $("#washing_ironing_container").hide();
                         $("#order_line_weight").hide();
                         $("#order_line_ironing").hide();
+                        $("#order_line_washing_detergent").hide();
 
                         $("#only_ironing_container").hide();
                         $("#order_line_only_ironing").hide();
@@ -482,11 +430,6 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                     appOrder.recalculatePrice();
             });
 
-            $(".btn-state-washing-items").click(function(event){
-                    event.preventDefault();
-                
-                    $("#modal_possible_items").modal("show");
-            });
 
 
             $("#checkout_form").submit(function( event ) {
@@ -495,9 +438,7 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                                       selectedLaundry === "dry_cleaning" || 
                                       selectedLaundry === "special_cleaning"; 
 
-                if((selectedLaundry === "only_ironing" && !onlyIroningControl.HasAnyItem()) ||
-                   (selectedLaundry === "dry_cleaning" && !drycleaningControl.HasAnyItem())
-                   ){
+                if(selectedLaundry === "dry_cleaning" && !drycleaningControl.HasAnyItem()){
                     event.preventDefault();
                     $("#message-fail").show().html("<strong>¡Atención!</strong> Debe seleccionar las prendas que desea enviar.");
                 }
@@ -516,21 +457,6 @@ include_once(dirname(__FILE__)."/templates/header.general.php");
                          
                          var hiddenInputItem = $.parseHTML(inputHtml);
                         ironing_items_post_hidden.append(hiddenInputItem);
-                    });
-                }
-
-                //Only cleaning
-                var only_ironing_items_post_hidden = $("#only_ironing_items_post_hidden");
-                only_ironing_items_post_hidden.html("");
-
-                if(selectedLaundry === "only_ironing" && onlyIroningControl.HasAnyItem()){
-                    $.each(onlyIroningControl.washProduct.itemLines, function( key, washItemLine ) {
-                        if(washItemLine.count > 0){
-                            var inputHtml =  \'<input type="checkbox" style="display:none" name="only_ironing_items_post[]" value="\'+washItemLine.item.Id+\',\'+washItemLine.count+\'" checked>\';
-                            
-                            var hiddenInputItem = $.parseHTML(inputHtml);
-                            only_ironing_items_post_hidden.append(hiddenInputItem);
-                        }
                     });
                 }
 

@@ -3,12 +3,22 @@ require_once(dirname(__FILE__)."/../_config.php");
 require_once(dirname(__FILE__)."/DiscountCoupon.class.php");
 require_once(dirname(__FILE__)."/City.class.php");
 
-function allExceptionHandler($exception) {
-    error_log("Unhandled exception!", 3, dirname(__FILE__)."/../logs/errors.log");
+// function allExceptionHandler($exception) {
+//     error_log("Unhandled exception!", 3, dirname(__FILE__)."/../logs/errors.log");
     
-    RedirectToErrorPage("", "Fatal eror occured");
+//     RedirectToErrorPage("", "Fatal eror occured");
+// }
+// set_exception_handler('allExceptionHandler');
+
+function LogHttpHeaders(){
+    error_log("\r\n");
+    error_log("\$_SERVER:");
+    error_log(var_export($_SERVER, true));
+    error_log("\$_GET:");
+    error_log(var_export($_GET, true));
+    error_log("\$_POST:");
+    error_log(var_export($_POST, true)."\r\n");
 }
-set_exception_handler('allExceptionHandler');
 
 
 function IsSamePagePost(){

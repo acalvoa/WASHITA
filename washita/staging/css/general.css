@@ -502,9 +502,10 @@ label.btn-primary{
     position: absolute;
 }
 
- #weight{
+ #weight,
+ #only_ironing_weight{
         max-width: 100px;
-    }
+}
 #weight-block{
     display: table-row;
 }
@@ -512,12 +513,16 @@ label.btn-primary{
     display: table-cell;  
     position: relative;
     vertical-align: middle;
+    width:100%;
 }
+
 .order-kg{
     position: relative;
-    top: -5px;
+    top: -2px;
     display: inline-block;
 }
+    
+
 .btn-state-washing-items-cell{
     display: table-cell;  
     position: relative;
@@ -597,6 +602,29 @@ img.washitem {
 }
 p.washing-checkbox-subtitle{
     font-size: 20px;
+    text-align: center;
+}
+.washing-checkbox-subtitle-hint{
+    font-size: 14px;
+}
+
+.washing-detergent-block{
+    margin-bottom: 20px;
+}
+.washing-detergent-title{
+    font-size: 20px;
+}
+.washing-detergent-block .radio-inline{
+    display: block;
+    font-size: 18px;
+    font-weight: 200;
+}
+.washing-detergent-block .radio-inline:first-of-type{
+    margin-left: 10px;
+}
+
+.washing-detergent-price{
+    font-size: 14px;
 }
 
 /*.checkbox_ironing{
@@ -673,41 +701,4 @@ p.help-block{
 #only_ironing_container,
 #dry_cleaning_container{
     padding-bottom: 20px;
-}
-
-.payelement{
-    float: left;
-    padding-left: 20px;
-    padding-right: 20px;
-}
-.payelement .inputfield{
-    float: left;
-    margin-right: 10px;
-    padding-top: 30px;
-}
-.payelement .logofield{
-    float: left;
-}
-.oneclick_tab{
-    display: none;
-}
-.pay_tab{
-    display: block;
-}
-.oneclick_tab .tc_input_row{
-    float: left;
-    width: calc(100% - 250px);
-}
-.oneclick_tab .tc_add_row{
-    float: left;
-    width: 250px;
-}
-.oneclick_tab .add_tc_btn{
-    padding: 10px 50px;
-    color: white;
-    background-color: #66cdcc;
-    border-radius: 20px;
-    border: 0;
-    float: right;
-    font-size: 16px;
 }

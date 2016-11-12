@@ -364,11 +364,12 @@ function IroningWashItemsControl(ironingPlaceHolderName, ironingCheckboxName) {
 
     this.createInputItem = function (washItemLine) {
        return '<div class="input-group washitem-line ironing-items" data-washitemid="'+washItemLine.item.Id+'">'+
-                '<input class="form-control numbersOnly items ironing-items-number" data-washitemid="'+washItemLine.item.Id+'"'+
+                '<input class="form-control numbersOnly items ironing-items-number" data-washitemid="'+washItemLine.item.Id+'"'+                    
                 ' type="number" min="1" max="1000" step="1.0" value="'+washItemLine.count+'"'+
                 ' lang="es" name="ironing_item_number" />'+
                 '<input class="form-control textinput" maxlength="60"'+
                     ' name="ironing_item_name" data-washitemid="'+washItemLine.item.Id+'"' +
+                    ' placeholder="ej.: Camisa azul"' +
                     ' value="'+washItemLine.item.Name+'"></input>'+
                 '<span  class="fa fa-minus-square-o remove-ironing-item" data-washitemid="'+washItemLine.item.Id+'"></span>'+
               '</div>'; 

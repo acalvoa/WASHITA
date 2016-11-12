@@ -1,17 +1,20 @@
 <?php
 include_once(dirname(__FILE__)."/../_config.php");
 include_once(dirname(__FILE__)."/WashType.enum.php");
+include_once(dirname(__FILE__)."/WashDetergent.enum.php");
 require_once(dirname(__FILE__)."/DiscountCoupon.class.php");
 
 class PriceParameters{
     var $kilo;
     public $Discount;
     public $WashType;
+    public $WashDetergent;
     public $WashItemLines;
     public $TotalIroningItems;
     
     public function __construct(){
         $this->kilo = 0;
+        $this->WashDetergent = WashDetergent::None;
     }
 }
 
@@ -27,6 +30,8 @@ class PriceResult {
     var $pricePerOneKilo;
     var $pricePerOneKiloText;
     var $pricePerOneItemIroningText;
+    var $pricePerOneKiloIroningText;
+    var $priceWashingDetergentText;
     var $totalIroningItems;
     var $weight;
 }
@@ -36,6 +41,9 @@ class Price {
     var $pricePerKiloStartingFiveKiloPack;
     var $priceForIroningPerKilo;
     var $priceForIroningPerItem;
+    var $priceWashingDetergentEcoFriendlyPerKilo;
+    var $priceWashingDetergentHypoallergenicFriendlyPerKilo;
+    var $priceWashingDetergentSoftForInfantsPerKilo;
 
     private function __construct(){
         
@@ -47,17 +55,33 @@ class Price {
         $obj->pricePerKiloStartingFiveKiloPack = $GLOBALS['PricePerKiloStartingFiveKiloPack'];
         $obj->priceForIroningPerKilo = $GLOBALS['PriceForIroningPerKilo'];
         $obj->priceForIroningPerItem = $GLOBALS['PriceForIroningPerItem'];
+
+        $obj->priceWashingDetergentEcoFriendlyPerKilo = $GLOBALS['PriceWashingDetergentEcoFriendlyPerKilo'];
+        $obj->priceWashingDetergentHypoallergenicFriendlyPerKilo = $GLOBALS['PriceWashingDetergentHypoallergenicFriendlyPerKilo'];
+        $obj->priceWashingDetergentSoftForInfantsPerKilo = $GLOBALS['PriceWashingDetergentSoftForInfantsPerKilo'];
         
         return $obj;
     }
     
-    public static function PriceFromParameters($pricePerOneKilo, $pricePerKiloStartingFiveKiloPack, $priceForIroningPerKilo, $priceForIroningPerItem){
+    public static function PriceFromParameters(
+            $pricePerOneKilo, 
+            $pricePerKiloStartingFiveKiloPack, 
+            $priceForIroningPerKilo, 
+            $priceForIroningPerItem,
+            $priceWashingDetergentEcoFriendlyPerKilo, 
+            $priceWashingDetergentHypoallergenicFriendlyPerKilo,
+            $priceWashingDetergentSoftForInfantsPerKilo){
+
         $obj = new Price();
         $obj->pricePerOneKilo = $pricePerOneKilo;
         $obj->pricePerKiloStartingFiveKiloPack = $pricePerKiloStartingFiveKiloPack;
         $obj->priceForIroningPerKilo = $priceForIroningPerKilo;
         $obj->priceForIroningPerItem = $priceForIroningPerItem;
-       
+
+        $obj->priceWashingDetergentEcoFriendlyPerKilo = $priceWashingDetergentEcoFriendlyPerKilo;
+        $obj->priceWashingDetergentHypoallergenicFriendlyPerKilo = $priceWashingDetergentHypoallergenicFriendlyPerKilo;
+        $obj->priceWashingDetergentSoftForInfantsPerKilo = $priceWashingDetergentSoftForInfantsPerKilo;
+
         return $obj;
     }
     
@@ -79,14 +103,26 @@ class Price {
 
             // ironing
             $result->priceWithoutDiscount += ($this->priceForIroningPerItem * $params->TotalIroningItems);
+
+            $priceWashingDetergent = 0;
+            //detergent
+            switch($params->WashDetergent){
+                case WashDetergent::EcoFriendly:
+                    $priceWashingDetergent = ($this->priceWashingDetergentEcoFriendlyPerKilo * $params->kilo);
+                    break;
+                case WashDetergent::Hypoallergenic:
+                    $priceWashingDetergent = ($this->priceWashingDetergentHypoallergenicFriendlyPerKilo * $params->kilo);
+                    break;
+                case WashDetergent::SoftForInfants:
+                    $priceWashingDetergent = ($this->priceWashingDetergentSoftForInfantsPerKilo * $params->kilo);
+                    break;
+            }
+            $result->priceWashingDetergentText = MoneyFormat($priceWashingDetergent);
+            $result->priceWithoutDiscount += $priceWashingDetergent;
         }
         else if($params->WashType == WashType::OnlyIroning){
-            $result->priceWithoutDiscount = 0;
-            if(!empty($params->WashItemLines)){
-                foreach ($params->WashItemLines as $washItemLine) {
-                    $result->priceWithoutDiscount += ($washItemLine->Count * $washItemLine->WashItem->OnlyIroningPrice);
-                }
-            }
+            $result->priceWithoutDiscount = ($this->priceForIroningPerKilo * $params->kilo);
+            $result->pricePerOneKiloIroningText = MoneyFormat($this->priceForIroningPerKilo);
         }
         else if($params->WashType == WashType::DryCleaning){
             $result->priceWithoutDiscount = 0;

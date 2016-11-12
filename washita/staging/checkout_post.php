@@ -1,18 +1,16 @@
 <?php
 include_once(dirname(__FILE__)."/_config.php");
-//include_once(dirname(__FILE__)."/php/paypal/paypal.class.php");
 include_once(dirname(__FILE__)."/php/MailService.class.php");
 include_once(dirname(__FILE__)."/php/_helpers.php");
 include_once(dirname(__FILE__)."/php/Price.class.php");
 include_once(dirname(__FILE__)."/php/WashType.enum.php");
+include_once(dirname(__FILE__)."/php/WashDetergent.enum.php");
 include_once(dirname(__FILE__)."/php/PickupTime.class.php");
-include_once(dirname(__FILE__)."/php/kpf/flowAPI.php");
-include_once(dirname(__FILE__)."/php/kpf/config.php");
 include_once(dirname(__FILE__)."/php/OrderWashItemLine.class.php");
 include_once(dirname(__FILE__)."/php/OrderCustomItemLine.class.php");
 
 
-
+    
 if($_POST) //Post Data received from order list page.
 {
 	$name =  GetPostNoLongerThan('name', 256); 
@@ -27,7 +25,6 @@ if($_POST) //Post Data received from order list page.
     
     $comment = GetPostNoLongerThan('comment', 3000); 
     
-    
     $params = new PriceParameters();
     $params->kilo = 0;//default
 
@@ -38,6 +35,8 @@ if($_POST) //Post Data received from order list page.
 		echo "¡Washing is incorrect!";
 		exit();
 	}
+
+
 
     $checkboxWashing = GetBooleanPost('checkbox_washing');
 
@@ -53,22 +52,19 @@ if($_POST) //Post Data received from order list page.
             $params->WashItemLines = OrderWashItemLine::ConvertFromPost($params->WashType, $orderWashitemLines);
             $params->kilo = GetPost('weight');
         }
+    
+        $params->WashDetergent = WashDetergent::ConvertFromPost(GetPost('washing-detergent'));
     }
     else if($params->WashType == WashType::OnlyIroning){
-        $orderOnlyIroningItemLines = isset($_POST['only_ironing_items_post']) ? $_POST['only_ironing_items_post']: "";
-        $params->WashItemLines = OrderWashItemLine::ConvertFromPost($params->WashType, $orderOnlyIroningItemLines);
-        $params->kilo = GetPost('weight');
+        $params->kilo = GetPost('only_ironing_weight');
     }
     else if($params->WashType == WashType::DryCleaning){
         $orderDryCleaningItemLines = isset($_POST['dry_cleaning_items_post']) ? $_POST['dry_cleaning_items_post']: "";
         $params->WashItemLines = OrderWashItemLine::ConvertFromPost($params->WashType, $orderDryCleaningItemLines);
         $params->kilo = GetPost('weight');
     }
-    
-    
 
-    if(($params->WashType == WashType::OnlyIroning ||
-        $params->WashType == WashType::DryCleaning || 
+    if(($params->WashType == WashType::DryCleaning || 
         $params->WashType == WashType::SpecialCleaning)
         && count($params->WashItemLines) < 1){
         echo "Wash items should be selected for only ironing, dry and special cleaning!";
@@ -107,6 +103,7 @@ if($_POST) //Post Data received from order list page.
 		echo "¡El peso debe ser entre 0 Kg y 1000 Kg!";
 		exit();
 	}
+
     if(empty($pickuptimeSelected)){
         echo "¡Elige cuándo pasamos a recoger tu ropa sucia!";
 		exit();
@@ -130,8 +127,8 @@ if($_POST) //Post Data received from order list page.
 
         // Write to the database requested data
         $query = "INSERT INTO `".$DBName."`.`orders`";
-        $query .= "(`NAME`,`CITY_AREA_ID`,`ADDRESS`,`PHONE`,`EMAIL`, `WEIGHT`, `PRICE_WITH_DISCOUNT`,`PRICE_WITHOUT_DISCOUNT`, `DISCOUNT_COUPON`,`WASH_TYPE`,`PICKUP_FROM`,`PICKUP_TILL`,`DROPOFF_FROM`,`DROPOFF_TILL`,`COMMENT`)";
-            $query .= "VALUES('".$mysqli->real_escape_string($name)."', '".$mysqli->real_escape_string($city_area_id)."', '".$mysqli->real_escape_string($address)."', '".$mysqli->real_escape_string($phone)."', '".$mysqli->real_escape_string($email)."', '".$mysqli->real_escape_string($params->kilo)."','".$mysqli->real_escape_string($price_result->priceWithDiscount)."', '".$mysqli->real_escape_string($price_result->priceWithoutDiscount)."', '".$mysqli->real_escape_string($discountCoupon)."', '".$mysqli->real_escape_string($params->WashType)."', '".$pickupdate->from->format("Y-m-d H:i:s")."', '".$pickupdate->to->format("Y-m-d H:i:s")."', '".$dropoffdate->from->format("Y-m-d H:i:s")."', '".$dropoffdate->to->format("Y-m-d H:i:s")."','".$mysqli->real_escape_string($comment)."')";
+        $query .= "(`NAME`,`CITY_AREA_ID`,`ADDRESS`,`PHONE`,`EMAIL`, `WEIGHT`, `PRICE_WITH_DISCOUNT`,`PRICE_WITHOUT_DISCOUNT`, `DISCOUNT_COUPON`,`WASH_TYPE`,`PICKUP_FROM`,`PICKUP_TILL`,`DROPOFF_FROM`,`DROPOFF_TILL`,`COMMENT`,`WASH_DETERGENT`)";
+            $query .= "VALUES('".$mysqli->real_escape_string($name)."', '".$mysqli->real_escape_string($city_area_id)."', '".$mysqli->real_escape_string($address)."', '".$mysqli->real_escape_string($phone)."', '".$mysqli->real_escape_string($email)."', '".$mysqli->real_escape_string($params->kilo)."','".$mysqli->real_escape_string($price_result->priceWithDiscount)."', '".$mysqli->real_escape_string($price_result->priceWithoutDiscount)."', '".$mysqli->real_escape_string($discountCoupon)."', '".$mysqli->real_escape_string($params->WashType)."', '".$pickupdate->from->format("Y-m-d H:i:s")."', '".$pickupdate->to->format("Y-m-d H:i:s")."', '".$dropoffdate->from->format("Y-m-d H:i:s")."', '".$dropoffdate->to->format("Y-m-d H:i:s")."','".$mysqli->real_escape_string($comment)."', '".$params->WashDetergent."')";
     } catch (Exception $e) {
         RedirectToErrorPage($orderNumber,"Internal error Checkout_Post");
         
@@ -152,7 +149,6 @@ if($_POST) //Post Data received from order list page.
                 OrderCustomItemLine::SetCustomOrderItems($orderNumber, $ironingItemLines, false);
             }
   
-           
             // SEND EMAIL
             $mailService = new MailService();
             $mailService->SendNotification($orderNumber);

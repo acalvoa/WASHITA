@@ -120,12 +120,45 @@ if($adminLogin->CanViewInfluencers()){
             </a>
                 ';
 }
+if($adminLogin->CanEditDiscounts()){
+    echo '
+         <a href="admin_discount.php" class="btn btn-default" 
+                style="float:left;clear: right;margin:30px;" role="button">
+                Discounts
+            </a>
+                ';
+}
+
+if($adminLogin->CanEditNonWorkingDays()){
+    echo '
+         <a href="admin_nonworkingdays.php" class="btn btn-default" 
+                style="float:left;clear: both;margin:30px;" role="button">
+                Nonworking days
+            </a>
+                ';
+
+    echo '
+         <a href="admin_nonworkingdates.php" class="btn btn-default" 
+                style="float:left;clear: right;margin:30px;" role="button">
+                Nonworking dates
+            </a>
+                ';
+}
 ?>
         
         <br/>
         <br/>
         <br/>
         <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+
         <br/>
         <br/>
         <br/>

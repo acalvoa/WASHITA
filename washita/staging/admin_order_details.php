@@ -14,6 +14,7 @@ require_once(dirname(__FILE__).'/php/OrderWashItemLine.class.php');
 require_once(dirname(__FILE__).'/php/OrderCustomItemLine.class.php');
 
 require_once(dirname(__FILE__).'/php/WashType.enum.php');
+require_once(dirname(__FILE__).'/php/WashDetergent.enum.php');
 require_once(dirname(__FILE__)."/php/AdminLogin.class.php");
 
 require_once(dirname(__FILE__)."/php/AdminLoginService.class.php");
@@ -63,9 +64,7 @@ function PutActualData($order){
                 OrderCustomItemLine::SetCustomOrderItems($order->OrderNumber, $ironingItemLines, true);
             }
             else if($order->WashType == WashType::OnlyIroning){
-                $orderOnlyIroningItemLinesPost = isset($_POST['only_ironing_items_post']) ? $_POST['only_ironing_items_post']: "";
-                $orderOnlyIroningItemLines  = OrderWashItemLine::ConvertFromPost($order->WashType, $orderOnlyIroningItemLinesPost);
-                OrderWashItemLine::SetActualItemsForOrder($order->OrderNumber, $orderOnlyIroningItemLines);
+                //
             }
             else if($order->WashType == WashType::DryCleaning){
                 $orderDryCleaningItemLinesPost = isset($_POST['dry_cleaning_items_post']) ? $_POST['dry_cleaning_items_post']: "";
@@ -165,7 +164,6 @@ $LINKS.= '<style>
             <?php 
             $initWashItemLines = [];
             $initIroningItemLines = [];
-            $initOnlyIroningItemLines = [];
             $initDryCleaningItemLines = [];
 
                 if($order->WashType == WashType::WashingAndIroning){
@@ -182,15 +180,17 @@ $LINKS.= '<style>
                             <p>'.OrderCustomItemLine::LinesToString($initIroningItemLines).'</p>
                     </fieldset> 
                     ';
+
+                    // echo'
+                    // <fieldset class="form-group">
+                    //     <label>Detergent</label>
+                    //     <p>'.WashDetergent::ToString($order->WashDetergent).'</p>
+                    // </fieldset>
+                    // ';
+                    
                 }
                 else if($order->WashType == WashType::OnlyIroning){
-                    $initOnlyIroningItemLines = OrderWashItemLine::GetInitialItemsForOrder($orderNumber);
-                     echo'
-                    <fieldset class="form-group">
-                        <label>Only ironing items</label>
-                        <p>'.OrderWashItemLine::LinesToString($initOnlyIroningItemLines).'</p>
-                    </fieldset>
-                    ';
+                    //
                 }
                 else if($order->WashType == WashType::DryCleaning){
                     $initDryCleaningItemLines = OrderWashItemLine::GetInitialItemsForOrder($orderNumber);
@@ -240,6 +240,7 @@ $LINKS.= '<style>
                     ';
                 }
             ?>
+
             <fieldset class="form-group">
                 <label>Cupón de Descuento</label>
                 <p><?php echo ($order != null && !empty($order->DiscountCoupon))? $order->DiscountCoupon : "-" ?></p>
@@ -286,11 +287,12 @@ $LINKS.= '<style>
 
 
     <form method="post" id="actual_form">
-            <h3>Precio Validado por Staff</h3>
+            <h3>Precio Validado por Staff*</h3>
                 <fieldset class="form-group">
                     <label>Ingresar precio final</label>
                     <input id="actual_price" name="actual_price" class="form-control numbersOnly" type="number" min="0" step="1" 
-                            placeholder="Price" value="<?php echo ($order != null? $order->ActualPriceWithDiscount:0)?>">
+                            placeholder="Price" value="<?php echo ($order != null? $order->ActualPriceWithDiscount:0)?>"
+                            required>
                     <small class="text-muted">Ingresar el precio validado para solicitar pago al cliente</small>
                 </fieldset>
 
@@ -298,15 +300,15 @@ $LINKS.= '<style>
         <?php 
            if($order != null && $order->IsWeightRequired()){
             echo '      
-            <h3>Peso Validado</h3>
+                <h3>Peso Validado*</h3>
                 <fieldset class="form-group">
                     <label>Ingrese Peso actual <span id="actual_weight_new"></span></label>
                     <input id="actual_weight" name="actual_weight" class="form-control decimals-with-tens" type="number" min="0" max="1000" step="0.1" 
                         value="'.($order != null? $order->ActualWeight:0).'"
-                        placeholder="Ingrese peso actual, mayor que '.NumberFormatWithTens($order->Weight).'">
+                        placeholder="Ingrese peso actual, mayor que '.NumberFormatWithTens($order->Weight).'"
+                        required>
                     <small class="text-muted">Ingrese el peso validado por el staff.</small>
                 </fieldset>
-                
             ';
         }
     ?>
@@ -375,13 +377,7 @@ $LINKS.= '<style>
                     ';
                 }
                 else if($order->WashType == WashType::OnlyIroning){
-                    echo '
-                                <div id="only_ironing_container">
-                                    <div id="only-ironing-possible-items-placeholder">
-                                    </div>
-                                    <div id="only_ironing_items_post_hidden"></div>
-                               </div> <!--only_ironing_container-->
-                    ';
+                   //
                 }
                 else if($order->WashType == WashType::DryCleaning){
                     echo '
@@ -559,14 +555,6 @@ for($x =0; $x < count($ironingItemLines); $x++){
 } 
 
 
-$jsInitOnlyIroningItems = 'var actualOnlyIroningItems = {};'; 
-$onlyIroningItemLines = $isModifiedByAdmin? $actualWashItemLines : $initOnlyIroningItemLines;
-foreach ($onlyIroningItemLines as $onlyIroningItemLine) {
-    $jsInitOnlyIroningItems.='actualOnlyIroningItems["'.$onlyIroningItemLine->WashItem->Id.'"]='.$onlyIroningItemLine->Count.';';
-}
-
-
-
 $jsInitDryCleaningItems = 'var actualDryCleaningItems = {};'; 
 $dryCleaningItemLines = $isModifiedByAdmin? $actualWashItemLines : $initDryCleaningItemLines;
 foreach ($dryCleaningItemLines as $dryCleaningItemLine) {
@@ -582,7 +570,6 @@ foreach ($dryCleaningItemLines as $dryCleaningItemLine) {
 
     '.$jsInitIroningItemLines.'
 
-    '.$jsInitOnlyIroningItems.'
     '.$jsInitDryCleaningItems.'
         $(document).ready(function() {
             appOrder.sanitizeNumberInput();
@@ -637,29 +624,9 @@ $SCRIPTS_FOOTER.= '
 }
 else if($order->WashType == WashType::OnlyIroning){
 $SCRIPTS_FOOTER.= '
-            var onlyIroningControl = new OnlyIroningWashItemsControl("#only-ironing-possible-items-placeholder", true);
-            onlyIroningControl.SetWashItems(actualOnlyIroningItems, function(){
-                onlyIroningControl.showInputItems();
-            });
-
             $("#actual_form").submit(function( event ) {
                 event.preventDefault();
 
-                //Only ironing
-                var only_ironing_items_post_hidden = $("#only_ironing_items_post_hidden");
-                only_ironing_items_post_hidden.html("");
-
-                if(onlyIroningControl.HasAnyItem()){
-                    $.each(onlyIroningControl.washProduct.itemLines, function( key, washItemLine ) {
-                        if(washItemLine.count > 0){
-                            var inputHtml =  \'<input type="checkbox" style="display:none" name="only_ironing_items_post[]" value="\'+washItemLine.item.Id+\',\'+washItemLine.count+\'" checked>\';
-                         
-                            var hiddenInputItem = $.parseHTML(inputHtml);
-                            only_ironing_items_post_hidden.append(hiddenInputItem);
-                        }
-                    });
-                }
-            
                 var data = $(this).serialize();
                 $(this).find(":input").prop("disabled", true);
                 $("#actual_form_saving_message").html("Saving is in process ...");
@@ -669,8 +636,6 @@ $SCRIPTS_FOOTER.= '
                     location.reload();
                 });
             });
-
-
      ';
 }
 else if($order->WashType == WashType::DryCleaning){

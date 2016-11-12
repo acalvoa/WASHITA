@@ -9,6 +9,7 @@ require_once(dirname(__FILE__)."/../PickupTime.class.php");
 require_once(dirname(__FILE__)."/../Order.class.php");
 require_once(dirname(__FILE__)."/../DiscountCoupon.class.php");
 
+LogHttpHeaders();
 
 // Inicializa la clase de flowAPI
 $flowAPI = new flowAPI();

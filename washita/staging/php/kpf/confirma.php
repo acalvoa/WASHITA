@@ -4,6 +4,8 @@ require_once(dirname(__FILE__)."/../../_config.php");
 require_once(dirname(__FILE__)."/../_helpers.php");
 require_once(dirname(__FILE__)."/flowAPI.php");
 
+LogHttpHeaders();
+
 // Inicializa la clase de flowAPI
 $flowAPI = new flowAPI();
 
@@ -12,8 +14,9 @@ try {
 	$flowAPI ->read_confirm();
 	
 } catch (Exception $e) {
-	// Si hay un error responde false
-	echo $flowAPI ->build_response(false);
+    error_log($e->getMessage());
+    // Si hay un error responde false
+	echo $flowAPI->build_response(false);
 	return;
 }
 

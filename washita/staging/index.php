@@ -265,6 +265,22 @@ include_once(dirname(__FILE__)."/templates/header.php");
                    <a href="javascript:void(0)" class="button button-google-maps"
                         data-slick-object-class=".slick-maps-two"
                         data-maps-src="https://www.google.com/maps/d/u/0/embed?mid=zHI8hr9UG0SA.kKJldWujN20U">Providencia</a>
+
+                    <!-- Todo: place real map data source -->    
+                    <a href="javascript:void(0)" class="button button-google-maps"
+                        data-slick-object-class=".slick-maps-six"
+                        data-maps-src="https://mapsengine.google.com/map/embed?mid=zHI8hr9UG0SA.kfkuf6qVmXxI">Vitacura</a>
+                    <!-- Todo: place real map data source -->    
+                    <a href="javascript:void(0)" class="button button-google-maps"
+                        data-slick-object-class=".slick-maps-seven"
+                        data-maps-src="https://mapsengine.google.com/map/embed?mid=zHI8hr9UG0SA.kfkuf6qVmXxI">Lo Barnechea</a>
+                    <!-- Todo: place real map data source -->    
+                    <!-- Hide Santiago Centro, also need to update the DataBase to show it again
+                        <a href="javascript:void(0)" class="button button-google-maps"
+                        data-slick-object-class=".slick-maps-eight"
+                        data-maps-src="https://mapsengine.google.com/map/embed?mid=zHI8hr9UG0SA.kfkuf6qVmXxI">Santiago Centro</a>
+                    <br>            
+                     -->
                     <a href="javascript:void(0)" class="button button-google-maps"
                         data-slick-object-class=".slick-maps-three"
                         data-maps-src="https://mapsengine.google.com/map/embed?mid=zHI8hr9UG0SA.koyM8lEDqYkg">Reñaca</a>                    
@@ -288,6 +304,9 @@ include_once(dirname(__FILE__)."/templates/header.php");
                     <div class="slick-maps-three"></div>
                     <div class="slick-maps-four"></div>
                     <div class="slick-maps-five"></div>
+                    <div class="slick-maps-six"></div>
+                    <div class="slick-maps-seven"></div>
+                    <div class="slick-maps-eight"></div>
                 </div>
 
                 

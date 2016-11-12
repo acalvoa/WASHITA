@@ -23,6 +23,24 @@ function lazy_mofo_payment_status($column_name, $value, $command, $called_from){
     return OrderPaymentStatus::ToString($value);
 }
 
+function lazy_mofo_date($column_name, $value, $command, $called_from){
+    // $column_name: field name
+    // $value: field value  
+    // $command: full command as defined in the arrays: form_input_control, grid_input_control, or grid_output_control
+    // $called_from: which function called this user function; form, or grid
+
+    global $lm;
+    $val = $lm->clean_out($value);
+    return '<div class="input-group datepicker date"> 
+                <input type="text" name="'.$column_name.'" data-default-value="'.$val.'" class="form-control" />
+                <span class="input-group-addon">
+                    <span class="fa fa-calendar"></span>
+                </span>
+            </div>
+            ';
+
+}
+
 // php crud datagrid for mysql and php5
 // MIT License - http://lazymofo.wdschools.com/
 // send feedback or questions lazymofo@wdschools.com

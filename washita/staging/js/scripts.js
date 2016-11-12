@@ -258,10 +258,24 @@ var appOrder = {
         var pickupMinDateTime = new Date($('#order_datepicker').attr('data-min-datetime'));
         var pickupMomentMinDate = moment(pickupMinDateTime);
         
-        function nextNearestPoint(choosenDateAndTime) {
+        function nextNearestPoint(choosenDateAndTime, nonWorkingDates) {
             function isMomentWeekDay(mDate){
                 var day = mDate.isoWeekday();
                 return day == 6 || day == 7;
+            }
+
+            function isMomentNonWorkingDay(mDate, nonWorkingDates){
+                var isNonWorkingDay = false;
+                nonWorkingDates.forEach(function(disabledDate){
+                    if(disabledDate.isSame(mDate, 'year') &&
+                       disabledDate.isSame(mDate, 'month') &&
+                       disabledDate.isSame(mDate, 'day')
+                    ){
+                        isNonWorkingDay = true;
+                    }
+                });
+
+                return isNonWorkingDay;
             }
 
             var choosenMoment = moment(choosenDateAndTime);
@@ -274,7 +288,7 @@ var appOrder = {
             else //Evening
             {
                 var nextWorkingDay = choosenMoment.startOf('day').add(1, 'day');
-                while(isMomentWeekDay(nextWorkingDay)){
+                while(isMomentWeekDay(nextWorkingDay) || isMomentNonWorkingDay(nextWorkingDay, nonWorkingDates)){
                     nextWorkingDay = nextWorkingDay.add(1, 'day');
                 }
                 // morning
@@ -282,25 +296,36 @@ var appOrder = {
             }
       }
 
-     function nextDropOff(choosenDateAndTime){
+
+
+     function nextDropOff(choosenDateAndTime,nonWorkingDates){
             var nextPickup = choosenDateAndTime;
             //1.5 day
             for(var i=0; i<3;i++){
-                nextPickup = nextNearestPoint(nextPickup);
+                nextPickup = nextNearestPoint(nextPickup,nonWorkingDates);
             }
             return nextPickup;        
         }   
        
-        var dppPickup = new DateTimePickerPair("order_datepicker", "pickuptime", pickupMomentMinDate, true);
+
+        var dateStrings = $("#nonworkingdates").html().split(";");
+        var nonWorkingDates = [];
+        dateStrings.forEach(function(dateStr){
+            if(dateStr){
+                nonWorkingDates.push(moment(trimChar(dateStr, " "), "DD.MM.YYYY"));
+            }
+        });
+
+        var dppPickup = new DateTimePickerPair("order_datepicker", "pickuptime", pickupMomentMinDate, true, nonWorkingDates);
         $(dppPickup).on('dpp.change', function(e, data){
             $('#pickup_datetime').val(data.asText());
-            var minDropOff = nextDropOff(data.from);
+            var minDropOff = nextDropOff(data.from, nonWorkingDates);
             dppDropOff.minDate(minDropOff);
             dppDropOff.setDateAndTime(minDropOff);
         });
 
-        var dropOffMomentMinDate = nextDropOff(pickupMinDateTime.from);
-        var dppDropOff = new DateTimePickerPair("dropoff_datepicker", "dropofftime", dropOffMomentMinDate, true);
+        var dropOffMomentMinDate = nextDropOff(pickupMinDateTime.from, nonWorkingDates);
+        var dppDropOff = new DateTimePickerPair("dropoff_datepicker", "dropofftime", dropOffMomentMinDate, true, nonWorkingDates);
         $(dppDropOff).on('dpp.change', function(e, data){
             $('#dropoff_datetime').val(data.asText());
         });
@@ -350,20 +375,34 @@ var appOrder = {
         // decimalsWithHundreds.attr("pattern", "[0-9]+([\.][0-9]+)?");
     },
     totalIroningItems: 0,
-    onlyIroningItemLines: [],
     dryCleaningItemLines: [],
     recalculatePrice: function(){
-        var weight = Number($('#weight').val());
+        var selectedLaundry = $('input[name="laundry_option"]:checked').val();
+        var weightBlockName = selectedLaundry === "only_ironing"? "#only_ironing_weight": "#weight";
+        var weight = Number($(weightBlockName).val());
         this.recalculatePriceByWeigth(weight);
     },
-    showPrice: function(totalPrice,oneKiloPrice,discountProcent,washTypeText,totalIroningItems,priceForIroningPerItemText){
+    showPrice: function(totalPrice,
+                        oneKiloPrice,
+                        discountProcent,
+                        washTypeText,
+                        totalIroningItems,
+                        priceForIroningPerItemText,
+                        pricePerOneKiloIroningText,
+                        priceWashingDetergentText){
+
         $('#total_price').text(totalPrice);
         $('#one_kilo_pack_price').text(oneKiloPrice);
         $('#dicount_procent').text(discountProcent);
         $('.selected_washing_text').text(washTypeText.toUpperCase());
+        // $('#selected_washing_detergent').text(priceWashingDetergentText);
 
         $('#ironing_item_price').text(priceForIroningPerItemText);
         $('.selected_ironing_items_total').text(totalIroningItems);
+        
+        $('#selected_only_ironing_items_weight').text(pricePerOneKiloIroningText);
+        
+        
         
     },
     priceWithDiscount: 0,
@@ -373,7 +412,7 @@ var appOrder = {
                      'laundry_option': $('input[name="laundry_option"]:checked').val(),
                      'discount_coupon':$('#discount_coupon').val(),
                      'washitems': $('input[name="washitems[]"]').map(function(){return trimChar($(this).val(), ',')}).get().join(';'),
-                     'only_ironing_items': $.map(appOrder.onlyIroningItemLines, function(itemLine){return itemLine.item.Id +','+itemLine.count}).join(';'),
+                     'washing-detergent': $('input[name="washing-detergent"]:checked').val(),
                      'dry_cleaning_items': $.map(appOrder.dryCleaningItemLines, function(itemLine){return itemLine.item.Id +','+itemLine.count}).join(';'),
                      'total_ironing_items': appOrder.totalIroningItems,
                      'email': $('input[name="email"]').val()
@@ -381,7 +420,7 @@ var appOrder = {
 
            $.post("process_price_service.php", params)
             .done(function(data){
-                //   console.log(data);
+                 //  console.log(data);
                 var res = jQuery.parseJSON(data);
                 appOrder.priceWithDiscount = res.priceWithDiscount;
                 appOrder.showPrice(res.priceWithDiscountText,
@@ -389,7 +428,10 @@ var appOrder = {
                               res.discountValueText,
                               res.washTypeText,
                                res.totalIroningItems,
-                               res.priceForIroningPerItemText); 
+                               res.priceForIroningPerItemText,
+                               JsFloatToChileanNumber(res.weight) + " x "+ res.pricePerOneKiloIroningText,
+                               res.priceWashingDetergentText
+                            ); 
                              
                var discountWarningMessage = $('#discountWarningMessage');
                if(res.discountWarningMessage){
@@ -403,7 +445,7 @@ var appOrder = {
                 
             })
             .fail(function()  {
-               appOrder.showPrice('Error','Error','Error','Error','Error'); 
+               appOrder.showPrice('Error','Error','Error','Error','Error','Error', 'Error'); 
             }); 
         
     },
@@ -412,14 +454,24 @@ var appOrder = {
        appOrder.recalculatePrice();
         $('#weight').bind("change paste keyup", function(event) {
             event.stopPropagation();
-            var sanitizedWeight = getSanitizedAndRoundedUpNumber(this.value,2);
+            var sanitizedWeight = getSanitizedAndRoundedUpNumber(this.value,1);
             appOrder.recalculatePriceByWeigth(sanitizedWeight);
         });
 
         $('#weight').blur(function(event) {
             event.stopPropagation();
-            var sanitizedWeight = getSanitizedAndRoundedUpNumber(this.value,2);
+            var sanitizedWeight = getSanitizedAndRoundedUpNumber(this.value,1);
             appOrder.recalculatePriceByWeigth(sanitizedWeight);
+        });
+
+        $("#only_ironing_weight").bind("change paste keyup", function(event) {
+            event.stopPropagation();
+            var sanitizedWeight = getSanitizedAndRoundedUpNumber(this.value,1);
+            appOrder.recalculatePriceByWeigth(sanitizedWeight);
+        });
+
+        $(".washing-detergent-block input[name='washing-detergent']").change(function(){
+            appOrder.recalculatePrice();
         });
        
        

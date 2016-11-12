@@ -429,6 +429,14 @@ class MySQLDB implements DBCommon {
 	public function SHOW_ERROR(){
 		return $E_ERROR;
 	}
+	/** @method array COUNT(string $table, array $where) This function get the total of fields of the array */
+	public function COUNT($table, $where = []){
+		$this->L_N_R = 0;
+		$query = "SELECT COUNT(*) AS TOTAL FROM ".$table;
+		$this->QUERY($query, $where);
+		$retorno = $this->L_RESULT->fetch_assoc();
+		return $retorno['TOTAL'];
+	}
 	/** @method void ERROR() this function throw an error */
 	function ERROR($message){
 		// STORE ERROR

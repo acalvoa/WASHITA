@@ -1,8 +1,10 @@
 <?php
 
-$site_root = 'http://washita.teamnodes.com/';
+$site_root = 'http://test.washita.cl/staging';
 $DBServer = 'localhost';
 $DBName   = 'washita';
+$DBUser   = 'root';
+$DBPass   = 'shadowfax';//'washit.334411';
 
 
 $smtpOrderVina = "eduardo.labarca@gmail.com";
