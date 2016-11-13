@@ -28,7 +28,11 @@ class OrderGenerator extends MySQLDB{
 	/* @var integer $USER_ID */
 	private $USER_ID;
 	/* @method __construct This is the constructor of the class */
-	function __construct($user){
+        function __construct(){
+                parent::__construct($GLOBALS["DBServer"],$GLOBALS["DBUser"],$GLOBALS["DBPass"],$GLOBALS["DBName"]);
+        }
+	/* @method __construct This is the constructor of the class */
+	function __construct1($user){
 		parent::__construct($GLOBALS["DBServer"],$GLOBALS["DBUser"],$GLOBALS["DBPass"],$GLOBALS["DBName"]);
 		$this->USER_ID = $user;
 	}
@@ -191,14 +195,16 @@ class OrderGenerator extends MySQLDB{
 	public function ORDER_INFO($ODC){
 		$ORDER['TBK_ODC'] = $ODC;
 		$retorno['TBK_TRANSACTION'] = $this->FIRST('TBK_TRANSACTIONS',$ORDER);
-		$retorno['TBK_PREORDER'] = $this->FIRST('TBK_PREORDER',$ORDER);
+		$ORDER_N['ORDER_NUMBER'] = $retorno['TBK_TRANSACTION']['WASHITA_ORDER'];
+		$retorno['TBK_PREORDER'] = $this->FIRST('orders',$ORDER_N);
 		return $retorno;
 	}
 	/* @method object ORDER_INFO_TOKEN() This method get the info of order emited by transbank from transaction token */
 	public function ORDER_INFO_TOKEN($TOKEN){
 		$ORDER['TOKEN'] = $TOKEN;
-		$retorno['TBK_PREORDER'] = $this->FIRST('TBK_PREORDER',$ORDER);
 		$retorno['TBK_TRANSACTION'] = $this->FIRST('TBK_TRANSACTIONS',$ORDER);
+		$ORDER_N['ORDER_NUMBER'] = $retorno['TBK_TRANSACTION']['WASHITA_ORDER'];
+                $retorno['TBK_PREORDER'] = $this->FIRST('orders',$ORDER_N);
 		return $retorno;
 	}
 }
