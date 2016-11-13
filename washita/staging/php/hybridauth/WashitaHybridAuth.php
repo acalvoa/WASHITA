@@ -183,7 +183,7 @@ class WashitaHybridAuth{
 		    $result->value = $user;
         }
 		else{
-            $result = Result::Fail("Internal error 'Register by Email DB'");
+            $result = Result::Fail("Internal error 'Register by Email DB'".$mysqli->error);
         }
         $mysqli->close();
         return $result;

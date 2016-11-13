@@ -15,7 +15,7 @@ if($_GET){
         
         if($result->success){
             //value contains user
-            $auth->Login($result->value);
+            $auth->LoginAndGo($result->value);
         }
         else{
             $error = $result->message;
@@ -41,7 +41,7 @@ if($_POST){
     $auth = new WashitaHybridAuth();
      $userSessionResult = $auth->GetUserSessionResultByEmailAndPassword($email, $password);
      if($userSessionResult->success){
-         $auth->Login($userSessionResult->value);
+         $auth->LoginAndGo($userSessionResult->value);
      }
      else{
         $error = $userSessionResult->message;
