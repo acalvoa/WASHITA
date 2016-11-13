@@ -11,6 +11,7 @@ require_once(dirname(__FILE__)."/../WashType.enum.php");
 // $order = Order::GetOrderByNumber('21120');
 // echo GetPaymentRequestBody($order);
 function GetPaymentRequestBody(Order $order){
+    global $PaymentService;
     $body = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -58,8 +59,41 @@ function GetPaymentRequestBody(Order $order){
 
         $body .= '</td></tr></table>';
         // ORDER End
-        
-        $body .= '<p>
+        if($PaymentService == 'webpay'){
+            $body .= '<p>
+                    Para procesar este pedido, por favor completar el pago de '.MoneyFormat($order->ActualPriceWithDiscount).' haciendo click en el siguiente botón.
+                </p>
+                <a href="'.$GLOBALS['site_root'].'/pay.php?orderNumber='.$order->OrderNumber.'" style="
+                                                padding: 10px 40px;
+                                                font-size: 18px;
+                                                color: #EBF3E9;
+                                                border-radius: 10px;
+                                                background-color: #228b22;
+                                                border-width: 1px;
+                                                text-decoration: initial;
+                                                display: inline-block;
+                    ">
+                        Pagar usando Webpay <img src="'.$GLOBALS['site_root'].'/img/webpayplus.jpg" height="30"/>
+                    </a> 
+                    <a href="'.$GLOBALS['site_root'].'/pay.php?orderNumber='.$order->OrderNumber.'" style="
+                                                padding: 10px 40px;
+                                                font-size: 18px;
+                                                color: #EBF3E9;
+                                                border-radius: 10px;
+                                                background-color: #228b22;
+                                                border-width: 1px;
+                                                text-decoration: initial;
+                                                display: inline-block;
+                    ">
+                        Pagar usando OneClick <img src="'.$GLOBALS['site_root'].'/img/oneclick.png" height="30"/>
+                    </a> 
+                     <br/>
+                    <br/>
+                    <br/>
+                ';
+        }
+        else {
+            $body .= '<p>
                     Para procesar este pedido, por favor completar el pago de '.MoneyFormat($order->ActualPriceWithDiscount).' haciendo click en el siguiente botón.
                 </p>
                 <a href="'.$GLOBALS['site_root'].'/pay.php?orderNumber='.$order->OrderNumber.'" style="
@@ -78,6 +112,7 @@ function GetPaymentRequestBody(Order $order){
                     <br/>
                     <br/>
                 ';
+        }
         
         
         
