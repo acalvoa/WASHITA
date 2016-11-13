@@ -16,7 +16,7 @@ setlocale(LC_NUMERIC, 'es_ES');
 
 
 
-$site_root              = 'http://www.washita.cl/staging';
+$site_root              = 'http://washita.teamnodes.com/';
 
 $smtpHost               = 'smtp.fatcow.com';
 $smtpName               = 'orders@washita.cl'; //from what address to send
