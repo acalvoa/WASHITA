@@ -72,7 +72,6 @@ if(!empty($action) AND !is_null($action)){
 		require_once(dirname(__FILE__)."/OneClick.php");
 		$price = $_POST['PRICE'];
 		$odc = $_POST['ODC'];
-		die($price."-".$odc);
 		if(isset($_GET['ws']) && $_GET['ws'] == "true"){
 			$oneclick = new OneClick();
 			$oneclick->AUTHORIZE($_POST['TBK_USER'],$price,$odc,true);
