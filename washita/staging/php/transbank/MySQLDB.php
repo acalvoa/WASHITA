@@ -150,6 +150,7 @@ class MySQLDB implements DBCommon {
 			}
 		}
 		call_user_func_array(array($stmt, "bind_param"), $list);
+		$this->LOGDB("Error: ".json_encode($list));
 		$stmt->execute();
 		$this->L_STMT = $stmt;
 		$this->L_RESULT = $stmt->get_result();
@@ -430,10 +431,10 @@ class MySQLDB implements DBCommon {
 		return $E_ERROR;
 	}
 	/** @method array COUNT(string $table, array $where) This function get the total of fields of the array */
-	public function COUNT($table, $where = []){
+	public function COUNT($table){
 		$this->L_N_R = 0;
 		$query = "SELECT COUNT(*) AS TOTAL FROM ".$table;
-		$this->QUERY($query, $where);
+		$this->QUERY($query);
 		$retorno = $this->L_RESULT->fetch_assoc();
 		return $retorno['TOTAL'];
 	}
