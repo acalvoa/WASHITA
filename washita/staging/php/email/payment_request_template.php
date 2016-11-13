@@ -10,8 +10,8 @@ require_once(dirname(__FILE__)."/../WashType.enum.php");
 // UNCOMMENT ONLY FOR A TEST and open page  /staging/php/email/payment_request_template.php
 // $order = Order::GetOrderByNumber('21120');
 // echo GetPaymentRequestBody($order);
-
 function GetPaymentRequestBody(Order $order){
+    global $PaymentService;
     $body = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -60,7 +60,7 @@ function GetPaymentRequestBody(Order $order){
         $body .= '</td></tr></table>';
         // ORDER End
         
-        $body .= '<p>
+        $body .= $PaymentService.'<p>
                     Para procesar este pedido, por favor completar el pago de '.MoneyFormat($order->ActualPriceWithDiscount).' haciendo click en el siguiente botón.
                 </p>
                 <a href="'.$GLOBALS['site_root'].'/pay.php?orderNumber='.$order->OrderNumber.'" style="
