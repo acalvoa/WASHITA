@@ -54,7 +54,7 @@ if($_POST){
      include_once(dirname(__FILE__)."/templates/header.general.php");
     
 $user = WashitaUser::CurrentUser();
-print_r($user);
+if(is_null($user)) echo "JAGSAJGSAJ";
 ?>
 <section>
     <div class="container">
