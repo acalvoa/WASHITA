@@ -144,7 +144,7 @@ else
                 </div>
                 <div class="input-group-horizontal">
                     <div class="tc_input_row">
-                        <select name="TBK_USER" class="TBK_USER_INPUT" class="form-control" required>
+                        <select name="TBK_USER" class="form-control TBK_USER_INPUT" required>
                             <option value="-1">Seleccione la tarjeta de pago</option>
                             <?php 
                                 $providers = OneClick::GETPROVIDERS();
