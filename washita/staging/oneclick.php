@@ -124,9 +124,9 @@ else
     <div class="container">
       <div class="section-heading section-order">
         <div class="row item checkout-block">
-          <form id="checkout_form" method="post" action="<?php echo $GLOBALS['TBK_INIT_TRANS_LINK'];?>">
+          <form id="checkout_form" method="post" action="<?php echo $GLOBALS['TBK_AUTHORIZE_ONECLICK'];?>">
                 <div class="input-group-vertical">
-                    <p>Elige tu medio de pago</p>
+                    <p>Pagar Utilizando:</p>
                 </div>
                 <div class="input-group-horizontal">
                     <div class="payelement">
@@ -166,6 +166,13 @@ else
       </div>
     </div>
 </section>
+<script>
+$(document).ready(function() {
+  $("#add_tc_action").on("click", function(){
+      location.href="php/transbank/ep_webpay.php?action=ONECLICK_INSCRIPTION";
+  });
+});
+</script>
 <?php
 }
     include_once(dirname(__FILE__)."/templates/footer.general.php");

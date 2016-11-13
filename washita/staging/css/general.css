@@ -717,7 +717,7 @@ p.help-block{
     float: left;
 }
 .oneclick_tab{
-    display: none;
+    display: block;
 }
 .pay_tab{
     display: block;
