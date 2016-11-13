@@ -64,7 +64,7 @@ function GetPaymentRequestBody(Order $order){
                     Para procesar este pedido, por favor completar el pago de '.MoneyFormat($order->ActualPriceWithDiscount).' haciendo click en el siguiente botón.
                 </p>
                 <a href="'.$GLOBALS['site_root'].'/pay.php?orderNumber='.$order->OrderNumber.'" >
-                        <div style="height:50px;"><img src="'.$GLOBALS['site_root'].'/img/webpayplus.jpg" height="50" style="float:left; margin-right: 20px;"/><div style="
+                        <div style="height:60px;"><img src="'.$GLOBALS['site_root'].'/img/webpayplus.jpg" height="60" style="float:left; margin-right: 20px;"/><div style="
                                                 padding: 10px 40px;
                                                 font-size: 18px;
                                                 color: #EBF3E9;
@@ -72,7 +72,7 @@ function GetPaymentRequestBody(Order $order){
                                                 background-color: #228b22;
                                                 border-width: 1px;
                                                 text-decoration: initial;
-                                                margin-top: 5px;
+                                                margin-top: 10px;
                                                 float: left;
                     ">Pagar con Webpay</div></div>
                     </a> <br>
