@@ -64,7 +64,7 @@ function GetPaymentRequestBody(Order $order){
                     Para procesar este pedido, por favor completar el pago de '.MoneyFormat($order->ActualPriceWithDiscount).' haciendo click en el siguiente botón.
                 </p>
                 <a href="'.$GLOBALS['site_root'].'/pay.php?orderNumber='.$order->OrderNumber.'" >
-                        <img src="'.$GLOBALS['site_root'].'/img/webpayplus.jpg" height="50"/><span style="
+                        <div><img src="'.$GLOBALS['site_root'].'/img/webpayplus.jpg" height="50" style="float:left; margin-right: 20px;"/><div style="
                                                 padding: 10px 40px;
                                                 font-size: 18px;
                                                 color: #EBF3E9;
@@ -72,11 +72,12 @@ function GetPaymentRequestBody(Order $order){
                                                 background-color: #228b22;
                                                 border-width: 1px;
                                                 text-decoration: initial;
-                                                display: inline-block;
-                    ">Pagar con Webpay</span>
+                                                margin-top: 5px;
+                                                float: left;
+                    ">Pagar con Webpay</div></div>
                     </a> <br>
                     <a href="'.$GLOBALS['site_root'].'/pay.php?orderNumber='.$order->OrderNumber.'" >
-                        <img src="'.$GLOBALS['site_root'].'/img/oneclick.png" height="50"/><span style="
+                        <div><img src="'.$GLOBALS['site_root'].'/img/oneclick.png" height="50" style="float:left; margin-right: 20px;"/><div style="
                                                 padding: 10px 40px;
                                                 font-size: 18px;
                                                 color: #EBF3E9;
@@ -84,8 +85,9 @@ function GetPaymentRequestBody(Order $order){
                                                 background-color: #228b22;
                                                 border-width: 1px;
                                                 text-decoration: initial;
-                                                display: inline-block;
-                    ">Pagar con Webpay</span>
+                                                margin-top: 5px;
+                                                float: left;
+                    ">Pagar con OneClick</div></div>
                     </a> 
                      <br/>
                     <br/>
