@@ -110,7 +110,11 @@ class WashitaHybridAuth{
             RedirectToProcessPage();
         }
     }
-    
+    public function LoginAndGo(WashitaUserSession $user)
+    {
+        WashitaUser::SaveUserDataInSession($user);
+        return true;
+    }
     public function GetUserIdByEmail( $email )
 	{
         global $DBName;

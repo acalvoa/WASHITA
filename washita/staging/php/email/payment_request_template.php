@@ -98,7 +98,7 @@ function GetPaymentRequestBody(Order $order){
             $body .= '<p>
                     Para procesar este pedido, por favor completar el pago de '.MoneyFormat($order->ActualPriceWithDiscount).' haciendo click en el siguiente botón.
                 </p>
-                <a href="'.$GLOBALS['site_root'].'/pay.php?orderNumber='.$order->OrderNumber.'" style="
+                <a href="'.$GLOBALS['site_root'].'/oneclick.php?orderNumber='.$order->OrderNumber.'" style="
                                                 padding: 10px 40px;
                                                 font-size: 18px;
                                                 color: #EBF3E9;
