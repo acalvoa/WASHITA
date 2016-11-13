@@ -113,7 +113,14 @@ class WashitaHybridAuth{
     public function LoginAndGo(WashitaUserSession $user)
     {
         WashitaUser::SaveUserDataInSession($user);
-        return true;
+         if(!$user->IsComplete || 
+            (isset($_SESSION["subscription_request"]) && $_SESSION["subscription_request"])){
+            // redirect to settings
+            RedirectToUserSettingsPage();
+        }
+        else{
+            return true;
+        }
     }
     public function GetUserIdByEmail( $email )
 	{
