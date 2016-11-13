@@ -126,7 +126,7 @@ else
     <div class="container">
       <div class="section-heading section-order">
           <form id="checkout_form" method="post" action="<?php echo $GLOBALS['TBK_AUTHORIZE_ONECLICK'];?>">
-            <div class="row item checkout-block">
+            <div class="row item checkout-block oneclick-resumen">
                 <div class="input-group-vertical">
                     <p>Monto a pagar: $<?php echo $order->ActualPriceWithDiscount ?></p>
                 </div>

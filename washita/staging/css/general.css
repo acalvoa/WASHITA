@@ -716,6 +716,9 @@ p.help-block{
 .payelement .logofield{
     float: left;
 }
+.oneclick-resumen{
+    margin-top: 20px;
+}
 .oneclick_tab{
     display: block;
 }
