@@ -36,6 +36,52 @@ else if($PaymentService == "webpay"){
     // $webpay = new Webpay();
     // $webpay->START_TRANS_WS($order->ActualPriceWithDiscount,$order->OrderNumber,$order->Email,$descritption);
     include_once(dirname(__FILE__)."/templates/header.general.php");
+?>
+<div class="container">
+    <div class="row item checkout-block">
+        <div class="input-group-vertical">
+            <p>Elige tu medio de pago</p>
+        </div>
+        <div class="input-group-horizontal">
+            <div class="payelement">
+                <div class="inputfield"><input class="payment_method" type="radio" name="payment_method" value="webpay" checked></div>  
+                <div class="logofield"><img class="webpay-logo" src="img/logo-webpay.png" height="100"></div>
+            </div>
+            <div class="payelement">
+                <div class="inputfield"><input class="payment_method" type="radio" name="payment_method" value="oneclick"></div> 
+                <div class="logofield" style="padding-top:5px;"><img class="webpay-logo" src="img/oneclick.png" height="80"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row item checkout_footer pay_tab">
+        <button type="submit" class="pay_btn hvr-glow">CONFIRMAR PEDIDO</button>
+    </div>
+    <div class="row item checkout-block oneclick_tab">
+        <div class="input-group-vertical">
+            <p>Elige La tarjeta de pago</p>
+        </div>
+        <div class="input-group-horizontal">
+            <div class="tc_input_row">
+                <select name="TBK_USER" class="form-control" required>
+                    <option value="-1">Seleccione la tarjeta de pago</option>
+                    <?php 
+                        $providers = OneClick::GETPROVIDERS();
+                        foreach ($providers as $provider) {
+                            echo '<option value="'.$provider['TBK_USER'].'" >('.strtoupper($provider['CREDIT_CARD_TYPE']).')  XXXX XXXX XXXX '.$provider['LAST4NUMBER'].'</option>';
+                        }
+                    ?>                               
+                </select>
+            </div>
+            <div class="tc_add_row">
+                <button type="button" class="add_tc_btn" id="add_tc_action">+ Agregar tarjeta</button>
+            </div>
+        </div>
+    </div>
+    <div class="row item checkout_footer oneclick_tab">
+        <button type="submit" class="pay_btn hvr-glow">CONFIRMAR PEDIDO</button>
+    </div>
+</div>
+<?php
     include_once(dirname(__FILE__)."/templates/footer.general.php");
 }
 ?>
