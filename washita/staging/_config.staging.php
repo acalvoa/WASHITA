@@ -15,6 +15,7 @@ $smtpOrderCcSantiago = "eduardo.labarca@singularityu.org,eduardo.labarca@gmail.c
 
 $smtpAdmin = 'eduardo.labarca@gmail.com'; // where to send email
 $smtpAdminCc = 'eduardo.labarca@gmail.com'; // where to send email
-
+$reCaptchaPublicKey = "6LemzwYUAAAAAM477SNX92cU112VADJ2v-i0A7FW";
+$reCaptchaPrivateKey = "6LemzwYUAAAAACTTOQJpyP4iD2_n-s_9jDUjNqH5";
 
 ?>
