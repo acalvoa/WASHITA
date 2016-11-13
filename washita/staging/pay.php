@@ -11,7 +11,7 @@ $orderNumber = $_GET["orderNumber"];
 $order = Order::GetOrderByNumber($orderNumber);
      
      
-$descritption = "Washita.cl, Orden N°".$order->OrderNumber.". Pago.";
+$descritption = "Washita.cl Orden N°".$order->OrderNumber.". Pago.";
 
 if($PaymentService == "flow"){
     $flowAPI = new flowAPI();

@@ -306,7 +306,7 @@ class Webpay extends MySQLDB{
 			$TBK_ORDER['PAYMENT_STATUS'] = 1;
 			$TBK_ORDER['TOKEN'] = $webpay_token;
 			$order_resp = $this->UPDATE($TBK_ORDER,$preorder,"TBK_TRANSACTIONS");
-			$tbk_re_order = $this->$this->FIRST('TBK_TRANSACTIONS', $preorder);
+			$tbk_re_order = $this->FIRST('TBK_TRANSACTIONS', $preorder);
 			if(!($order_resp)){
 				die('RECHAZADO');
 			}

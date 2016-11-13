@@ -1,6 +1,6 @@
 <?php
 
-$site_root = 'http://test.washita.cl/staging';
+$site_root = 'http://washita.teamnodes.com';
 $DBServer = 'localhost';
 $DBName   = 'washita';
 $DBUser   = 'root';
