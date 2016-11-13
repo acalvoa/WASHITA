@@ -67,23 +67,29 @@ function GetPaymentRequestBody(Order $order){
                                                 padding: 10px 40px;
                                                 font-size: 18px;
                                                 color: #EBF3E9;
+                                                line-height:60px;
+                                                vertical-align: middle;
+                                                border:1px #228b22 solid;
                                                 border-radius: 10px;
                                                 border-width: 1px;
                                                 text-decoration: initial;
                                                 display: inline-block;
                     ">
-                        Pagar con Webpay <img src="'.$GLOBALS['site_root'].'/img/webpayplus.jpg" height="50"/>
+                        Pagar con Webpay &nbps;&nbps;<img src="'.$GLOBALS['site_root'].'/img/webpayplus.jpg" height="60"/>
                     </a> 
                     <a href="'.$GLOBALS['site_root'].'/pay.php?orderNumber='.$order->OrderNumber.'" style="
                                                 padding: 10px 40px;
                                                 font-size: 18px;
                                                 color: #EBF3E9;
                                                 border-radius: 10px;
+                                                line-height:60px;
+                                                vertical-align: middle;
+                                                border:1px #228b22 solid;
                                                 border-width: 1px;
                                                 text-decoration: initial;
                                                 display: inline-block;
                     ">
-                        Pagar con OneClick <img src="'.$GLOBALS['site_root'].'/img/oneclick.png" height="50"/>
+                        Pagar con OneClick &nbps;&nbps;<img src="'.$GLOBALS['site_root'].'/img/oneclick.png" height="60"/>
                     </a> 
                      <br/>
                     <br/>
