@@ -155,7 +155,7 @@ else
                         </select>
                     </div>
                     <div class="tc_add_row">
-                        <button type="button" class="rm_tc_btn" id="add_tc_action">- Quitar tarjeta</button>
+                        <button type="button" class="rm_tc_btn" id="rm_tc_action">- Quitar tarjeta</button>
                         <button type="button" class="add_tc_btn" id="add_tc_action">+ Agregar tarjeta</button>
                     </div>
                 </div>
