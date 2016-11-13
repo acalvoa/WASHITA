@@ -165,14 +165,19 @@ else
       </div>
     </div>
 </section>
-<script>
-$(document).ready(function() {
-  $("#add_tc_action").on("click", function(){
-      location.href="php/transbank/ep_webpay.php?action=ONECLICK_INSCRIPTION&order=<?php echo $order->OrderNumber; ?>";
-  });
-});
-</script>
-<?php
+
+ <?php 
 }
+  if(!isset($SCRIPTS_FOOTER)){
+  $SCRIPTS_FOOTER = "";
+  }
+  $SCRIPTS_FOOTER.= '
+  <script>
+  $(document).ready(function() {
+    $("#add_tc_action").on("click", function(){
+        location.href="php/transbank/ep_webpay.php?action=ONECLICK_INSCRIPTION&order=<?php echo $order->OrderNumber; ?>";
+    });
+  });
+  </script>';
     include_once(dirname(__FILE__)."/templates/footer.general.php");
 ?>
