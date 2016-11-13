@@ -63,6 +63,7 @@ function GetPaymentRequestBody(Order $order){
             $body .= '<p>
                     Para procesar este pedido, por favor completar el pago de '.MoneyFormat($order->ActualPriceWithDiscount).' haciendo click en el siguiente botón.
                 </p>
+                <table
                 <tr>
                 <img src="'.$GLOBALS['site_root'].'/img/webpayplus.jpg" height="50"/><a href="'.$GLOBALS['site_root'].'/pay.php?orderNumber='.$order->OrderNumber.'" style="
                                                 padding: 10px 40px;
@@ -89,6 +90,7 @@ function GetPaymentRequestBody(Order $order){
                     ">
                         Pagar con OneClick
                     </a> </tr>
+                    </table>
                      <br/>
                     <br/>
                     <br/>
