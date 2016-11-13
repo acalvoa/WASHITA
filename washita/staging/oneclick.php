@@ -52,8 +52,10 @@ if($_POST){
     $LINKS = '
     <link rel="stylesheet" href="css/bootstrap-social.css">
     ';
-     include_once(dirname(__FILE__)."/templates/header.general.php");
-    
+    include_once(dirname(__FILE__)."/templates/header.general.php");
+    $orderNumber = $_GET["orderNumber"];
+    $order = Order::GetOrderByNumber($orderNumber);
+    $descritption = "Washita.cl, Orden N°".$order->OrderNumber.". Pago.";
 $user = WashitaUser::CurrentUser();
 if(is_null($user)){
 ?>
@@ -123,19 +125,16 @@ else
 <section>
     <div class="container">
       <div class="section-heading section-order">
-        <div class="row item checkout-block">
           <form id="checkout_form" method="post" action="<?php echo $GLOBALS['TBK_AUTHORIZE_ONECLICK'];?>">
+            <div class="row item checkout-block">
                 <div class="input-group-vertical">
-                    <p>Pagar Utilizando:</p>
+                    <p>Monto a pagar: $<?php echo $order->ActualPriceWithDiscount ?></p>
                 </div>
                 <div class="input-group-horizontal">
                     <div class="payelement">
                         <div class="logofield" style="padding-top:5px;"><img class="webpay-logo" src="img/oneclick.png" height="80"></div>
                     </div>
                 </div>
-            </div>
-            <div class="row item checkout_footer pay_tab">
-                <button type="submit" class="pay_btn hvr-glow">CONFIRMAR PEDIDO</button>
             </div>
             <div class="row item checkout-block oneclick_tab">
                 <div class="input-group-vertical">
