@@ -31,14 +31,15 @@ if(!empty($action) AND !is_null($action)){
 	}
 	else if($action == "ONECLICK_INSCRIPTION"){
 		require_once(dirname(__FILE__)."/OneClick.php");
+		$order = $_GET['order'];
 		if(isset($_GET['ws']) && $_GET['ws'] == "true"){
 			$oneclick = new OneClick();
-			$oneclick->INIT_INSCRIPTION(true);
+			$oneclick->INIT_INSCRIPTION($order,true);
 		}
 		else
 		{
 			$oneclick = new OneClick();
-			$oneclick->INIT_INSCRIPTION();
+			$oneclick->INIT_INSCRIPTION($order);
 		}
 	}
 	else if($action == "FINISH_ONECLICK_INSCRIPTION"){

@@ -39,8 +39,9 @@ class OneClick extends MySQLDB{
 		$this->TBK_LOGPATH = $GLOBALS["LOG_PATH"];
 		$this->CHECKCONFIG();
 	}
-	function INIT_INSCRIPTION($ws = false){
+	function INIT_INSCRIPTION($order, $ws = false){
 		$this->GETUSERPARAM();
+		$_SESSION['ONECLICK_ORDER'] = $order;
 		$oneClickService = new OneClickWS();
 		$oneClickInscriptionInput = new oneClickInscriptionInput();
 		$oneClickInscriptionInput->username = $this->WASHITA_USERNAME;

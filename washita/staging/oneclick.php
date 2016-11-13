@@ -168,7 +168,7 @@ else
 <script>
 $(document).ready(function() {
   $("#add_tc_action").on("click", function(){
-      location.href="php/transbank/ep_webpay.php?action=ONECLICK_INSCRIPTION";
+      location.href="php/transbank/ep_webpay.php?action=ONECLICK_INSCRIPTION&order=<?php echo $order->OrderNumber; ?>";
   });
 });
 </script>
