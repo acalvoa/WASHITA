@@ -161,7 +161,7 @@ else
                 </div>
             </div>
             <div class="row item checkout_footer oneclick_tab">
-                <button type="submit" class="pay_btn hvr-glow">CONFIRMAR PEDIDO</button>
+                <button type="submit" class="pay_btn hvr-glow">PAGAR</button>
             </div>
           </form>
         </div>
