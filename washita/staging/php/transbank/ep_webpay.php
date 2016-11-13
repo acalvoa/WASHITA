@@ -44,15 +44,15 @@ if(!empty($action) AND !is_null($action)){
 	}
 	else if($action == "ONECLICK_REMOVE_INSCRIPTION"){
 		require_once(dirname(__FILE__)."/OneClick.php");
-		$order = $_GET['order'];
+		$TBK_USER = $_GET['TBK_USER'];
 		if(isset($_GET['ws']) && $_GET['ws'] == "true"){
 			$oneclick = new OneClick();
-			$oneclick->INIT_INSCRIPTION($order,true);
+			$oneclick->REMOVE_INSCRIPTION($TBK_USER,true);
 		}
 		else
 		{
 			$oneclick = new OneClick();
-			$oneclick->INIT_INSCRIPTION($order);
+			$oneclick->REMOVE_INSCRIPTION($TBK_USER);
 		}
 	}
 	else if($action == "FINISH_ONECLICK_INSCRIPTION"){

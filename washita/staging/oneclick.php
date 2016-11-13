@@ -144,7 +144,7 @@ else
                 </div>
                 <div class="input-group-horizontal">
                     <div class="tc_input_row">
-                        <select name="TBK_USER" class="form-control" required>
+                        <select name="TBK_USER" class="TBK_USER_INPUT" class="form-control" required>
                             <option value="-1">Seleccione la tarjeta de pago</option>
                             <?php 
                                 $providers = OneClick::GETPROVIDERS();
@@ -181,7 +181,7 @@ else
         location.href="php/transbank/ep_webpay.php?action=ONECLICK_INSCRIPTION&order=<?php echo $order->OrderNumber; ?>";
     });
     $("#rm_tc_action").on("click", function(){
-        location.href="php/transbank/ep_webpay.php?action=ONECLICK_REMOVE_INSCRIPTION&order=<?php echo $order->OrderNumber; ?>";
+        location.href="php/transbank/ep_webpay.php?action=ONECLICK_REMOVE_INSCRIPTION&TBK_USER="+$(".TBK_USER_INPUT").val();
     });
   });
   </script>';
