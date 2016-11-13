@@ -104,24 +104,25 @@ class OneClick extends MySQLDB{
 		}
 	}
 	/** @method void AUTHORIZE() this function authorice a transaction with transbank oneclick. */
-	function AUTHORIZE($TBK_USER, $ws = false){
+	function AUTHORIZE($TBK_USER, $PRICE, $ORDER, $ws = false){
 		$this->GETUSERPARAM();
 		if(!isset($this->WASHITA_USERNAME)) throw new Exception("The USER is not loged is not set", 1);
 		$this->GENERATE_SESION();
 		$this->LOG("#######################\nIniciamos la transaccion: ".$this->TBK_SESSION);
 		// GENERATE THE PREORDER
-		$PREORDER = new OrderGenerator($this->WASHITA_USERNAME);
-		$PREORDER->PROCESS_FIELDS();
-		$ID_PREORDER = $PREORDER->CREATE_PRE_ORDER();
+		// $PREORDER = new OrderGenerator($this->WASHITA_USERNAME);
+		// $PREORDER->PROCESS_FIELDS();
+		// $ID_PREORDER = $PREORDER->CREATE_PRE_ORDER();
+		$ID_PREORDER = date('YmdHis').$this->COUNT("TBK_TRANSACTIONS");
 		$this->LOG("Preorden creada: ".$ID_PREORDER.", Redirigiendo");
-		if($this->REG_TRANS($ID_PREORDER,$PREORDER->GET_PRICE()."00")){
+		if($this->REG_TRANS($ID_PREORDER,$PRICE,$ORDER,$this->WASHITA_EMAIL, "Washita.cl Orden N°".$ORDER.". Pago."){
 			// LLAMAMOS LOS WEBSERVICES
 			$oneClickService = new OneClickWS();
 			$oneClickInscriptionInput = new oneClickInscriptionInput();
 			$oneClickPayInput = new oneClickPayInput();
 			// CREAMOS LA PREORDEN
 			// VERIFICAMOS CON TRANSBANK
-			$oneClickPayInput->amount = $PREORDER->GET_PRICE();
+			$oneClickPayInput->amount = $PRICE;
 			$oneClickPayInput->buyOrder = $ID_PREORDER;
 			$oneClickPayInput->tbkUser = $TBK_USER;
 			$oneClickPayInput->username = $this->WASHITA_USERNAME;
@@ -141,19 +142,17 @@ class OneClick extends MySQLDB{
 				// CREAMOS LA ORDEN EN LA BASE DE DATOS
 				$this->LOG("Creamos la nueva orden de trabajo. Rescatamos el registro");
 				$preorder['TBK_ODC'] = $ID_PREORDER;
-				$order_param = $this->FIRST('TBK_PREORDER', $preorder);
-				unset($order_param['TBK_ODC']);
-				unset($order_param['ID_ODC']);
-				unset($order_param['ID_USER']);
-				$this->LOG("Creamos la nueva orden de trabajo. Creamos el registro");
-				$order = $this->INSERT($order_param,"orders");
-				$TBK_ORDER['WASHITA_ORDER'] = $GLOBALS["OrdersNumberStart"] + $order;
+				// $order_param = $this->FIRST('TBK_PREORDER', $preorder);
+				// unset($order_param['TBK_ODC']);
+				// unset($order_param['ID_ODC']);
+				// unset($order_param['ID_USER']);
+				// $this->LOG("Creamos la nueva orden de trabajo. Creamos el registro");
+				// $order = $this->INSERT($order_param,"orders");
+				// $TBK_ORDER['WASHITA_ORDER'] = $GLOBALS["OrdersNumberStart"] + $order;
 				$TBK_ORDER['PAYMENT_STATUS'] = 1;
 				$order_resp = $this->UPDATE($TBK_ORDER,$preorder,"TBK_TRANSACTIONS");
 				if(!($order_resp)){
 					$this->REVERSE($ID_PREORDER);
-					$where['ID'] = $order;
-					$this->DELETE($where,"orders");
 					$in['REVERSED'] = 1;
 					$order_resp = $this->UPDATE($in,$preorder,"TBK_TRANSACTIONS");
 					if($ws){
@@ -170,14 +169,14 @@ class OneClick extends MySQLDB{
 						die();
 					}
 				}
-				$ORDER_FINAL['ORDER_NUMBER'] = $TBK_ORDER['WASHITA_ORDER'];
+				$tbk_re_order = $this->FIRST('TBK_TRANSACTIONS', $preorder);
+
 				$ORDER_FINAL['PAYMENT_STATUS'] = 1;
-				$ORDER_WHERE['ID']  = $order;
+				$ORDER_WHERE['ORDER_NUMBER']  = $tbk_re_order['WASHITA_ORDER'];
 				$order_result = $this->UPDATE($ORDER_FINAL,$ORDER_WHERE,"orders");
+
 				if(!($order_result)){
 					$this->REVERSE($ID_PREORDER);
-					$where['ID'] = $order;
-					$this->DELETE($where,"orders");
 					$in['REVERSED'] = 1;
 					$order_resp = $this->UPDATE($in,$preorder,"TBK_TRANSACTIONS");
 					if($ws){
@@ -194,9 +193,6 @@ class OneClick extends MySQLDB{
 						die();
 					}
 				}
-				 // SEND EMAIL
-		        $mailService = new MailService();
-	        	$mailService->SendNotification($TBK_ORDER['WASHITA_ORDER']);
 	        	if($ws){
 					$retorno['STATUS'] = 1;
 					$retorno['TBK_ODC'] = $ID_PREORDER;
@@ -210,7 +206,7 @@ class OneClick extends MySQLDB{
 				{
 					printf('<form action="%s" name="frm" method="post">', $this->TBK_SUCCESS);
 					printf('<input type="hidden" name="TBK_ORDEN_COMPRA" value="%s"/>', $ID_PREORDER);
-					printf('<input type="hidden" name="TBK_AMOUNT" value="%s"/>', $PREORDER->GET_PRICE());
+					printf('<input type="hidden" name="TBK_AMOUNT" value="%s"/>', $PRICE);
 					printf('<input type="hidden" name="TBK_AUTH_CODE" value="%s"/>', $authorizationCode);
 					printf('<input type="hidden" name="TBK_TC_DIGIT" value="%s"/>', $last4CardDigits);
 					printf('<input type="hidden" name="TBK_TC_TYPE" value="%s"/>', $creditCardType);
@@ -278,8 +274,21 @@ class OneClick extends MySQLDB{
 		$soapValidation = new SoapValidation($xmlResponse, SERVER_CERT);
 		//Si la firma es válida
 		// Valor booleano que indica si el usuario fue removido.
-		$removeUserResponse->return;
 		// REMOVEMOS DE LA BASE DE DATOS
+		if($removeUserResponse->return){
+			// INGRESAMOS LOS CAMPOS A LA BASE DE DATOS
+			$TC['TBK_USER'] = $TBK_USER;
+			$result = $this->DELETE($TC,'TBK_OC_REGISTER_TC');
+			if(!$result){
+				throw new Exception("The TBK_USER REGISTER ERROR - ERROR IN INSERT OPERATION", 1);
+			}
+			if($ws) die(json_encode($TC));
+			header('Location: /oneclick.php?orderNumber='.$_SESSION['ONECLICK_ORDER']);
+		}
+		else
+		{
+			header('Location: /oneclick.php?TC_INS=fail');
+		}
 	}
 	/** @method void GETUSERPARAM() this function finish the TC inscription process. */
 	function GETUSERPARAM(){
@@ -313,20 +322,31 @@ class OneClick extends MySQLDB{
 		}
 	}
 	/** @method void REG_TRANS() this function register the transbank transaction */
-	public function REG_TRANS($odc, $amount){
+	public function REG_TRANS($odc, $amount, $order, $email, $description){
 		$TRANSACTION = array();
 		$TRANSACTION['TBK_SESSION'] = $this->TBK_SESSION;
 		$TRANSACTION['TBK_ODC'] = $odc;
 		$TRANSACTION['TBK_AMOUNT'] = $amount;
 		$TRANSACTION['PAYMENT_STATUS'] = 0;
+		$TRANSACTION['WASHITA_ORDER'] = $order;
+		$TRANSACTION['PAYER_EMAIL'] = $email;
+		$TRANSACTION['TBK_DESCRIPTION'] = $description;
 		return $this->INSERT($TRANSACTION,"TBK_TRANSACTIONS");
 	}
 	/** @method void GENERATE_SESION() this function check the MAC provided by transbank */
 	private function GENERATE_SESION(){
-		$user_id = $this->WASHITA_USERNAME;
+		// $user_id = $this->USER->Id;
 		$time_hash = sha1(time());
-		$hash = $user_id."@".$time_hash;
+		$hash = $this->GENERATECODE(20)."@".$time_hash;
 		$this->TBK_SESSION = md5($hash);
+	}
+	//GENERA CARACTERES ALEATORIOS PARA GENERAR EL TOKEN DE SESION
+	private function GENERATECODE($longitud) {
+		$key = '';
+		$pattern = '1234567890abcdefghijklmnopqrstuvwxyz';
+		$max = strlen($pattern)-1;
+		for($i=0;$i < $longitud;$i++) $key .= $pattern{mt_rand(0,$max)};
+		return $key;
 	}
 }
 ?>

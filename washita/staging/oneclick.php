@@ -126,6 +126,8 @@ else
     <div class="container">
       <div class="section-heading section-order">
           <form id="checkout_form" method="post" action="<?php echo $GLOBALS['TBK_AUTHORIZE_ONECLICK'];?>">
+            <input type="hidden" name="ODC" value="<?php echo $order->OrderNumber; ?>" />
+            <input type="hidden" name="PRICE" value="<?php echo $order->ActualPriceWithDiscount; ?>" />
             <div class="row item checkout-block oneclick-resumen">
                 <div class="input-group-vertical">
                     <p>Monto a pagar: $<?php echo $order->ActualPriceWithDiscount ?></p>
@@ -153,6 +155,7 @@ else
                         </select>
                     </div>
                     <div class="tc_add_row">
+                        <button type="button" class="rm_tc_btn" id="add_tc_action">- Quitar tarjeta</button>
                         <button type="button" class="add_tc_btn" id="add_tc_action">+ Agregar tarjeta</button>
                     </div>
                 </div>
@@ -176,6 +179,9 @@ else
   $(document).ready(function() {
     $("#add_tc_action").on("click", function(){
         location.href="php/transbank/ep_webpay.php?action=ONECLICK_INSCRIPTION&order=<?php echo $order->OrderNumber; ?>";
+    });
+    $("#rm_tc_action").on("click", function(){
+        location.href="php/transbank/ep_webpay.php?action=ONECLICK_REMOVE_INSCRIPTION&order=<?php echo $order->OrderNumber; ?>";
     });
   });
   </script>';

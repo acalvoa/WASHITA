@@ -42,6 +42,19 @@ if(!empty($action) AND !is_null($action)){
 			$oneclick->INIT_INSCRIPTION($order);
 		}
 	}
+	else if($action == "ONECLICK_REMOVE_INSCRIPTION"){
+		require_once(dirname(__FILE__)."/OneClick.php");
+		$order = $_GET['order'];
+		if(isset($_GET['ws']) && $_GET['ws'] == "true"){
+			$oneclick = new OneClick();
+			$oneclick->INIT_INSCRIPTION($order,true);
+		}
+		else
+		{
+			$oneclick = new OneClick();
+			$oneclick->INIT_INSCRIPTION($order);
+		}
+	}
 	else if($action == "FINISH_ONECLICK_INSCRIPTION"){
 		require_once(dirname(__FILE__)."/OneClick.php");
 		if(isset($_GET['ws']) && $_GET['ws'] == "true"){
@@ -56,14 +69,16 @@ if(!empty($action) AND !is_null($action)){
 	}
 	else if($action == "AUTHORIZE_ONECLICK"){
 		require_once(dirname(__FILE__)."/OneClick.php");
+		$price = $_POST['PRICE'];
+		$odc = $_POST['ODC'];
 		if(isset($_GET['ws']) && $_GET['ws'] == "true"){
 			$oneclick = new OneClick();
-			$oneclick->AUTHORIZE($_POST['TBK_USER'],true);
+			$oneclick->AUTHORIZE($_POST['TBK_USER'],$price,$odc,true);
 		}
 		else
 		{
 			$oneclick = new OneClick();
-			$oneclick->AUTHORIZE($_POST['TBK_USER']);
+			$oneclick->AUTHORIZE($_POST['TBK_USER'],$price,$odc);
 		}
 	}
 }
