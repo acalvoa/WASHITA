@@ -81,6 +81,24 @@ else if($PaymentService == "webpay"){
         <button type="submit" class="pay_btn hvr-glow">CONFIRMAR PEDIDO</button>
     </div>
 </div>
+<script>
+        $(document).ready(function() {
+            $("#checkout_form input[name=payment_method]").on("click", function() {
+                if($("input[name=payment_method]:checked", "#checkout_form").val() == "oneclick"){
+                    $(".pay_tab").hide();
+                    $(".oneclick_tab").show();
+                    $("#checkout_form").attr("action", "'.$GLOBALS['TBK_AUTHORIZE_ONECLICK'].'");
+                } 
+                else{
+                    $(".pay_tab").show();
+                    $(".oneclick_tab").hide();
+                    $("#checkout_form").attr("action", "'.$GLOBALS['TBK_INIT_TRANS_LINK'].'");
+                }
+            });
+            $("#add_tc_action").on("click", function(){
+                location.href="php/transbank/ep_webpay.php?action=ONECLICK_INSCRIPTION";
+            });
+        });
 <?php
     include_once(dirname(__FILE__)."/templates/footer.general.php");
 }
