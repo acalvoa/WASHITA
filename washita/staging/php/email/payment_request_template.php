@@ -76,7 +76,7 @@ function GetPaymentRequestBody(Order $order){
                                                 float: left;
                     ">Pagar con Webpay</div></div>
                     </a> <br>
-                    <a href="'.$GLOBALS['site_root'].'/pay.php?orderNumber='.$order->OrderNumber.'" >
+                    <a href="'.$GLOBALS['site_root'].'/oneclick.php?orderNumber='.$order->OrderNumber.'" >
                         <div style="height:50px;"><img src="'.$GLOBALS['site_root'].'/img/oneclick.png" height="50" style="float:left; margin-right: 20px;"/><div style="
                                                 padding: 10px 40px;
                                                 font-size: 18px;
@@ -98,7 +98,7 @@ function GetPaymentRequestBody(Order $order){
             $body .= '<p>
                     Para procesar este pedido, por favor completar el pago de '.MoneyFormat($order->ActualPriceWithDiscount).' haciendo click en el siguiente botón.
                 </p>
-                <a href="'.$GLOBALS['site_root'].'/oneclick.php?orderNumber='.$order->OrderNumber.'" style="
+                <a href="'.$GLOBALS['site_root'].'/pay.php?orderNumber='.$order->OrderNumber.'" style="
                                                 padding: 10px 40px;
                                                 font-size: 18px;
                                                 color: #EBF3E9;
