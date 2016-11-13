@@ -33,8 +33,10 @@ if($PaymentService == "flow"){
 else if($PaymentService == "webpay"){
     // TODO: implement webpay
     require_once(dirname(__FILE__)."/php/transbank/Webpay.php");
-    $webpay = new Webpay();
-    $webpay->START_TRANS_WS($order->ActualPriceWithDiscount,$order->OrderNumber,$order->Email,$descritption);
+    // $webpay = new Webpay();
+    // $webpay->START_TRANS_WS($order->ActualPriceWithDiscount,$order->OrderNumber,$order->Email,$descritption);
+    include_once(dirname(__FILE__)."/templates/header.general.php");
+    include_once(dirname(__FILE__)."/templates/footer.general.php");
 }
 ?>
 
