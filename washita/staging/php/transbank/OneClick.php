@@ -261,6 +261,7 @@ class OneClick extends MySQLDB{
 	/** @method void REMOVE_INSCRIPTION() this function remove an TC inscription. */
 	function REMOVE_INSCRIPTION($TBK_USER){
 		$this->GETUSERPARAM();
+		$_SESSION['ONECLICK_ORDER'] = $order;
 		$oneClickService = new OneClickWS();
 		$oneClickRemoveUserInput = new oneClickRemoveUserInput();
 		$tbkUser = $TBK_USER;
