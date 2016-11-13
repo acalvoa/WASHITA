@@ -181,7 +181,13 @@ else
         location.href="php/transbank/ep_webpay.php?action=ONECLICK_INSCRIPTION&order=<?php echo $order->OrderNumber; ?>";
     });
     $("#rm_tc_action").on("click", function(){
-        location.href="php/transbank/ep_webpay.php?action=ONECLICK_REMOVE_INSCRIPTION&TBK_USER="+$(".TBK_USER_INPUT").val();
+        if($(".TBK_USER_INPUT").val() == -1){
+          alert("Debe seleccionar una tarjeta de credito registrada");
+        }
+        else
+        {
+          location.href="php/transbank/ep_webpay.php?action=ONECLICK_REMOVE_INSCRIPTION&TBK_USER="+$(".TBK_USER_INPUT").val();
+        }
     });
   });
   </script>';
