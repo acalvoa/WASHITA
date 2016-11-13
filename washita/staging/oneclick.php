@@ -54,7 +54,7 @@ if($_POST){
      include_once(dirname(__FILE__)."/templates/header.general.php");
     
 $user = WashitaUser::CurrentUser();
-if(is_null($user)) echo "JAGSAJGSAJ";
+if(is_null($user)){
 ?>
 <section>
     <div class="container">
@@ -115,5 +115,17 @@ if(is_null($user)) echo "JAGSAJGSAJ";
 </section>
 
 <?php
+}
+else
+{
+?>
+<section>
+    <div class="container">
+         <div class="section-heading section-order">
+         </div>
+    </div>
+</section>
+<?php
+}
     include_once(dirname(__FILE__)."/templates/footer.general.php");
 ?>
