@@ -68,24 +68,22 @@ function GetPaymentRequestBody(Order $order){
                                                 font-size: 18px;
                                                 color: #EBF3E9;
                                                 border-radius: 10px;
-                                                background-color: #228b22;
                                                 border-width: 1px;
                                                 text-decoration: initial;
                                                 display: inline-block;
                     ">
-                        Pagar usando Webpay <img src="'.$GLOBALS['site_root'].'/img/webpayplus.jpg" height="30"/>
+                        Pagar con Webpay <img src="'.$GLOBALS['site_root'].'/img/webpayplus.jpg" height="50"/>
                     </a> 
                     <a href="'.$GLOBALS['site_root'].'/pay.php?orderNumber='.$order->OrderNumber.'" style="
                                                 padding: 10px 40px;
                                                 font-size: 18px;
                                                 color: #EBF3E9;
                                                 border-radius: 10px;
-                                                background-color: #228b22;
                                                 border-width: 1px;
                                                 text-decoration: initial;
                                                 display: inline-block;
                     ">
-                        Pagar usando OneClick <img src="'.$GLOBALS['site_root'].'/img/oneclick.png" height="30"/>
+                        Pagar con OneClick <img src="'.$GLOBALS['site_root'].'/img/oneclick.png" height="50"/>
                     </a> 
                      <br/>
                     <br/>
