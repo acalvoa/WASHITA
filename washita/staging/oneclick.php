@@ -186,7 +186,7 @@ else
         }
         else
         {
-          location.href="php/transbank/ep_webpay.php?action=ONECLICK_REMOVE_INSCRIPTION&TBK_USER="+$(".TBK_USER_INPUT").val();
+          location.href="php/transbank/ep_webpay.php?action=ONECLICK_REMOVE_INSCRIPTION&order=<?php echo $order->OrderNumber; ?>&TBK_USER="+$(".TBK_USER_INPUT").val();
         }
     });
   });
