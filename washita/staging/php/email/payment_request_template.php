@@ -74,7 +74,7 @@ function GetPaymentRequestBody(Order $order){
                                                 text-decoration: initial;
                                                 display: inline-block;
                     ">Pagar con Webpay</span>
-                    </a> 
+                    </a> <br>
                     <a href="'.$GLOBALS['site_root'].'/pay.php?orderNumber='.$order->OrderNumber.'" >
                         <img src="'.$GLOBALS['site_root'].'/img/oneclick.png" height="50"/><span style="
                                                 padding: 10px 40px;
