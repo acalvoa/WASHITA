@@ -115,7 +115,7 @@ class OneClick extends MySQLDB{
 		// $ID_PREORDER = $PREORDER->CREATE_PRE_ORDER();
 		$ID_PREORDER = date('YmdHis').$this->COUNT("TBK_TRANSACTIONS");
 		$this->LOG("Preorden creada: ".$ID_PREORDER.", Redirigiendo");
-		if($this->REG_TRANS($ID_PREORDER,$PRICE,$ORDER,$this->WASHITA_EMAIL, "Washita.cl Orden N°".$ORDER.". Pago."){
+		if($this->REG_TRANS($ID_PREORDER,$PRICE,$ORDER,$this->WASHITA_EMAIL, "Washita.cl Orden N°".$ORDER.". Pago.")){
 			// LLAMAMOS LOS WEBSERVICES
 			$oneClickService = new OneClickWS();
 			$oneClickInscriptionInput = new oneClickInscriptionInput();
