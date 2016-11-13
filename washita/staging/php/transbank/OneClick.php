@@ -1,4 +1,5 @@
 <?php
+session_start();
 /**
 *	@autor: Angelo Calvo A. <angelo.calvoa@gmail.com>
 *	@autor: Angelo Calvo A. - Github(acalvoa)
@@ -95,11 +96,11 @@ class OneClick extends MySQLDB{
 				throw new Exception("The TBK_USER REGISTER ERROR - ERROR IN INSERT OPERATION", 1);
 			}
 			if($ws) die(json_encode($TC));
-			header('Location: /process.php');
+			header('Location: /oneclick.php?orderNumber='.$_SESSION['ONECLICK_ORDER']);
 		}
 		else
 		{
-			header('Location: /process.php?TC_INS=fail');
+			header('Location: /oneclick.php?TC_INS=fail');
 		}
 	}
 	/** @method void AUTHORIZE() this function authorice a transaction with transbank oneclick. */
