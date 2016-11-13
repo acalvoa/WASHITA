@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__)."/_config.php");
 require_once(dirname(__FILE__)."/php/_helpers.php");
-
+require_once(dirname(__FILE__).'/php/Order.class.php');
 require_once(dirname(__FILE__)."/php/recaptcha/recaptchalib.php");
 require_once(dirname(__FILE__)."/php/hybridauth/WashitaHybridAuth.php");
 include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
