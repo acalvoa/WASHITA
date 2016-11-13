@@ -4,6 +4,7 @@ require_once(dirname(__FILE__)."/php/_helpers.php");
 
 require_once(dirname(__FILE__)."/php/recaptcha/recaptchalib.php");
 require_once(dirname(__FILE__)."/php/hybridauth/WashitaHybridAuth.php");
+include_once(dirname(__FILE__)."/php/transbank/OneClick.php");
 
 $error = null;
 
@@ -129,11 +130,6 @@ else
                 </div>
                 <div class="input-group-horizontal">
                     <div class="payelement">
-                        <div class="inputfield"><input class="payment_method" type="radio" name="payment_method" value="webpay" checked></div>  
-                        <div class="logofield"><img class="webpay-logo" src="img/logo-webpay.png" height="100"></div>
-                    </div>
-                    <div class="payelement">
-                        <div class="inputfield"><input class="payment_method" type="radio" name="payment_method" value="oneclick"></div> 
                         <div class="logofield" style="padding-top:5px;"><img class="webpay-logo" src="img/oneclick.png" height="80"></div>
                     </div>
                 </div>
